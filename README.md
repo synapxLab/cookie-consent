@@ -9,4 +9,5 @@ npm install @synapxlab/cookie-consent
 - Zéro dépendance, 15kb minifié
 - Compatible tous frameworks
 
+
 [Documentation complète] [Démo live] [Issues]
