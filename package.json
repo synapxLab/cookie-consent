@@ -1,6 +1,6 @@
 {
   "name": "@synapxlab/cookie-consent",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Bannière de consentement cookies RGPD gratuite - Alternative française à Cookiebot (JS pur, zéro dépendance)",
   "main": "dist/cookie.js",
   "types": "dist/cookie.d.ts",
@@ -12,7 +12,7 @@
   ],
   "keywords": [
     "gdpr",
-    "rgpd", 
+    "rgpd",
     "cookie-banner",
     "cookie-consent",
     "cookies",
@@ -74,6 +74,3 @@
     "url": "https://github.com/sponsors/synapxLab"
   }
 }
-
-
-
