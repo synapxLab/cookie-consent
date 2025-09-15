@@ -1,0 +1,211 @@
+:root{
+  --fg:#111827; --muted:#6b7280; --line:#e5e7eb; --bg:#f9fafb; --card:#fff;
+  --accent:#0ea5e9;
+}
+
+*{ box-sizing:border-box; }
+html, body{
+  margin:0; padding:0;
+  background:var(--bg); color:var(--fg);
+  font:16px/1.6 system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+}
+
+/* Header */
+header{
+  padding:2.5rem 1rem 1rem; text-align:center;
+  h1{ margin:0 0 .25rem; font-size:clamp(1.6rem,2.5vw,2.2rem); }
+  .subtitle{ color:var(--muted); margin:0; }
+}
+
+/* Layout */
+
+html { scroll-behavior: smooth; }
+
+main{
+  max-width:980px; margin:1rem auto 4rem; padding:0 1rem; display:grid; gap:1rem;
+}
+section{
+  background:var(--card); border:1px solid var(--line); border-radius:12px; padding:1rem 1.2rem;
+}
+h2{ margin:.2rem 0 1rem; font-size:1.25rem; }
+
+/* Lists & notes */
+.klist{ margin:.25rem 0 .75rem 1.1rem; }
+.note{ font-size:.9rem; color:var(--muted); }
+
+/* Code blocks */
+pre{
+  background:#0f172a; color:#e5e7eb; border-radius:10px; padding:1rem; overflow:auto;
+  code{ font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; font-size:.9rem; }
+}
+code{ font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; }
+
+/* Grid helpers */
+.grid{ display:grid; gap:1rem; }
+@media (min-width:760px){ .grid.two{ grid-template-columns:1fr 1fr; } }
+
+/* Callout */
+.callout{
+  background:#ecfeff; border:1px solid #a5f3fc; color:#164e63;
+  padding:.75rem 1rem; border-radius:10px;
+}
+
+/* Footer */
+.site-footer{
+  max-width:980px; margin:0 auto 3rem; padding:0 1rem; color:var(--muted); text-align:center;
+  .credits a{ color:inherit; text-decoration:underline; }
+}
+
+/* Small util */
+.small{ font-size:.9rem; }
+
+
+#sommaire {
+  position: sticky; top: 1rem;
+  background: #fff; border: 1px solid #e5e7eb; border-radius: 12px;
+  padding: .8rem 1rem; margin-bottom: 1rem;
+}
+#sommaire ul { list-style: none; padding: 0; margin: .4rem 0 0; }
+#sommaire li + li { margin-top: .25rem; }
+#sommaire a { text-decoration: none; color: #0f172a; }
+#sommaire a.active { font-weight: 700; text-decoration: underline; }
+
+/* ===== Scroll doux ===== */
+html { scroll-behavior: smooth; }
+
+/* ===== Layout : sommaire à gauche, contenu à droite ===== */
+main{
+  max-width: 1100px;                  /* un peu plus large pour loger la sidebar */
+  margin: 1rem auto 4rem;
+  padding: 0 1rem;
+  display: grid;
+  grid-template-columns: 280px 1fr;   /* 1) nav gauche  2) contenu */
+  gap: 1rem;
+  align-items: start;
+}
+
+/* Toutes les sections = colonne contenu (droite) */
+main section{ grid-column: 2; }
+.callout-danger{
+  background: #fff5f5;           /* rouge très pâle */
+  border-color: #fecaca;         /* contour rouge clair */
+  color: #7f1d1d;                /* texte rouge foncé */
+}
+.callout-danger strong{ font-weight: 800; }
+
+.callout-warning{
+  background:#fffbeb;             /* jaune très pâle */
+  border:1px solid #fde68a;       /* contour jaune clair */
+  color:#7c2d12;                  /* texte brun/ambre foncé */
+  padding:.75rem 1rem; border-radius:10px;
+}
+.callout-warning strong{ font-weight:800; }
+
+/* Sommaire latéral (gauche) */
+#sommaire{
+  grid-column: 1;
+  align-self: start;
+  position: sticky; top: 1rem;        /* reste visible au scroll */
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: .8rem 1rem;
+  height: fit-content;
+  max-height: calc(100vh - 2rem);     /* scroll interne si long */
+  overflow: auto;
+}
+#sommaire h2{ margin: 0 0 .5rem; font-size: 1.05rem; }
+#sommaire ul{ list-style: none; padding: 0; margin: .4rem 0 0; }
+#sommaire li + li{ margin-top: .25rem; }
+#sommaire a{ text-decoration: none; color: #0f172a; }
+#sommaire a.active{ font-weight: 700; text-decoration: underline; }
+/* ===== Raccourcis (logos) ===== */
+.install-quick{
+  display: flex; flex-wrap: wrap; gap: .5rem; margin: .5rem 0 1rem;
+}
+.chip{
+  display: inline-flex; align-items: center; gap: .4rem;
+  padding: .35rem .6rem; border:1px solid var(--line); border-radius: 999px;
+  background: var(--card); color: var(--fg); text-decoration: none; font-size: .9rem;
+}
+.chip::before{
+  display: inline-grid; place-items: center;
+  width: 1.35rem; height: 1.35rem; border-radius: 50%;
+  border: 1px solid var(--line); font-size: .85rem;
+  background: #fff;
+}
+
+/* ===== Accordéons ===== */
+.acc{
+  border:1px solid var(--line); border-radius: 12px; background: var(--card); margin-bottom: .6rem; overflow: clip;
+}
+.acc > summary{
+  list-style: none; cursor: pointer; user-select: none;
+  display: flex; align-items: center; gap: .6rem;
+  padding: .75rem 1rem; font-weight: 600;
+}
+.acc > summary::-webkit-details-marker{ display:none; }
+.acc .logo{
+  display:inline-grid; place-items:center;
+  width:1.6rem; height:1.6rem; border-radius: 50%; border:1px solid var(--line);
+  background:#fff; font-size:.95rem;
+}
+.acc[open] > summary{ background: #f8fafc; }
+.acc .acc-body{ padding: .2rem 1rem 1rem; }
+
+/* ===== Responsive : sous 980px, on repasse en 1 colonne ===== */
+@media (max-width: 980px){
+  main{ grid-template-columns: 1fr; }
+  #sommaire{
+    position: static;
+    max-height: none;
+    margin-bottom: 1rem;
+    grid-column: 1;
+  }
+  main section{ grid-column: 1; }
+}
+/* Icônes SVG */
+.icon { width: 1.25rem; height: 1.25rem; display:inline-block; vertical-align: -2px; }
+
+/* Raccourcis (logos) */
+.install-quick{ display:flex; flex-wrap:wrap; gap:.5rem; margin:.5rem 0 1rem; }
+.chip{
+  display:inline-flex; align-items:center; gap:.45rem;
+  padding:.35rem .6rem; border:1px solid var(--line); border-radius:999px;
+  background:var(--card); color:var(--fg); text-decoration:none; font-size:.9rem;
+}
+
+/* Accordéons */
+.acc{ border:1px solid var(--line); border-radius:12px; background:var(--card); margin-bottom:.6rem; overflow:clip; }
+.acc > summary{
+  list-style:none; cursor:pointer; user-select:none;
+  display:flex; align-items:center; gap:.6rem; padding:.75rem 1rem; font-weight:600;
+}
+.acc > summary::-webkit-details-marker{ display:none; }
+.acc[open] > summary{ background:#f8fafc; }
+.acc .acc-body{ padding:.2rem 1rem 1rem; }
+
+/* Remplace l’ancienne .logo “pastille” par une vraie icône */
+.acc summary .icon{
+  border:1px solid var(--line); border-radius:50%; background:#fff; padding:.15rem;
+  width:1.6rem; height:1.6rem;
+}
+
+
+    /* Hero Marketing */
+    .hero-marketing {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 3rem 1rem 2rem;
+      text-align: center;
+    }
+    .hero-marketing h1 {
+      font-size: clamp(1.8rem, 4vw, 2.8rem);
+      margin: 0 0 1rem;
+      font-weight: 800;
+    }
+    .hero-marketing .tagline {
+      font-size: 1.1rem;
+      opacity: 0.9;
+      margin-bottom: 1.5rem;
+    }

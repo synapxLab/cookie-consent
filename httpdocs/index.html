@@ -1,0 +1,599 @@
+<!doctype html>
+
+
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>🍪 Gérer le consentement aux cookies - Solution RGPD gratuite</title>
+  <meta name="description" content="Bannière de consentement cookies RGPD 100% gratuite. Alternative française à Cookiebot - Documentation complète, installation simple, conformité légale.">
+  <meta name="keywords" content="RGPD, GDPR, bannière cookies, consentement, gratuit, cookiebot alternative, CNIL, open source">
+  <meta property="og:title" content="Cookie Consent RGPD Gratuit - Alternative à Cookiebot">
+  <meta property="og:description" content="Solution française gratuite de consentement cookies. Fini les 50€/mois !">
+
+</head>
+
+ <style>
+
+
+
+ </style>
+<body>
+
+  <!-- Hero Marketing Section -->
+  <section class="hero-marketing">
+    <div style="max-width: 1200px; margin: 0 auto;">
+      <h1>🍪 Bannière Cookies RGPD<br><strong>100% Gratuite</strong></h1>
+      <p class="tagline">Alternative française à Cookiebot • Économisez 600€/an • Open-source</p>
+      
+      <a href="#installation" class="cta-primary">Installer maintenant</a>
+      <a href="#demo" class="cta-secondary">Voir la démo</a>
+    </div>
+  </section>
+
+
+
+<!-- Sprite d'icônes SVG (réutilisable partout) -->
+<svg xmlns="http://www.w3.org/2000/svg" style="display:none">
+  <!-- Icônes génériques -->
+  <symbol id="ico-pkg" viewBox="0 0 24 24">
+    <path fill="currentColor" d="M3 7.5 12 3l9 4.5v9L12 21 3 16.5v-9Z"/>
+    <path fill="#fff" d="M12 6.5 6 9.5v5l6 3 6-3v-5l-6-3Z" opacity=".25"/>
+  </symbol>
+  <symbol id="ico-code" viewBox="0 0 24 24">
+    <path fill="currentColor" d="M9.4 16.6 5.8 13l3.6-3.6 1.4 1.4L8.6 13l2.2 2.2-1.4 1.4Zm5.2 0-1.4-1.4 2.2-2.2-2.2-2.2 1.4-1.4L18.2 13l-3.6 3.6Z"/>
+  </symbol>
+
+  <!-- Pastilles lettres (cercle + lettres) -->
+  <!-- Astuce: on garde le visuel cohérent, sans logos brand exacts -->
+  <symbol id="ico-npm" viewBox="0 0 24 24">
+    <circle cx="12" cy="12" r="10" fill="#fff"/><circle cx="12" cy="12" r="10" fill="none" stroke="currentColor"/>
+    <text x="50%" y="54%" text-anchor="middle" dominant-baseline="middle" font-size="8" font-family="system-ui" fill="currentColor">npm</text>
+  </symbol>
+  <symbol id="ico-c" viewBox="0 0 24 24">
+    <circle cx="12" cy="12" r="10" fill="#fff"/><circle cx="12" cy="12" r="10" fill="none" stroke="currentColor"/>
+    <text x="50%" y="54%" text-anchor="middle" dominant-baseline="middle" font-size="11" font-family="system-ui" fill="currentColor">C</text>
+  </symbol>
+  <symbol id="ico-react" viewBox="0 0 24 24">
+    <circle cx="12" cy="12" r="10" fill="#fff"/><circle cx="12" cy="12" r="10" fill="none" stroke="currentColor"/>
+    <text x="50%" y="54%" text-anchor="middle" dominant-baseline="middle" font-size="10" font-family="system-ui" fill="currentColor">R</text>
+  </symbol>
+  <symbol id="ico-vue" viewBox="0 0 24 24">
+    <circle cx="12" cy="12" r="10" fill="#fff"/><circle cx="12" cy="12" r="10" fill="none" stroke="currentColor"/>
+    <text x="50%" y="54%" text-anchor="middle" dominant-baseline="middle" font-size="10" font-family="system-ui" fill="currentColor">V</text>
+  </symbol>
+  <symbol id="ico-angular" viewBox="0 0 24 24">
+    <circle cx="12" cy="12" r="10" fill="#fff"/><circle cx="12" cy="12" r="10" fill="none" stroke="currentColor"/>
+    <text x="50%" y="54%" text-anchor="middle" dominant-baseline="middle" font-size="10" font-family="system-ui" fill="currentColor">A</text>
+  </symbol>
+  <symbol id="ico-svelte" viewBox="0 0 24 24">
+    <circle cx="12" cy="12" r="10" fill="#fff"/><circle cx="12" cy="12" r="10" fill="none" stroke="currentColor"/>
+    <text x="50%" y="54%" text-anchor="middle" dominant-baseline="middle" font-size="10" font-family="system-ui" fill="currentColor">S</text>
+  </symbol>
+  <symbol id="ico-next" viewBox="0 0 24 24">
+    <circle cx="12" cy="12" r="10" fill="#fff"/><circle cx="12" cy="12" r="10" fill="none" stroke="currentColor"/>
+    <text x="50%" y="54%" text-anchor="middle" dominant-baseline="middle" font-size="10" font-family="system-ui" fill="currentColor">N</text>
+  </symbol>
+  <symbol id="ico-nuxt" viewBox="0 0 24 24">
+    <circle cx="12" cy="12" r="10" fill="#fff"/><circle cx="12" cy="12" r="10" fill="none" stroke="currentColor"/>
+    <text x="50%" y="54%" text-anchor="middle" dominant-baseline="middle" font-size="9" font-family="system-ui" fill="currentColor">N3</text>
+  </symbol>
+  <symbol id="ico-symfony" viewBox="0 0 24 24">
+    <circle cx="12" cy="12" r="10" fill="#fff"/><circle cx="12" cy="12" r="10" fill="none" stroke="currentColor"/>
+    <text x="50%" y="54%" text-anchor="middle" dominant-baseline="middle" font-size="10" font-family="system-ui" fill="currentColor">SF</text>
+  </symbol>
+  <symbol id="ico-wp" viewBox="0 0 24 24">
+    <circle cx="12" cy="12" r="10" fill="#fff"/><circle cx="12" cy="12" r="10" fill="none" stroke="currentColor"/>
+    <text x="50%" y="54%" text-anchor="middle" dominant-baseline="middle" font-size="10" font-family="system-ui" fill="currentColor">W</text>
+  </symbol>
+  <symbol id="ico-ps" viewBox="0 0 24 24">
+    <circle cx="12" cy="12" r="10" fill="#fff"/><circle cx="12" cy="12" r="10" fill="none" stroke="currentColor"/>
+    <text x="50%" y="54%" text-anchor="middle" dominant-baseline="middle" font-size="9" font-family="system-ui" fill="currentColor">PS</text>
+  </symbol>
+</svg>
+
+<!--   <header>
+    <h1>🍪 Gérer le consentement aux cookies</h1>
+    <p class="subtitle">Pourquoi c’est affiché sur le site, et comment installer le script</p>
+  </header>
+ -->
+  <main>
+
+
+    
+    <!-- Sommaire -->
+    <nav id="sommaire" aria-label="Sommaire">
+      <h2>Sommaire</h2>
+      <ul>
+        <li><a href="#pourquoi">Cookie ?</a></li>
+        <li><a href="#obligation">Obligation</a></li>
+        <li><a href="#installation">Installation</a></li>
+        <li><a href="#utilisation">Utilisation</a></li>
+        <li><a href="#api">API</a></li>
+        <li><a href="#css">Personnalisation CSS</a></li>
+        <li><a href="#demo">Exemple de page (démo)</a></li>
+        <li><a href="#a11y">Accessibilité</a></li>
+        <li><a href="#compat">Compatibilité navigateurs</a></li>
+        <li><a href="#dev">Développement</a></li>
+        <li><a href="#deploy">Build & déploiement</a></li>
+        <li><a href="#license">Licence</a></li>
+      </ul>
+    </nav>
+
+    <!-- Cookie ? / Pourquoi cette bannière -->
+    <section id="pourquoi">
+      <h2>Cookie ? / Pourquoi cette bannière</h2>
+
+      <h3>Concrètement, c’est quoi un cookie&nbsp;?</h3>
+      <p>
+        Un <strong>cookie</strong> est une petite donnée enregistrée dans votre navigateur par un site web.
+        D’autres technologies similaires existent (<code>localStorage</code>, <code>sessionStorage</code>, IndexedDB, etc.) et sont
+        traitées de la même façon par la loi lorsqu’elles servent à vous reconnaître ou vous suivre.
+        La bannière permet à l’internaute <strong>d’accepter</strong>, <strong>de refuser</strong> ou de <strong>gérer des préférences</strong> par finalité.
+      </p>
+
+      <h3>Ce que permet (et impose) la bannière</h3>
+      <ul class="klist">
+        <li><strong>Transparence</strong> : description claire des finalités (statistiques, marketing…).</li>
+        <li><strong>Choix utilisateur</strong> : accepter, refuser, ou n’autoriser que certaines catégories.</li>
+        <li><strong>Preuve & révocabilité</strong> : le choix est enregistré et peut être modifié à tout moment (ex. lien “Politique en matière de cookies” en pied de page).</li>
+      </ul>
+
+      <h3>Références légales (UE & France)</h3>
+      <ul class="klist">
+        <li><strong>Directive ePrivacy (2002/58/CE), art. 5(3)</strong> — dépôt/lecture d’informations sur l’équipement terminal (cookies, traceurs) uniquement avec <em>consentement préalable</em>, sauf exception « strictement nécessaire » au service demandé.</li>
+        <li><strong>France – Loi Informatique & Libertés, art. 82</strong> — transposition de l’art. 5(3) ePrivacy : information claire et complète + possibilité de s’opposer ; consentement requis pour les traceurs non essentiels ; exemptions pour le strictement nécessaire.</li>
+        <li><strong>RGPD</strong> :
+          <ul>
+            <li><strong>Art. 4(11)</strong> — définition du <em>consentement</em> : libre, spécifique, éclairé et univoque.</li>
+            <li><strong>Art. 7</strong> — <em>conditions du consentement</em> : démontrable, réversible, et <em>aussi facile à retirer qu’à donner</em>.</li>
+            <li><strong>Art. 6(1)(a)</strong> — base légale « consentement » lorsque des données personnelles sont traitées via ces traceurs.</li>
+          </ul>
+        </li>
+        <li><strong>CNIL</strong> — le refus des cookies doit être <em>aussi simple</em> que l’acceptation ; contrôles et mises en demeure en cas de non-conformité.</li>
+      </ul>
+
+      <div class="callout callout-warning" role="note">
+        <strong>Remarque perso :</strong> sur le web, on voit encore des bannières… mais les cookies partent quand même.
+        Franchement, regardez la console : vous verrez des scripts tiers qui se lancent sans consentement.
+        Conclusion : ne faites pas pareil — <u>ne chargez pas</u> les scripts tiers (Google Analytics, pixels, etc.)
+        et <u>ne déposez pas</u> leurs cookies tant que l’utilisateur n’a pas dit oui.
+      </div>
+    </section>
+
+    <!-- Obligation -->
+    <section id="obligation">
+      <h2>Obligation légale&nbsp;:</h2>
+
+      <h3> la bannière est-elle obligatoire&nbsp;?</h3>
+      <ul class="klist">
+        <li><strong>Oui, bannière obligatoire</strong> dès qu’un traceur (cookie, localStorage, etc.) sert à une finalité
+          <em>non strictement nécessaire</em> (ex. statistiques « classiques », marketing, personnalisation, profiling, A/B test…).
+          → Il faut un <strong>consentement préalable</strong> et la possibilité de <strong>refuser aussi simplement qu’accepter</strong>. <em>(ePrivacy art. 5(3) / LIL art. 82, règles CNIL)</em></li>
+        <li><strong>Pas de bannière requise</strong> si le site n’utilise <em>que</em> des traceurs
+          <strong>strictement nécessaires</strong> au service (ex. session, sécurité, panier, équilibrage de charge). <em>(exemptés de consentement)</em></li>
+        <li><strong>Mesure d’audience exemptée</strong> (cas particuliers)&nbsp;: certaines stats « 1ʳᵉ partie » peuvent être
+          <strong>dispensées de consentement</strong> si <em>toutes</em> les conditions CNIL sont respectées
+          (finalité exclusivement statistique, portée limitée à l’éditeur, durée/portée réduites, pas de recoupement, IP tronquée, etc.).
+          Dans ce cas, <strong>pas de bannière de consentement</strong> nécessaire, mais <strong>information claire</strong> à fournir. </li>
+      </ul>
+
+      <div class="callout callout-danger" role="alert">
+        <strong>RÈGLE D’OR :</strong> tant que l’utilisateur <em>n’a pas consenti</em> à la catégorie concernée,
+        <u>ne chargez pas</u> les <strong>scripts tiers</strong> (ex. Google Analytics, pixels publicitaires, chat, maps…)
+        et <u>ne déposez pas</u> leurs cookies.
+      </div>
+
+      <p class="note">
+        ⚠️ Le fait qu’un cookie soit « 1ʳᵉ partie » (et non « tiers ») ne le rend pas automatiquement légal sans consentement.
+        S’il n’est <em>pas strictement nécessaire</em> et ne remplit pas une <em>exemption CNIL</em> (ex. audience sous conditions),
+        la bannière reste <strong>obligatoire</strong>.
+      </p>
+    </section>
+<section id="installation">
+  <h2>Installation</h2>
+
+  <!-- Raccourcis (logos) -->
+<!--   <div class="install-quick">
+    <a class="chip" href="#inst-npm"        data-icon="📦">npm / yarn / pnpm</a>
+    <a class="chip" href="#inst-script"     data-icon="&lt;/&gt;">Script &lt;script&gt;</a>
+    <a class="chip" href="#inst-composer"   data-icon="C">Composer</a>
+    <a class="chip" href="#inst-react"      data-icon="⚛️">React</a>
+    <a class="chip" href="#inst-vue"        data-icon="🟩">Vue 3</a>
+    <a class="chip" href="#inst-angular"    data-icon="🅰️">Angular</a>
+    <a class="chip" href="#inst-svelte"     data-icon="🔶">Svelte/SvelteKit</a>
+    <a class="chip" href="#inst-next"       data-icon="⏭️">Next.js</a>
+    <a class="chip" href="#inst-nuxt"       data-icon="🌀">Nuxt 3</a>
+    <a class="chip" href="#inst-symfony"    data-icon="SF">Symfony</a>
+    <a class="chip" href="#inst-wordpress"  data-icon="W">WordPress</a>
+    <a class="chip" href="#inst-prestashop" data-icon="PS">PrestaShop</a>
+  </div> -->
+<div class="install-quick">
+  <a class="chip" href="#inst-npm">       <svg class="icon" aria-hidden="true"><use href="#ico-npm"/></svg> npm / yarn / pnpm</a>
+  <a class="chip" href="#inst-script">    <svg class="icon" aria-hidden="true"><use href="#ico-code"/></svg> Script &lt;script&gt;</a>
+  <a class="chip" href="#inst-composer">  <svg class="icon" aria-hidden="true"><use href="#ico-c"/></svg> Composer</a>
+  <a class="chip" href="#inst-react">     <svg class="icon" aria-hidden="true"><use href="#ico-react"/></svg> React</a>
+  <a class="chip" href="#inst-vue">       <svg class="icon" aria-hidden="true"><use href="#ico-vue"/></svg> Vue 3</a>
+  <a class="chip" href="#inst-angular">   <svg class="icon" aria-hidden="true"><use href="#ico-angular"/></svg> Angular</a>
+  <a class="chip" href="#inst-svelte">    <svg class="icon" aria-hidden="true"><use href="#ico-svelte"/></svg> Svelte/SvelteKit</a>
+  <a class="chip" href="#inst-next">      <svg class="icon" aria-hidden="true"><use href="#ico-next"/></svg> Next.js</a>
+  <a class="chip" href="#inst-nuxt">      <svg class="icon" aria-hidden="true"><use href="#ico-nuxt"/></svg> Nuxt 3</a>
+  <a class="chip" href="#inst-symfony">   <svg class="icon" aria-hidden="true"><use href="#ico-symfony"/></svg> Symfony</a>
+  <a class="chip" href="#inst-wordpress"> <svg class="icon" aria-hidden="true"><use href="#ico-wp"/></svg> WordPress</a>
+  <a class="chip" href="#inst-prestashop"><svg class="icon" aria-hidden="true"><use href="#ico-ps"/></svg> PrestaShop</a>
+</div>
+  <!-- Accordéons -->
+  <details id="inst-npm" class="acc" open>
+    <summary><svg class="icon" aria-hidden="true"><use href="#ico-npm"/></svg> Via npm / yarn / pnpm</summary>
+    <div class="acc-body">
+      <pre><code>npm install @lockness/cookie
+# ou
+yarn add @lockness/cookie
+pnpm add @lockness/cookie</code></pre>
+      <p class="small">Dans votre bundle (ex: <code>src/js/bundle.js</code>) :</p>
+      <pre><code>import '@lockness/cookie';   // charge la bannière
+// (facultatif) window.CookieConsent?.open();</code></pre>
+    </div>
+  </details>
+
+  <details id="inst-script" class="acc">
+    <summary><svg class="icon" aria-hidden="true"><use href="#ico-code"/></svg> Via balise &lt;script&gt;</summary>
+    <div class="acc-body">
+      <p class="small">Placez ces scripts <strong>avant</strong> votre JS principal :</p>
+      <pre><code>&lt;script src="/assets/js/cookie.js"&gt;&lt;/script&gt;
+&lt;script src="/assets/js/bundle.js"&gt;&lt;/script&gt;</code></pre>
+    </div>
+  </details>
+
+  <details id="inst-composer" class="acc">
+    <summary><svg class="icon" aria-hidden="true"><use href="#ico-c"/></svg> Via Composer (PHP) Via Composer (PHP)</summary>
+    <div class="acc-body">
+      <pre><code>composer require @lockness/cookie</code></pre>
+      <p class="small">Servez ensuite le fichier côté public (ex. copie en build) :</p>
+      <pre><code>cp vendor/lockness/cookie/dist/cookie.js httpdocs/assets/js/cookie.js
+# Puis dans l'HTML :
+&lt;script src="/assets/js/cookie.js"&gt;&lt;/script&gt;</code></pre>
+    </div>
+  </details>
+
+  <details id="inst-react" class="acc">
+    <summary><span class="logo">⚛️</span> React (Vite / CRA)</summary>
+    <div class="acc-body">
+      <pre><code>// src/main.jsx
+import '@lockness/cookie';
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import App from './App.jsx';
+ReactDOM.createRoot(document.getElementById('root')).render(&lt;App /&gt;);</code></pre>
+    </div>
+  </details>
+
+  <details id="inst-vue" class="acc">
+    <summary><span class="logo">🟩</span> Vue 3 (Vite)</summary>
+    <div class="acc-body">
+      <pre><code>// src/main.js
+import '@lockness/cookie';
+import { createApp } from 'vue';
+import App from './App.vue';
+createApp(App).mount('#app');</code></pre>
+    </div>
+  </details>
+
+  <details id="inst-angular" class="acc">
+    <summary><span class="logo">🅰️</span> Angular (CLI)</summary>
+    <div class="acc-body">
+      <pre><code>// src/main.ts
+import '@lockness/cookie';
+import { bootstrapApplication } from '@angular/platform-browser';
+import { AppComponent } from './app/app.component';
+bootstrapApplication(AppComponent);</code></pre>
+    </div>
+  </details>
+
+  <details id="inst-svelte" class="acc">
+    <summary><span class="logo">🔶</span> Svelte / SvelteKit</summary>
+    <div class="acc-body">
+      <pre><code>// Svelte : src/main.js
+import '@lockness/cookie';
+import App from './App.svelte';
+new App({ target: document.getElementById('app') });
+
+// SvelteKit (client)
+import { onMount } from 'svelte';
+onMount(() =&gt; import('@lockness/cookie'));</code></pre>
+    </div>
+  </details>
+
+  <details id="inst-next" class="acc">
+    <summary><span class="logo">⏭️</span> Next.js (App Router)</summary>
+    <div class="acc-body">
+      <pre><code>// app/layout.tsx
+'use client';
+import { useEffect } from 'react';
+export default function RootLayout({ children }) {
+  useEffect(() =&gt; { import('@lockness/cookie'); }, []);
+  return (&lt;html&gt;&lt;body&gt;{children}&lt;/body&gt;&lt;/html&gt;);
+}</code></pre>
+    </div>
+  </details>
+
+  <details id="inst-nuxt" class="acc">
+    <summary><span class="logo">🌀</span> Nuxt 3</summary>
+    <div class="acc-body">
+      <pre><code>// plugins/cookie.client.ts
+import '@lockness/cookie';
+export default defineNuxtPlugin(() =&gt; {});</code></pre>
+    </div>
+  </details>
+
+  <details id="inst-symfony" class="acc">
+    <summary><span class="logo">SF</span> Symfony (Webpack Encore)</summary>
+    <div class="acc-body">
+      <pre><code>// assets/app.js
+import '@lockness/cookie';         // avant vos intégrations tierces
+import './styles/app.scss';
+// templates/base.html.twig
+{{ encore_entry_script_tags('app') }}</code></pre>
+    </div>
+  </details>
+
+  <details id="inst-wordpress" class="acc">
+    <summary><span class="logo">W</span> WordPress (plugin léger)</summary>
+    <div class="acc-body">
+      <pre><code>wp-content/plugins/lockness-cookie/
+├─ lockness-cookie.php
+└─ assets/js/cookie.js  # votre build</code></pre>
+      <pre><code>&lt;?php
+/**
+ * Plugin Name: Lockness Cookie Consent
+ */
+add_action('wp_enqueue_scripts', function () {
+  wp_enqueue_script('lockness-cookie', plugins_url('assets/js/cookie.js', __FILE__), [], null, true);
+});
+add_action('wp_footer', function () {
+  echo '&lt;div id="openpolitecookie"&gt;&lt;a href="#"&gt;[Politique en matière de cookies]&lt;/a&gt;&lt;/div&gt;';
+});</code></pre>
+    </div>
+  </details>
+
+  <details id="inst-prestashop" class="acc">
+    <summary><span class="logo">PS</span> PrestaShop (module minimal)</summary>
+    <div class="acc-body">
+      <pre><code>modules/lockcookie/
+├─ lockcookie.php
+├─ views/js/cookie.js
+└─ views/templates/hook/footer.tpl</code></pre>
+      <pre><code>&lt;?php
+class Lockcookie extends Module {
+  public function install() {
+    return parent::install() &amp;&amp; $this-&gt;registerHook('header') &amp;&amp; $this-&gt;registerHook('displayFooter');
+  }
+  public function hookHeader() {
+    $this-&gt;context-&gt;controller-&gt;registerJavascript($this-&gt;name, 'modules/'.$this-&gt;name.'/views/js/cookie.js',
+      ['position' =&gt; 'bottom', 'priority' =&gt; 150]);
+  }
+  public function hookDisplayFooter() {
+    return $this-&gt;display(__FILE__, 'views/templates/hook/footer.tpl');
+  }
+}</code></pre>
+      <pre><code>&lt;!-- footer.tpl --&gt;
+&lt;div id="openpolitecookie"&gt;&lt;a href="#"&gt;[Politique en matière de cookies]&lt;/a&gt;&lt;/div&gt;</code></pre>
+    </div>
+  </details>
+
+  <div class="callout callout-danger" role="alert">
+    <strong>RÈGLE D’OR :</strong> tant que l’utilisateur <em>n’a pas consenti</em> à la catégorie concernée,
+    <u>ne chargez pas</u> les <strong>scripts tiers</strong> (Analytics, pixels, chat, maps…)
+    et <u>ne déposez pas</u> leurs cookies.
+  </div>
+</section><!-- 
+
+
+
+
+ -->
+
+    <!-- Utilisation -->
+    <section id="utilisation">
+      <h2>Utilisation</h2>
+      <p>
+        Le script injecte la bannière au chargement. Les catégories sont <strong>cachées par défaut</strong> et
+        s’affichent uniquement quand l’utilisateur clique sur <em>« Les préférences »</em>. Les choix sont
+        stockés dans <code>localStorage</code> sous la clé <code>politecookiebanner</code>.
+      </p>
+
+      <h3>Outils de test rapide</h3>
+      <div class="actions-consent">
+        <button id="btn-reset-consent">Effacer le consentement</button>
+        <button id="btn-open-consent">Ouvrir la fenêtre de préférences</button>
+      </div>
+      <p class="note">
+        “Effacer le consentement” supprime les préférences stockées (localStorage).  
+        “Ouvrir la fenêtre de préférences” affiche la bannière en mode <em>Préférences</em>.
+      </p>
+
+      <div class="callout callout-danger" role="alert">
+        <strong>RÈGLE D’OR :</strong>
+        tant que l’utilisateur <em>n’a pas consenti</em> à la catégorie concernée,
+        <u>ne chargez pas</u> les <strong>scripts tiers</strong>
+        (ex. Google Analytics, pixels publicitaires, chat, maps, etc.)
+        et <u>ne déposez pas</u> leurs cookies.
+        <br><br>
+        ✅ Strictement nécessaire → toujours actif (non refusables).<br>
+        ❌ Statistiques / Marketing refusés → <strong>rien ne doit être chargé</strong>.
+      </div>
+
+      <h4>Exemple : ne charger Google Analytics que si “Statistiques” est consenti</h4>
+      <pre><code>&lt;script&gt;
+document.addEventListener('DOMContentLoaded', () =&gt; {
+  // Les préférences sont stockées en localStorage sous la clé "politecookiebanner"
+  // Exemple de structure : {"cookies":true,"statistics":true,"marketing":false}
+  let prefs = {};
+  try { prefs = JSON.parse(localStorage.getItem('politecookiebanner') || '{}'); } catch {}
+
+  if (prefs.statistics) {
+    // OK pour la mesure d’audience → on charge GA (remplacez G-XXXX par votre ID)
+    const s = document.createElement('script');
+    s.src = 'https://www.googletagmanager.com/gtag/js?id=G-XXXX';
+    s.async = true;
+    document.head.appendChild(s);
+
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){ dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', 'G-XXXX', { anonymize_ip: true }); // bon réflexe
+  }
+});
+&lt;/script&gt;</code></pre>
+    </section>
+
+    <!-- API -->
+    <section id="api">
+      <h2>API</h2>
+      <pre><code>// Ouvrir la bannière (showPrefs=true ⇒ onglet Préférences directement visible)
+window.CookieConsent.open(true);
+
+// Effacer les préférences et rouvrir en mode Préférences
+window.CookieConsent.reset();</code></pre>
+      <p class="note">Clé de stockage : <code>localStorage['politecookiebanner']</code>.</p>
+    </section>
+
+    <!-- Personnalisation CSS -->
+    <section id="css">
+      <h2>Personnalisation CSS</h2>
+      <p>
+        La bannière utilise des <strong>variables CSS</strong> (custom properties). C’est le moyen le plus simple
+        d’adapter les couleurs/contrastes à votre charte <em>sans toucher au JS</em> et sans recoder le SCSS.
+      </p>
+
+      <h3>Variables disponibles</h3>
+      <pre><code>:root{
+  --cc-bg: #fff;
+  --cc-border: #e5e7eb;
+  --cc-accent: #9b6b5a;   /* couleur d’accent (bouton Accepter, switch ON) */
+  --cc-text: #111827;
+  --cc-muted: #6b7280;
+  --cc-line: #e5e7eb;
+  --cc-surface: #f3f4f6;
+}</code></pre>
+
+      <div class="callout">
+        <strong>Note :</strong> ces overrides fonctionnent car le CSS de la bannière
+        lit les variables au <em>runtime</em>. Vous pouvez donc modifier les couleurs
+        avec un simple fichier CSS, sans recompiler le JS.  
+        Si vous voulez changer la structure (ex. arrondis, paddings), éditez
+        <code>src/scss/cookie.scss</code> puis re-générez le bundle.
+      </div>
+
+      <h3>Thèmes multiples</h3>
+      <p>
+        La bannière lit ses couleurs via des <strong>variables CSS</strong>. On peut donc créer plusieurs
+        thèmes en générant des classes utilitaires (ex. <code>.cookie-theme-brown</code>, <code>.cookie-theme-dark</code>)
+        qui surchargent ces variables, sans toucher au JS.
+      </p>
+      <pre><code>// src/scss/cookie.scss (extrait)
+$cookie-themes: (
+  default: ( bg:#fff, text:#111827, muted:#6b7280, line:#e5e7eb, surface:#f3f4f6, accent:#9b6b5a ),
+  dark:    ( bg:#0b1220, text:#e5e7eb, muted:#94a3b8, line:#1f2937, surface:#141b2b, accent:#9b6b5a ),
+  blue:    ( bg:#ffffff, text:#0f172a, muted:#475569, line:#e2e8f0, surface:#f1f5f9, accent:#2563eb )
+);
+
+// Génère .cookie-theme-XXX qui définissent les variables CSS</code></pre>
+
+      <h3>Commutateur de thème (démo)</h3>
+      <div class="theme-switch">
+        <button data-theme="default">Default</button>
+        <button data-theme="brown">Brown</button>
+        <button data-theme="dark">Dark</button>
+        <button data-theme="blue">Blue</button>
+      </div>
+      <p class="note">Ces boutons ne sont là que pour la démo. En prod, choisissez un thème et gardez-le.</p>
+    </section>
+
+    <!-- Exemple de page (démo) -->
+    <section id="demo">
+      <h2>Exemple de page (démo)</h2>
+      <pre><code>&lt;!doctype html&gt;
+&lt;html lang="fr"&gt;
+&lt;head&gt;
+  &lt;meta charset="utf-8" /&gt;
+  &lt;meta name="viewport" content="width=device-width,initial-scale=1" /&gt;
+  &lt;title&gt;Gérer le consentement aux cookies&lt;/title&gt;
+&lt;/head&gt;
+&lt;body class="cookie-theme-default"&gt;
+  &lt;footer&gt;
+    &lt;div id="openpolitecookie"&gt;&lt;a href="#"&gt;[Politique en matière de cookies]&lt;/a&gt;&lt;/div&gt;
+  &lt;/footer&gt;
+
+  &lt;!-- IMPORTANT : la bannière avant votre JS --&gt;
+  &lt;script src="/assets/js/cookie.js"&gt;&lt;/script&gt;
+  &lt;script src="/assets/js/bundle.js"&gt;&lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+    </section>
+
+    <!-- Accessibilité -->
+    <section id="a11y">
+      <h2>Accessibilité</h2>
+      <ul class="klist">
+        <li>Dialog ARIA : <code>role="dialog"</code>, <code>aria-live="polite"</code>, <code>aria-modal="true"</code></li>
+        <li>Bouton de fermeture avec <code>aria-label</code></li>
+        <li>Navigation clavier (tab) et focus visibles</li>
+      </ul>
+    </section>
+
+    <!-- Compatibilité navigateurs -->
+    <section id="compat">
+      <h2>Compatibilité navigateurs</h2>
+      <p>Chrome, Firefox, Safari, Edge (versions récentes). iOS/Android WebView modernes. Pas de dépendance à jQuery.</p>
+    </section>
+
+    <!-- Développement -->
+    <section id="dev">
+      <h2>Développement</h2>
+      <pre><code>npm run dev     # dev-server (HMR)
+npm run build   # build production (minifié)</code></pre>
+      <p class="note">
+        Sortie par défaut : <code>/assets/js/cookie.js</code> (bannière) et <code>/assets/js/bundle.js</code> (site).
+      </p>
+    </section>
+
+    <!-- Build & déploiement -->
+    <section id="deploy">
+      <h2>Build & déploiement</h2>
+      <ol>
+        <li><code>npm run build</code></li>
+        <li>Uploader <code>httpdocs/</code> (incluant <code>/assets/js/</code>) sur votre hébergeur</li>
+        <li>Vérifier que l’HTML charge <strong>d’abord</strong> <code>cookie.js</code>, puis <code>bundle.js</code></li>
+      </ol>
+    </section>
+
+    <!-- Licence -->
+    <section id="license">
+      <h2>Licence</h2>
+      <p><strong>MIT</strong> — utilisez, modifiez, redistribuez librement. Merci de conserver la mention de licence.</p>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="copyright">
+      © Copyright <strong><span>Gérer le consentement aux cookies</span></strong>. All Rights Reserved
+    </div>
+
+    <!-- 👇 Ce lien ouvre la bannière de cookies (branché côté JS) -->
+    <div id="openpolitecookie" class="credits">
+      &nbsp;<a href="#">[Politique en matière de cookies]</a>&nbsp;
+    </div>
+
+    <div class="credits">
+      Web Development , Designed by
+      <a href="https://lockness-informatique.fr/">[Administralis.fr]</a>
+    </div>
+  </footer>
+
+  <!-- Important : charger d'abord le consentement -->
+  <script src="/assets/js/cookie.js"></script>
+  <!-- Puis le JS du site -->
+  <script src="/assets/js/bundle.js"></script>
+</body>
+</html>

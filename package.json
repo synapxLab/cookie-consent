@@ -1,0 +1,76 @@
+{
+  "name": "@lockness/cookie-consent",
+  "version": "1.0.0",
+  "description": "Bannière de consentement cookies RGPD gratuite - Alternative française à Cookiebot (JS pur, zéro dépendance)",
+  "main": "dist/cookie.js",
+  "types": "dist/cookie.d.ts",
+  "files": [
+    "dist/",
+    "src/",
+    "README.md",
+    "LICENSE"
+  ],
+  "keywords": [
+    "gdpr",
+    "rgpd", 
+    "cookie-banner",
+    "cookie-consent",
+    "cookies",
+    "privacy",
+    "consentement",
+    "banniere-cookies",
+    "cookiebot-alternative",
+    "france",
+    "french",
+    "gratuit",
+    "free",
+    "open-source",
+    "vanilla-js",
+    "zero-dependency",
+    "eprivacy",
+    "cnil",
+    "wordpress",
+    "shopify",
+    "prestashop",
+    "symfony",
+    "react",
+    "vue",
+    "angular"
+  ],
+  "homepage": "https://github.com/lockness-informatique/cookie-consent",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/lockness-informatique/cookie-consent.git"
+  },
+  "bugs": {
+    "url": "https://github.com/lockness-informatique/cookie-consent/issues"
+  },
+  "author": {
+    "name": "Laurent Lockness",
+    "email": "laurent.rougier@lockness-informatique.fr",
+    "url": "https://lockness-informatique.fr"
+  },
+  "license": "MIT",
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "scripts": {
+    "dev": "webpack serve --mode development",
+    "build": "webpack --mode production",
+    "test": "echo 'Tests à venir' && exit 0",
+    "prepublishOnly": "npm run build"
+  },
+  "devDependencies": {
+    "css-loader": "^7.1.2",
+    "sass": "^1.92.1",
+    "sass-loader": "^16.0.5",
+    "style-loader": "^4.0.0",
+    "webpack": "^5.101.3",
+    "webpack-cli": "^6.0.1",
+    "webpack-dev-server": "^5.2.2"
+  },
+  "funding": {
+    "type": "individual",
+    "url": "https://github.com/sponsors/lockness-informatique"
+  }
+}
