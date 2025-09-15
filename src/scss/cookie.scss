@@ -6,7 +6,7 @@
 
 /* --------- Thèmes (multi-variants) --------- */
 $cookie-themes: (
-  "default": (bg:#ffffff, text:#111827, muted:#6b7280, line:#e5e7eb, surface:#f3f4f6, accent:#9b6b5a),
+  "default": (bg:#ffffff, text:#111827, muted:#6b7280, line:#e5e7eb, surface:#f3f4f6, accent:#29453e),
   "brown":   (bg:#ffffff, text:#1f2937, muted:#6b7280, line:#e5e7eb, surface:#f8f5f2, accent:#8b5e3c),
   "dark":    (bg:#0b1220, text:#e5e7eb, muted:#94a3b8, line:#1f2937, surface:#141b2b, accent:#9b6b5a),
   "blue":    (bg:#ffffff, text:#0f172a, muted:#475569, line:#e2e8f0, surface:#f1f5f9, accent:#2563eb)
@@ -43,7 +43,7 @@ $cookie-themes: (
   z-index: 99999;
   background: var(--cc-bg);
   color: var(--cc-text);
-  width: 480px;
+  width: 520px;
   max-width: calc(100vw - 24px);
   max-height: calc(100vh - 24px);
   border: 1px solid var(--cc-border);
