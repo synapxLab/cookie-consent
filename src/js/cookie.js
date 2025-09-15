@@ -1,3 +1,60 @@
+/**
+ * @synapxlab/cookie-consent
+ * Bannière de consentement cookies RGPD - Alternative française gratuite à Cookiebot
+ * 
+ * @version 2.0.0
+ * @author SynapxLab <contact@synapxlab.com>
+ * @license MIT
+ * @repository https://github.com/synapxLab/cookie-consent
+ * @homepage https://synapxlab.github.io/cookie-consent
+ * 
+ * @description
+ * Solution française 100% gratuite pour la gestion du consentement cookies
+ * conforme RGPD, ePrivacy et recommandations CNIL.
+ * 
+ * Fonctionnalités :
+ * - Bannière responsive et accessible
+ * - Gestion par catégories (cookies, statistiques, marketing)
+ * - API JavaScript simple
+ * - Événements personnalisés pour intégration
+ * - Thèmes CSS personnalisables
+ * - Zéro dépendance
+ * 
+ * @example
+ * // Installation via npm
+ * npm install @synapxlab/cookie-consent
+ * 
+ * // Utilisation
+ * import '@synapxlab/cookie-consent';
+ * 
+ * // API
+ * window.CookieConsent.open(true);
+ * window.CookieConsent.reset();
+ * const prefs = window.CookieConsent.getPreferences();
+ * 
+ * @legal
+ * Conforme aux réglementations :
+ * - RGPD (Règlement Général sur la Protection des Données)
+ * - Directive ePrivacy 2002/58/CE article 5(3)
+ * - Loi Informatique et Libertés (France) article 82
+ * - Recommandations CNIL 2020-2024
+ * 
+ * @copyright 2024 SynapxLab. Tous droits réservés.
+ * @license MIT - voir LICENSE file pour détails complets
+ * 
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ */
+
+
+
 import '../scss/cookie.scss';
 
 const STORAGE_KEY = 'politecookiebanner';
@@ -5,7 +62,16 @@ const STORAGE_KEY = 'politecookiebanner';
 const loadPrefs = () => {
   try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || ''); } catch { return null; }
 };
-const savePrefs = (obj) => localStorage.setItem(STORAGE_KEY, JSON.stringify(obj || {}));
+
+const savePrefs = (obj) => {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(obj || {}));
+  
+  // NOUVEAU : Émettre un événement personnalisé après sauvegarde
+  const event = new CustomEvent('cookieConsentChanged', {
+    detail: { preferences: obj }
+  });
+  document.dispatchEvent(event);
+};
 
 function renderOnce() {
   if (document.getElementById('politecookiebanner')) return;
@@ -42,11 +108,11 @@ function renderOnce() {
           <span class="pmcpli-description-functional">
             Le stockage ou l'accès aux informations est uniquement utilisé pour des finalités techniques indispensables, telles que :
             <ul>
-              <li>le fonctionnement de la navigation ou de l’interface utilisateur,</li>
+              <li>le fonctionnement de la navigation ou de l'interface utilisateur,</li>
               <li>la gestion de session (ex : panier, connexion),</li>
               <li>ou la transmission sécurisée des données entre le client et le serveur.</li>
             </ul>
-            Aucun appel vers des services tiers de mesure d’audience, de publicité ou de profilage (ex : Google Analytics, Pixel Meta, etc.) n’est effectué dans ce cadre.
+            Aucun appel vers des services tiers de mesure d'audience, de publicité ou de profilage (ex : Google Analytics, Pixel Meta, etc.) n'est effectué dans ce cadre.
           </span>
         </div>
       </details>
@@ -63,12 +129,12 @@ function renderOnce() {
         </summary>
         <div class="pmcpli-description">
           <span class="pmcpli-description-statistics-anonymous">
-            Ces cookies ne sont pas utilisés à des fins publicitaires, mais ils jouent un rôle essentiel dans l’amélioration de votre expérience utilisateur.
+            Ces cookies ne sont pas utilisés à des fins publicitaires, mais ils jouent un rôle essentiel dans l'amélioration de votre expérience utilisateur.
             <br>Par exemple :
             <ul>
               <li>Ils permettent de garder votre session active plus de 10 minutes…</li>
               <li>Ils mémorisent vos préférences (langue, affichage, formulaires remplis),</li>
-              <li>Ils facilitent certaines fonctionnalités comme le panier d’achat ou la navigation entre pages.</li>
+              <li>Ils facilitent certaines fonctionnalités comme le panier d'achat ou la navigation entre pages.</li>
             </ul>
             Ces cookies peuvent être désactivés, mais certaines fonctionnalités risquent alors de ne pas fonctionner correctement.
           </span>
@@ -120,10 +186,11 @@ function renderOnce() {
   <div class="pmcpli-links pmcpli-information p-2"></div>
   <div class="pmcpli-divider pmcpli-footer"></div>
   <div class="pmcpli-buttons">
-    <button class="pmcpli-btn pmcpli-accept">Accepter</button>
+    <button class="pmcpli-btn pmcpli-accept">Tout Accepter</button>
     <button class="pmcpli-btn pmcpli-deny">Refuser</button>
     <button class="pmcpli-btn pmcpli-view-preferences">Les préférences</button>
-    <button class="pmcpli-btn pmcpli-save-preferences">Enregistrer</button>
+    <button class="pmcpli-btn pmcpli-save-preferences" style="display:none;">Enregistrer</button>
+    <button class="pmcpli-btn pmcpli-del-preferences" style="display:none;">Supprimer</button>
   </div>
   <div class="pmcpli-links pmcpli-documents"></div>
 </div>`;
@@ -136,7 +203,13 @@ function openBanner(showPrefs = false) {
   if (!el) return;
   el.style.display = 'block';
   const cats = el.querySelector('.pmcpli-categories');
-  // cats.style.display = showPrefs ? 'block' : 'none'; // uniquement si demandé
+  if (showPrefs) {
+    cats.style.display = 'block';
+    // Afficher les boutons de gestion quand on affiche les préférences
+    el.querySelector('.pmcpli-save-preferences').style.display = 'inline-block';
+    el.querySelector('.pmcpli-del-preferences').style.display = 'inline-block';
+    el.querySelector('.pmcpli-view-preferences').style.display = 'none';
+  }
 }
 
 function attachHandlers() {
@@ -161,26 +234,59 @@ function attachHandlers() {
       const m = cb.name.match(/^politecookie\['(.+)'\]$/);
       if (m) prefs[m[1]] = cb.checked;
     });
-    savePrefs(prefs);
+    savePrefs(prefs); // Ceci déclenche maintenant l'événement
     el.style.display = 'none';
+  };
+
+  const deletePrefs = () => {
+    localStorage.removeItem(STORAGE_KEY);
+    // Émettre un événement de suppression
+    const event = new CustomEvent('cookieConsentChanged', {
+      detail: { preferences: null, action: 'deleted' }
+    });
+    document.dispatchEvent(event);
+    // Réinitialiser l'interface
+    el.querySelectorAll('input[name^="politecookie["]').forEach(cb => cb.checked = false);
+    el.style.display = 'none';
+  };
+
+  const togglePreferencesView = () => {
+    const cats = el.querySelector('.pmcpli-categories');
+    const saveBtn = el.querySelector('.pmcpli-save-preferences');
+    const delBtn = el.querySelector('.pmcpli-del-preferences');
+    const viewBtn = el.querySelector('.pmcpli-view-preferences');
+    
+    if (cats.style.display === 'none' || !cats.style.display) {
+      // Afficher les préférences
+      cats.style.display = 'block';
+      saveBtn.style.display = 'inline-block';
+      delBtn.style.display = 'inline-block';
+      viewBtn.style.display = 'none';
+    } else {
+      // Cacher les préférences
+      cats.style.display = 'none';
+      saveBtn.style.display = 'none';
+      delBtn.style.display = 'none';
+      viewBtn.style.display = 'inline-block';
+    }
   };
 
   // Boutons
   el.querySelector('.pmcpli-close')?.addEventListener('click', () => el.style.display = 'none');
+  
   el.querySelector('.pmcpli-accept')?.addEventListener('click', () => {
     el.querySelectorAll('input[name^="politecookie["]').forEach(cb => cb.checked = true);
     save();
   });
+  
   el.querySelector('.pmcpli-deny')?.addEventListener('click', () => {
     el.querySelectorAll('input[name^="politecookie["]').forEach(cb => cb.checked = false);
     save();
   });
-  el.querySelector('.pmcpli-view-preferences')?.addEventListener('click', () => {
-    const cats = el.querySelector('.pmcpli-categories');
-    cats.style.display = cats.style.display === 'block' ? 'none' : 'block';
-    // cats.style.display = (cats.style.display === 'none' || !cats.style.display) ? 'block' : 'none';
-  });
+  
+  el.querySelector('.pmcpli-view-preferences')?.addEventListener('click', togglePreferencesView);
   el.querySelector('.pmcpli-save-preferences')?.addEventListener('click', save);
+  el.querySelector('.pmcpli-del-preferences')?.addEventListener('click', deletePrefs);
 
   // Lien site
   document.addEventListener('click', (e) => {
@@ -191,14 +297,19 @@ function attachHandlers() {
   });
 }
 
-
-
-
-// // API globale si besoin
-// window.CookieConsent = {
-//   open: (showPrefs=false) => openBanner(showPrefs),
-//   reset: () => { localStorage.removeItem(STORAGE_KEY); openBanner(true); }
-// };
+// NOUVEAU : API globale décommentée et améliorée
+window.CookieConsent = {
+  open: (showPrefs = false) => openBanner(showPrefs),
+  reset: () => { 
+    localStorage.removeItem(STORAGE_KEY); 
+    openBanner(true); 
+  },
+  getPreferences: () => loadPrefs(),
+  hasConsent: (category) => {
+    const prefs = loadPrefs();
+    return prefs ? !!prefs[category] : false;
+  }
+};
 
 document.addEventListener('DOMContentLoaded', () => {
   renderOnce();
