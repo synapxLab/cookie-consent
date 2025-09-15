@@ -203,7 +203,4 @@ function attachHandlers() {
 document.addEventListener('DOMContentLoaded', () => {
   renderOnce();
   attachHandlers();
-
-
-
 });

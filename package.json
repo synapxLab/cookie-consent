@@ -1,5 +1,5 @@
 {
-  "name": "@lockness/cookie-consent",
+  "name": "@synapxlab/cookie-consent",
   "version": "1.0.0",
   "description": "Bannière de consentement cookies RGPD gratuite - Alternative française à Cookiebot (JS pur, zéro dépendance)",
   "main": "dist/cookie.js",
@@ -37,18 +37,18 @@
     "vue",
     "angular"
   ],
-  "homepage": "https://github.com/lockness-informatique/cookie-consent",
+  "homepage": "https://github.com/synapxLab/cookie-consent",
   "repository": {
     "type": "git",
-    "url": "https://github.com/lockness-informatique/cookie-consent.git"
+    "url": "https://github.com/synapxLab/cookie-consent.git"
   },
   "bugs": {
-    "url": "https://github.com/lockness-informatique/cookie-consent/issues"
+    "url": "https://github.com/synapxLab/cookie-consent/issues"
   },
   "author": {
     "name": "Laurent Lockness",
-    "email": "laurent.rougier@lockness-informatique.fr",
-    "url": "https://lockness-informatique.fr"
+    "email": "synapxLab@lockness-informatique.fr",
+    "url": "https://synapx.fr"
   },
   "license": "MIT",
   "engines": {
@@ -71,6 +71,9 @@
   },
   "funding": {
     "type": "individual",
-    "url": "https://github.com/sponsors/lockness-informatique"
+    "url": "https://github.com/sponsors/synapxLab"
   }
 }
+
+
+

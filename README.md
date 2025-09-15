@@ -1,9 +1,7 @@
-# Cookie Consent RGPD Gratuit
-
-🚀 Alternative française gratuite à Cookiebot • Économisez 600€/an
+# Cookie Consent RGPD
 
 ## Installation rapide
-npm install @lockness/cookie-consent
+npm install @synapxlab/cookie-consent
 
 ## Pourquoi ce projet ?
 - 100% gratuit et open-source
