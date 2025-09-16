@@ -42,46 +42,52 @@ npm install @synapxlab/cookie-consent
 ```
 
 ```javascript
-import CookieConsent from '@synapxlab/cookie-consent';
+import '@synapxlab/cookie-consent';
 
-// Initialisation
-const cookieConsent = new CookieConsent({
-  // Configuration...
-});
+// API disponible globalement
+window.CookieConsent.open();
+window.CookieConsent.reset();
 ```
 
-### Configuration de base
+### Utilisation simple
 
 ```javascript
-const cookieConsent = new CookieConsent({
-  // Textes personnalisables
-  title: "Gestion des cookies",
-  message: "Ce site utilise des cookies pour améliorer votre expérience.",
-  acceptText: "Tout accepter",
-  rejectText: "Tout refuser",
-  settingsText: "Personnaliser",
+// Ouvrir la bannière avec préférences
+window.CookieConsent.open(true);
+
+// Réinitialiser les préférences
+window.CookieConsent.reset();
+
+// Récupérer les préférences actuelles
+const prefs = window.CookieConsent.getPreferences();
+console.log(prefs); // { cookies: true, statistics: false, marketing: true }
+
+// Vérifier une catégorie spécifique
+if (window.CookieConsent.hasConsent('statistics')) {
+  // Charger Google Analytics
+  console.log('Statistiques autorisées');
+}
+```
+
+### Écouter les changements de consentement
+
+```javascript
+document.addEventListener('cookieConsentChanged', (event) => {
+  const preferences = event.detail.preferences;
   
-  // Styles personnalisables
-  theme: "light", // "light" ou "dark"
-  position: "bottom", // "top" ou "bottom"
+  if (preferences.statistics) {
+    // Charger Google Analytics
+    loadGoogleAnalytics();
+  }
   
-  // Catégories de cookies
-  categories: {
-    necessary: {
-      name: "Cookies nécessaires",
-      description: "Indispensables au fonctionnement du site",
-      required: true
-    },
-    analytics: {
-      name: "Cookies analytiques", 
-      description: "Nous aident à comprendre l'utilisation du site",
-      required: false
-    },
-    marketing: {
-      name: "Cookies marketing",
-      description: "Utilisés pour la publicité personnalisée",
-      required: false
-    }
+  if (preferences.marketing) {
+    // Charger pixels marketing
+    loadMarketingScripts();
+  }
+  
+  if (preferences.cookies) {
+    // Activer cookies fonctionnels
+    enableFunctionalCookies();
   }
 });
 ```
@@ -91,33 +97,74 @@ const cookieConsent = new CookieConsent({
 ### React
 ```jsx
 import { useEffect } from 'react';
-import CookieConsent from '@synapxlab/cookie-consent';
+import '@synapxlab/cookie-consent';
 
 function App() {
   useEffect(() => {
-    new CookieConsent({
-      // Configuration...
-    });
+    // Vérifier les préférences au chargement
+    const prefs = window.CookieConsent?.getPreferences();
+    if (prefs) {
+      handleConsentPreferences(prefs);
+    }
+    
+    // Écouter les changements
+    const handleConsentChange = (event) => {
+      handleConsentPreferences(event.detail.preferences);
+    };
+    
+    document.addEventListener('cookieConsentChanged', handleConsentChange);
+    
+    return () => {
+      document.removeEventListener('cookieConsentChanged', handleConsentChange);
+    };
   }, []);
   
-  return <div>Mon app React</div>;
+  const handleConsentPreferences = (prefs) => {
+    if (prefs.statistics) {
+      // Charger Google Analytics
+    }
+  };
+  
+  return (
+    <div>
+      <button onClick={() => window.CookieConsent?.open(true)}>
+        Gérer les cookies
+      </button>
+    </div>
+  );
 }
 ```
 
 ### Vue.js
 ```vue
 <template>
-  <div>Mon app Vue</div>
+  <div>
+    <button @click="openCookieSettings">Gérer les cookies</button>
+  </div>
 </template>
 
 <script>
-import CookieConsent from '@synapxlab/cookie-consent';
+import '@synapxlab/cookie-consent';
 
 export default {
   mounted() {
-    new CookieConsent({
-      // Configuration...
-    });
+    // Écouter les changements de consentement
+    document.addEventListener('cookieConsentChanged', this.handleConsentChange);
+  },
+  
+  beforeDestroy() {
+    document.removeEventListener('cookieConsentChanged', this.handleConsentChange);
+  },
+  
+  methods: {
+    openCookieSettings() {
+      window.CookieConsent?.open(true);
+    },
+    
+    handleConsentChange(event) {
+      const preferences = event.detail.preferences;
+      // Gérer les préférences
+    }
   }
 }
 </script>
@@ -131,53 +178,78 @@ function enqueue_cookie_consent() {
         'cookie-consent',
         'https://unpkg.com/@synapxlab/cookie-consent@latest/dist/cookie.js',
         array(),
-        '1.0.0',
+        '2.1.0',
         true
     );
+    
+    // Ajouter un lien pour ouvrir les préférences
+    wp_add_inline_script('cookie-consent', '
+        document.addEventListener("DOMContentLoaded", function() {
+            // Bouton pour gérer les cookies
+            const cookieLink = document.querySelector("#manage-cookies");
+            if (cookieLink) {
+                cookieLink.addEventListener("click", function(e) {
+                    e.preventDefault();
+                    window.CookieConsent.open(true);
+                });
+            }
+        });
+    ');
 }
 add_action('wp_enqueue_scripts', 'enqueue_cookie_consent');
 ```
 
 ## 🎨 Personnalisation
 
-### Thèmes disponibles
-- `light` - Thème clair (défaut)
-- `dark` - Thème sombre
-- `custom` - Entièrement personnalisable via CSS
+### Thèmes CSS disponibles
+```javascript
+// Dans votre CSS/SCSS, appliquer un thème au body
+document.body.classList.add('cookie-theme-dark');    // Thème sombre
+document.body.classList.add('cookie-theme-blue');    // Thème bleu
+document.body.classList.add('cookie-theme-brown');   // Thème marron
+document.body.classList.add('cookie-theme-default'); // Thème par défaut
+```
 
-### CSS personnalisé
+### Personnalisation complète via CSS
 ```css
-.cookie-consent-banner {
-  /* Vos styles personnalisés */
-  background: linear-gradient(45deg, #667eea 0%, #764ba2 100%);
+/* Personnaliser la bannière */
+#politecookiebanner {
+  font-family: 'Roboto', sans-serif;
+  border-radius: 12px;
 }
 
-.cookie-consent-button {
-  /* Personnaliser les boutons */
-  border-radius: 25px;
+/* Personnaliser les boutons */
+.pmcpli-btn {
+  border-radius: 6px;
+  font-weight: 600;
+}
+
+.pmcpli-accept {
+  background: linear-gradient(45deg, #667eea 0%, #764ba2 100%);
 }
 ```
 
 ## 📋 API et méthodes
 
 ```javascript
-const cookieConsent = new CookieConsent(options);
+// API globale disponible sur window.CookieConsent
+const api = window.CookieConsent;
 
-// Vérifier le consentement
-if (cookieConsent.hasConsent('analytics')) {
-  // Charger Google Analytics
-}
+// Ouvrir la bannière (avec ou sans préférences)
+api.open();           // Simple
+api.open(true);       // Avec préférences ouvertes
 
-// Écouter les changements
-cookieConsent.on('consent-given', (categories) => {
-  console.log('Consentement donné pour:', categories);
-});
+// Réinitialiser (supprime le localStorage et rouvre)
+api.reset();
 
-// Afficher à nouveau la bannière
-cookieConsent.show();
+// Récupérer les préférences actuelles
+const prefs = api.getPreferences();
+// Retourne: { cookies: boolean, statistics: boolean, marketing: boolean } ou null
 
-// Révoquer le consentement
-cookieConsent.revoke();
+// Vérifier une catégorie spécifique
+const hasAnalytics = api.hasConsent('statistics');
+const hasCookies = api.hasConsent('cookies');
+const hasMarketing = api.hasConsent('marketing');
 ```
 
 ## 🔧 Développement
@@ -208,7 +280,7 @@ Les contributions sont les bienvenues ! Consultez notre [guide de contribution](
 
 - **Documentation complète** : [https://cookie.synapx.fr/](https://cookie.synapx.fr/)
 - **Issues GitHub** : [https://github.com/synapxLab/cookie-consent/issues](https://github.com/synapxLab/cookie-consent/issues)
-- **Email** : synapxLab@lockness-informatique.fr
+- **Email** : contact@synapxlab.com
 
 ## ⭐ Remerciements
 
