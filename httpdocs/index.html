@@ -1,0 +1,250 @@
+<!doctype html>
+
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>🍪 Gérer le consentement aux cookies - Solution RGPD gratuite</title>
+  <meta name="description" content="Bannière de consentement cookies RGPD 100% gratuite. Alternative française à Cookiebot - Documentation complète, installation simple, conformité légale.">
+  <meta name="keywords" content="RGPD, GDPR, bannière cookies, consentement, gratuit, cookiebot alternative, CNIL, open source">
+  <meta property="og:title" content="Cookie Consent RGPD Gratuit - Alternative à Cookiebot">
+  <meta property="og:description" content="Solution française gratuite de consentement cookies. Fini les 50€/mois !">
+</head>
+<body>
+  <section class="hero-marketing">
+    <div style="max-width: 1200px; margin: 0 auto;">
+      <h1>🍪 Bannière Cookies RGPD<br><strong>100% Gratuite</strong></h1>
+      <p class="tagline">Une API JavaScript simple et légère pour la gestion des cookies</p>
+    </div>
+  </section>
+  <svg xmlns="http://www.w3.org/2000/svg" style="display:none">
+    <!-- Icônes génériques -->
+    <symbol id="ico-pkg" viewBox="0 0 24 24">
+      <path fill="currentColor" d="M3 7.5 12 3l9 4.5v9L12 21 3 16.5v-9Z"/>
+      <path fill="#fff" d="M12 6.5 6 9.5v5l6 3 6-3v-5l-6-3Z" opacity=".25"/>
+    </symbol>
+    <symbol id="ico-code" viewBox="0 0 24 24">
+      <path fill="currentColor" d="M9.4 16.6 5.8 13l3.6-3.6 1.4 1.4L8.6 13l2.2 2.2-1.4 1.4Zm5.2 0-1.4-1.4 2.2-2.2-2.2-2.2 1.4-1.4L18.2 13l-3.6 3.6Z"/>
+    </symbol>
+
+    <!-- Pastilles lettres (cercle + lettres) -->
+    <!-- Astuce: on garde le visuel cohérent, sans logos brand exacts -->
+    <symbol id="ico-npm" viewBox="0 0 24 24">
+      <circle cx="12" cy="12" r="10" fill="#fff"/><circle cx="12" cy="12" r="10" fill="none" stroke="currentColor"/>
+      <text x="50%" y="54%" text-anchor="middle" dominant-baseline="middle" font-size="8" font-family="system-ui" fill="currentColor">npm</text>
+    </symbol>
+    <symbol id="ico-c" viewBox="0 0 24 24">
+      <circle cx="12" cy="12" r="10" fill="#fff"/><circle cx="12" cy="12" r="10" fill="none" stroke="currentColor"/>
+      <text x="50%" y="54%" text-anchor="middle" dominant-baseline="middle" font-size="11" font-family="system-ui" fill="currentColor">C</text>
+    </symbol>
+  </svg>
+  <main>
+    <nav id="sommaire" aria-label="Sommaire">
+      <h2>Sommaire</h2>
+      <ul>
+        <li><a href="#installation">Installation</a></li>
+        <li><a href="#utilisation">Utilisation</a></li>
+        <li><a href="#css">Personnalisation CSS</a></li>
+        <li><a href="#demo">Exemple de page (démo)</a></li>
+        <li><a href="#license">Licence</a></li>
+      </ul>
+    </nav>
+
+    <section id="installation">
+      <h2>Installation</h2>
+
+      <!-- Accordéons -->
+      <details id="inst-npm" class="acc" >
+        <summary><svg class="icon" aria-hidden="true"><use href="#ico-npm"/></svg> Via npm / yarn / pnpm</summary>
+        <div class="acc-body">
+          <pre><code>npm install @synapxlab/cookie-consent
+            # ou
+            yarn add @synapxlab/cookie-consent
+          pnpm add @synapxlab/cookie-consent</code></pre>
+          <p class="small">Dans votre bundle (ex: <code>src/js/bundle.js</code>) :</p>
+          <pre><code>import '@synapxlab/cookie-consent';   // charge la bannière </code></pre>
+        </div>
+      </details>
+
+      <details id="inst-script" class="acc">
+        <summary><svg class="icon" aria-hidden="true"><use href="#ico-code"/></svg> Via balise &lt;script&gt; HTML</summary>
+        <div class="acc-body">
+          <p class="small">Placez ces scripts <strong>avant</strong> votre JS principal :</p>
+          <pre><code>&lt;script src="https://unpkg.com/@synapxlab/cookie-consent/dist/cookie.js"&gt;&lt;/script>
+            Ou téléchargement local :
+          &lt;script src="/assets/js/cookie.js"&gt;&lt;/script&gt;</code></pre>
+        </div>
+      </details>
+      <details id="inst-react" class="acc">
+        <summary><span class="logo">⚛️</span> React (Vite / CRA)</summary>
+        <div class="acc-body">
+          <pre><code>// src/main.jsx
+            import '@synapxlab/cookie-consent';
+            import React from 'react';
+            import ReactDOM from 'react-dom/client';
+            import App from './App.jsx';
+          ReactDOM.createRoot(document.getElementById('root')).render(&lt;App /&gt;);</code></pre>
+        </div>
+      </details>
+       <a href="https://synapx.fr/sdk/cookie/">Doc complette</a> 
+    </section>
+    <section id="utilisation">
+      <h2>Utilisation</h2>
+      <p>
+        Le script injecte la bannière au chargement. Les catégories sont <strong>cachées par défaut</strong> et
+        s’affichent uniquement quand l’utilisateur clique sur <em>« Les préférences »</em>. Les choix sont
+        stockés dans <code>localStorage</code> sous la clé <code>politecookiebanner</code>.
+      </p>
+
+      Ajouter dans le footer de votre page html : <pre>
+       &lt;div id="openpolitecookie" class="credits"&gt;&nbsp;&lt;a href="#">[Politique en matière de cookies]&lt;/a&gt;&nbsp;&lt;/div&gt;
+     </pre>
+
+     <h2>API</h2>
+     <pre><code>// Ouvrir la bannière (showPrefs=true ⇒ onglet Préférences directement visible)
+      window.CookieConsent.open(true);
+
+      // Effacer les préférences et rouvrir en mode Préférences
+    window.CookieConsent.reset();</code></pre>
+    <p class="note">Clé de stockage : <code>localStorage['politecookiebanner']</code>.</p>
+
+    <h3>Outils de test rapide</h3>
+    <div class="actions-consent">
+      <button id="btn-reset-consent">Effacer le consentement</button>
+      <button id="btn-open-consent">Ouvrir la fenêtre de préférences</button>
+    </div>
+    <details id="" >
+      <summary>Afficher le code des buttons</summary>
+      <pre><code>
+        const resetBtn = document.getElementById('btn-reset-consent');
+        const openBtn  = document.getElementById('btn-open-consent');
+        resetBtn?.addEventListener('click', () => {
+          if (window.CookieConsent?.reset) {
+            window.CookieConsent.reset(); // ouvre la bannière en mode préférences
+          } else {
+            try { localStorage.removeItem('politecookiebanner'); } catch {}
+            alert('Consentement effacé. Rechargez la page avec F5 pour voir la bannière.');
+          }
+        });
+
+        openBtn?.addEventListener('click', () => {
+          if (window.CookieConsent?.open) {
+            window.CookieConsent.open(true); // ouvre directement avec préférences visibles
+          } else {
+            const link = document.querySelector('#openpolitecookie a');
+            if (link) { link.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true })); }
+          }
+        });
+      </code></pre>
+    </details>
+    <p class="note">
+      “Effacer le consentement” supprime les préférences stockées (localStorage).  
+      “Ouvrir la fenêtre de préférences” affiche la bannière en mode <em>Préférences</em>.
+    </p>
+
+    <div class="callout callout-danger" role="alert">
+      <strong>RÈGLE D’OR :</strong>
+      tant que l’utilisateur <em>n’a pas consenti</em> à la catégorie concernée,
+      <u>ne chargez pas</u> les <strong>scripts tiers</strong>
+      (ex. Google Analytics, pixels publicitaires, chat, maps, etc.)
+      et <u>ne déposez pas</u> leurs cookies.
+      <br><br>
+      ✅ Strictement nécessaire → toujours actif (non refusables).<br>
+      ❌ Statistiques / Marketing refusés → <strong>rien ne doit être chargé</strong>.
+    </div>
+
+    <h4>Exemple : ne charger Google Analytics que si “Statistiques” est consenti</h4>
+    <pre><code>const startcall=(prefs)=>{
+      console.log('Préférences reçues:', prefs);
+
+      if (prefs?.statistics) {
+        // Charger Google Analytics loadGoogleAnalytics();
+      }
+
+      if (prefs?.marketing) {
+        // Charger pixels marketing loadMarketingScripts();
+      }
+
+      if (prefs?.cookies) {
+        // Activer cookies fonctionnels enableFunctionalCookies();
+      }
+    }
+    document.addEventListener('DOMContentLoaded', () => {
+      if (window.CookieConsent) {
+        const prefs = window.CookieConsent.getPreferences();
+        if (prefs) startcall(prefs);
+      }
+      document.addEventListener('cookieConsentChanged', (event) => {
+       startcall(event.detail.preferences);
+     });
+   });
+ </code></pre> 
+</section>
+<section id="css">
+  <h2>Personnalisation CSS</h2>
+  <p>
+    La bannière utilise des <strong>variables CSS</strong> (custom properties). C’est le moyen le plus simple
+    d’adapter les couleurs/contrastes à votre charte <em>sans toucher au JS</em> et sans recoder le SCSS.
+  </p>
+  <div class="callout">
+    <strong>Note :</strong> ces overrides fonctionnent car le CSS de la bannière
+    lit les variables au <em>runtime</em>. Vous pouvez donc modifier les couleurs
+    avec un simple fichier CSS, sans recompiler le JS.  
+    Si vous voulez changer la structure (ex. arrondis, paddings), éditez
+    <code>src/scss/cookie.scss</code> puis re-générez le bundle.
+  </div>
+
+// Génère .cookie-theme-XXX qui définissent les variables CSS</code></pre>
+
+<h3>Commutateur de thème (démo)</h3>
+<div class="theme-switch">
+  <button data-theme="default">Default</button>
+  <button data-theme="brown">Brown</button>
+  <button data-theme="dark">Dark</button>
+  <button data-theme="blue">Blue</button>
+</div>
+<p class="note">Ces boutons ne sont là que pour la démo. En prod, choisissez un thème et gardez-le.</p>
+</section>
+<section id="demo">
+  <h2>Exemple de page (démo)</h2>
+  <pre><code>&lt;!doctype html&gt;
+    &lt;html lang="fr"&gt;
+    &lt;head&gt;
+    &lt;meta charset="utf-8" /&gt;
+    &lt;meta name="viewport" content="width=device-width,initial-scale=1" /&gt;
+    &lt;title&gt;Gérer le consentement aux cookies&lt;/title&gt;
+    &lt;/head&gt;
+    &lt;body class="cookie-theme-default"&gt;
+    &lt;footer&gt;
+    &lt;div id="openpolitecookie"&gt;&lt;a href="#"&gt;[Politique en matière de cookies]&lt;/a&gt;&lt;/div&gt;
+    &lt;/footer&gt;
+
+    &lt;!-- IMPORTANT : la bannière avant votre JS --&gt;
+    &lt;script src="/assets/js/cookie.js"&gt;&lt;/script&gt;
+    &lt;script src="/assets/js/bundle.js"&gt;&lt;/script&gt;
+    &lt;/body&gt;
+  &lt;/html&gt;</code></pre>
+</section>
+<section id="license">
+  <h2>Licence</h2>
+  <p><strong>MIT</strong> — utilisez, modifiez, redistribuez librement. Merci de conserver la mention de licence.</p>
+  <p class="note">
+    Code source disponible sur <a href="https://github.com/synapxLab/cookie-consent">GitHub</a>.
+    Contributions et suggestions bienvenues !
+  </p>
+</section>
+</main>
+
+<footer class="site-footer">
+  <div class="copyright">
+    © Copyright <strong><span>Gérer le consentement aux cookies</span></strong>. All Rights Reserved
+  </div>
+  <div id="openpolitecookie" class="credits">
+    &nbsp;<a href="#">[Politique en matière de cookies]</a>&nbsp;
+  </div>
+
+  <div class="credits">  Web Development , Designed by <a href="https://lockness-informatique.fr/">[Synapx.fr]</a>  </div>
+</footer>
+<script src="/assets/js/bundle.js"></script>
+</body>
+</html>

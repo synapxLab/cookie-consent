@@ -1,0 +1,19 @@
+{
+    "name": "root/cookie",
+    "description": "Bannière de consentement cookies minimaliste (JS pur, zéro dépendance).",
+    "type": "project",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Root\\Cookie\\": "app/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Laurent Lockness",
+            "email": "laurent.rougier@lockness-informatique.fr"
+        }
+    ],
+    "minimum-stability": "stable",
+    "require": {}
+}
