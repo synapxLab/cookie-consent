@@ -1,7 +1,5 @@
 # 🍪 Cookie Consent RGPD
 
-> **Alternative française gratuite à Cookiebot** • Économisez 600€/an
-
 Bannière de consentement cookies **100% conforme RGPD/CNIL** en JavaScript pur, sans aucune dépendance.
 
 [![npm version](https://badge.fury.io/js/@synapxlab%2Fcookie-consent.svg)](https://www.npmjs.com/package/@synapxlab/cookie-consent)
