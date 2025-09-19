@@ -1,4 +1,9 @@
-node_modules\ndist\n*.tgz
+node_modules
+*.tgz
 *.hot-update.*
+readme.txt
 httpdocs/assets/js/*.hot-update.*
 node_modules/
+app/
+temps/
+vendor/
