@@ -9,7 +9,7 @@ Bannière de consentement cookies **100% conforme RGPD/CNIL** en JavaScript pur,
 
 ## 🚀 Démo en direct
 
-**[Voir la démo → https://cookie.synapx.fr/](https://synapx.fr/sdk/cookie/)**
+**[Voir la démo → https://synapx.fr/sdk/cookie/](https://synapx.fr/sdk/cookie/)**
 
 
 ## ⚡ Installation rapide
