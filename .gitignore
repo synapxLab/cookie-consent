@@ -1,4 +1,8 @@
-node_modules\ndist\n*.tgz
+# Fichiers de développement
+vendor/
+app/
+webpack.config.js
+*.tgz
 *.hot-update.*
-httpdocs/assets/js/*.hot-update.*
+temps/
 node_modules/

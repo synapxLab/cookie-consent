@@ -40,15 +40,11 @@ const js=()=>{
     if (!btn) return;
     applyTheme(btn.dataset.theme);
   });
-
-
-
 }
 
 const startcall=(prefs)=>{
   console.log('Préférences reçues:', prefs);
-  
-  if (prefs?.statistics) {
+    if (prefs?.statistics) {
     // Charger Google Analytics
     // loadGoogleAnalytics();
   }
@@ -63,33 +59,29 @@ const startcall=(prefs)=>{
     // enableFunctionalCookies();
   }
 }
+
 document.addEventListener('DOMContentLoaded', () => {
   if (window.CookieConsent) {
+    // ACTIVEZ LE LOGGING ICI si nécessaire
+    window.CookieConsent.enableLogging({
+      endpoint: '/api/consent/log',
+      includeUserAgent: true,
+      anonymousId: true,
+      headers: {
+          "X-CSRF-TOKEN":"AiLCJ2ZXIiOjEsImFsZyI6IkFFUy0yNTYtR0NNIiwia2lkIjoiSzIwMjVfMDkifQ.t3Jm86jRQxuuR5jbDLEzG8QJDQmwOKjqv5bp4-KdjCd"
+        }
+    });
+
     const prefs = window.CookieConsent.getPreferences();
     if (prefs) startcall(prefs);
   }
-  document.addEventListener('cookieConsentChanged', (event) => {
- startcall(event.detail.preferences);
-      // console.log("Event dans le  ",preferences)
-  });
+  
+      document.addEventListener('cookieConsentChanged', (event) => {
+        startcall(event.detail.preferences);
+      });
+  
   js();
 });
-
-
-// import 'cookie'; 
-// import '@synapxlab/cookie-consent'; 
-// import '@synapxlab/cookie-consent'; 
-
-
-// if (window.CookieConsent) {
-//   window.CookieConsent.init({
-//     message: "On respecte votre vie privée (promis).",
-//     policyUrl: "/politique-confidentialite"
-//   });
-// }
-// document.add
-
-
 
 
 

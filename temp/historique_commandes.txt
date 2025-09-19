@@ -1,0 +1,154 @@
+    1  git config --global user.name "synapxLab"
+    2  git config --global user.email "synapxLab@lockness-informatique.fr"
+    3  git config --list | grep user
+    4  ssh-keygen -t ed25519 -C "synapxLab@lockness-informatique.fr"
+    5  eval "$(ssh-agent -s)"
+    6  cat ~/.ssh/id_ed25519.pub
+    7  ssh -T git@github.com
+    8  cd /chemin/vers/ton/projet/cookie
+    9  cd /var/www/vhosts/cookie/
+   10  ls -la
+   11  git status
+   12  git config --global --add safe.directory /var/www/vhosts/cookie
+   13  rm -rf .git
+   14  git init
+   15  git remote add origin git@github.com:synapxLab/cookie-consent.git
+   16  git status
+   17  git .add
+   18  git remote -v
+   19  cat .gitignore
+   20  git add .
+   21  git status
+   22  chown -R synapxlab:synapxlab .git/
+   23  git status
+   24  rm -rf .git
+   25  clear
+   26  git init
+   27  git remote add origin git@github.com:synapxLab/cookie-consent.git
+   28  git add .
+   29  ls -la .git/
+   30  ls -la
+   31  git add .
+   32  git status
+   33  git commit -m "Initial commit - Cookie consent project"
+   34  git branch -M main
+   35  git push -u origin main
+   36  cat package.json
+   37  npm run build
+   38  cd dist/
+   39  ls
+   40  npm run build
+   41  npm whoami
+   42  npm login
+   43  npm whoami
+   44  npm publish --access public
+   45  cd ..
+   46  pwd
+   47  npm whoami
+   48  npm login
+   49  npm login --auth-type=legacy
+   50  npm whoami
+   51  npm publish --access public
+   52  npm publish
+   53  npm run build
+   54  # Modifier le code...
+   55  npm run build
+   56  git add .
+   57  git commit -m "fix: correction API"
+   58  npm version patch  # incrémente automatiquement
+   59  git push origin main --follow-tags
+   60  npm publish
+   61  npm run build
+   62  git add .
+   63  git commit -m "fix: correction API"
+   64  git add
+   65  git add .
+   66  rm httpdocs/assets/js/*.hot-update.*
+   67  rm httpdocs/inde_oldx.html
+   68  rm httpdocs/indexv2.html
+   69  git add .
+   70  echo "*.hot-update.*" >> .gitignore
+   71  echo "httpdocs/assets/js/*.hot-update.*" >> .gitignore
+   72  echo "node_modules/" >> .gitignore
+   73  git add src/
+   74  git add dist/
+   75  git add package.json
+   76  git add README.md
+   77  git add .gitignore
+   78  git commit -m "feat: initial release v2.0.0 - RGPD cookie consent banner"
+   79  git commit -m "fix: correction API"
+   80  git push origin main --follow-tags
+   81  npm publish
+   82  npm version minor
+   83  npm publish --access public
+   84  npm view @synapxlab/cookie-consent versions --json
+   85  git rm -r --cached node_modules vendor
+   86  nano .gitignore
+   87  git rm -r --cached node_modules dist
+   88  git ls-files | grep vendor
+   89  git ls-files | grep dist
+   90  git rm -r --cached vendor dist
+   91  git commit -m "remove vendor/dist from repo"
+   92  git push origin main
+   93  git fetch origin
+   94  git rebase origin/main
+   95  git status    
+   96  git add -A
+   97  pip install git-filter-repo
+   98  git filter-repo --path node_modules --path vendor --invert-paths
+   99  pip install git-filter-repo
+  100  which git-filter-repo
+  101  python3 -m git_filter_repo --path node_modules --path vendor --invert-paths
+  102  git filter-branch --tree-filter 'rm -rf node_modules vendor' --prune-empty HEAD
+  103  nano .gitignore 
+  104  git config --global core.excludesfile ~/.gitignore_global
+  105  echo "node_modules/" >> ~/.gitignore_global
+  106  cat > .git/hooks/pre-commit << 'EOF'
+#!/bin/sh
+if git diff --cached --name-only | grep -q "node_modules"; then
+    echo "❌ Tentative de commit de node_modules détectée!"
+    exit 1
+fi
+EOF
+
+  107  chmod +x .git/hooks/pre-commit
+  108  git ls-files | grep node_modules
+  109  git count-objects -vH
+  110  git log --name-only --pretty=format: | sort -u | grep node_modules
+  111  pip install git-filter-repo
+  112  git clone --bare /var/www/vhosts/cookie backup-cookie-consent
+  113  git filter-repo --path node_modules --invert-paths --force
+  114  pip install git-filter-repo
+  115  export PATH="$HOME/.local/bin:$PATH"
+  116  echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.bashrc
+  117  source ~/.bashrc
+  118  python3 -m git_filter_repo --path node_modules --invert-paths --force
+  119  git filter-repo --version
+  120  git filter-repo --path node_modules --invert-paths --force
+  121  git count-objects -vH
+  122  git push --force-with-lease
+  123  git remote add origin git@github.com:synapxLab/cookie-consent.git
+  124  git remote -v
+  125  git push --force-with-lease origin main
+  126  git push --force origin main
+  127  git fetch origin
+  128  git log --oneline -10
+  129  git log --oneline origin/main -10
+  130  git add README.md
+  131  git commit -m "docs: add comprehensive README.md with examples and documentation"
+  132  git push origin main
+  133  npm run build
+  134  history > historique_commandes.txt
+
+
+
+
+su - synapxlab 
+cvb
+
+cd /var/www/vhosts/cookie/
+
+
+clear
+
+php server.php

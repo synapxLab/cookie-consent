@@ -6,8 +6,8 @@
   "types": "dist/cookie.d.ts",
   "files": [
     "dist/",
-    "src/",
     "README.md",
+    "CHANGELOG.md",
     "LICENSE"
   ],
   "keywords": [
@@ -38,7 +38,7 @@
     "vue",
     "angular"
   ],
-  "homepage": "https://github.com/synapxLab/cookie-consent",
+  "homepage": "https://synapx.fr/sdk/cookie/",
   "repository": {
     "type": "git",
     "url": "https://github.com/synapxLab/cookie-consent.git"
@@ -49,7 +49,7 @@
   "author": {
     "name": "Laurent Lockness",
     "email": "synapxLab@lockness-informatique.fr",
-    "url": "https://synapx.fr"
+    "url": "https://www.lockness-informatique.fr/"
   },
   "license": "MIT",
   "engines": {
