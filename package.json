@@ -59,10 +59,15 @@
     "dev": "webpack serve --mode development",
     "build": "webpack --mode production",
     "test": "echo 'Tests à venir' && exit 0",
-    "prepublishOnly": "npm run build"
+    "prepublishOnly": "npm run build",
+     "lint": "eslint src --ext .js",
+     "check": "npm run lint && npm audit"
   },
   "devDependencies": {
+    "@eslint/js": "^9.35.0",
     "css-loader": "^7.1.2",
+    "eslint": "^9.35.0",
+    "globals": "^16.4.0",
     "sass": "^1.92.1",
     "sass-loader": "^16.0.5",
     "style-loader": "^4.0.0",

@@ -101,7 +101,7 @@ const logConsentToServer = async (preferences, action = 'updated') => {
       }
       // console.warn('[CookieConsent] Logging failed:', response.status);
     } catch (error) {
-      // console.warn('[CookieConsent] Logging error:', error.message);
+      console.warn('[CookieConsent] Logging error:', error.message);
     }
     
     // Backoff exponentiel : 1s, 2s, 4s...

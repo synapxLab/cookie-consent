@@ -7,26 +7,30 @@ import './cookie';
 function loadGoogleAnalytics() {
   console.log('🔍 Chargement Google Analytics...');
   
-  // Remplacez 'G-VOTRE-ID' par votre vrai ID Google Analytics
   const script = document.createElement('script');
   script.src = 'https://www.googletagmanager.com/gtag/js?id=G-VOTRE-ID';
   script.async = true;
   document.head.appendChild(script);
+
   window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
+  function gtag(){ window.dataLayer.push(arguments); }
+
   gtag('js', new Date());
   gtag('config', 'G-VOTRE-ID', {
-    anonymize_ip: true, // Respect RGPD
+    anonymize_ip: true,
     cookie_flags: 'SameSite=None;Secure'
   });
+
   console.log('Google Analytics chargé');
 }
+
+
 
 // Fonction pour charger les scripts marketing
 function loadMarketingScripts() {
   console.log('Chargement scripts marketing...');
   
-  // Facebook Pixel (exemple)
+  // Facebook Pixel
   !function(f,b,e,v,n,t,s) {
     if(f.fbq)return;n=f.fbq=function(){n.callMethod?
     n.callMethod.apply(n,arguments):n.queue.push(arguments)};
@@ -36,11 +40,12 @@ function loadMarketingScripts() {
     s.parentNode.insertBefore(t,s)
   }(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');
   
-  // Remplacez 'VOTRE-PIXEL-ID' par votre ID Facebook Pixel
-  fbq('init', 'VOTRE-PIXEL-ID');
-  fbq('track', 'PageView');
-  
-  // Google Ads / AdSense (exemple)
+  if (typeof window.fbq === 'function') {
+    window.fbq('init', 'VOTRE-PIXEL-ID');
+    window.fbq('track', 'PageView');
+  }
+
+  // Google Ads / AdSense
   const adsScript = document.createElement('script');
   adsScript.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js';
   adsScript.async = true;
@@ -48,7 +53,6 @@ function loadMarketingScripts() {
   
   console.log('Scripts marketing chargés');
 }
-
 
 function enableFunctionalCookies() {
   console.log('Activation cookies fonctionnels...');
@@ -68,7 +72,11 @@ const js=()=>{
     if (window.CookieConsent?.reset) {
       window.CookieConsent.reset(); // ouvre la bannière en mode préférences
     } else {
-      try { localStorage.removeItem('politecookiebanner'); } catch {}
+      try {
+        localStorage.removeItem('politecookiebanner');
+      } catch {
+  // ignore error (par ex. quota plein ou accès interdit)
+      }
       alert('Consentement effacé. Rechargez la page avec F5 pour voir la bannière.');
     }
   });
@@ -119,12 +127,12 @@ const startcall=(prefs)=>{
   }
   
   if (prefs?.marketing) {
-     loadMarketingScripts();
-  }
-  
-  if (prefs?.cookies) {
-      enableFunctionalCookies();
-  }
+   loadMarketingScripts();
+ }
+ 
+ if (prefs?.cookies) {
+  enableFunctionalCookies();
+}
 }
 
 window.CookieConsent.enableLogging({
@@ -144,7 +152,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (prefs) startcall(prefs);
   }
   document.addEventListener('cookieConsentChanged', (event) => {
-  startcall(event.detail.preferences);
+    startcall(event.detail.preferences);
   });
   js();
 });

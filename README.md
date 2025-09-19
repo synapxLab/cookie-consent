@@ -11,9 +11,8 @@ Bannière de consentement cookies **100% conforme RGPD/CNIL** en JavaScript pur,
 
 ## 🚀 Démo en direct
 
-**[Voir la démo → https://cookie.synapx.fr/](https://cookie.synapx.fr/)**
+**[Voir la démo → https://cookie.synapx.fr/](https://synapx.fr/sdk/cookie/)**
 
-![Bannière Cookie](https://raw.githubusercontent.com/synapxlab/cookie-consent/main/Consentement%20Cookie%20-%20Open-Source%20FR.png)
 
 ## ⚡ Installation rapide
 
@@ -32,7 +31,7 @@ import '@synapxlab/cookie-consent';
 - ✅ **100% gratuit et open-source** - Économisez 50-100€/mois
 - ✅ **Conformité RGPD/CNIL** complète - Consentement préalable, granularité, révocabilité
 - ✅ **Zéro dépendance** - Aucune librairie externe requise
-- ✅ **Compatible tous frameworks** - React, Vue, Angular, WordPress, Vanilla JS
+- ✅ **Compatible tous frameworks** - React, Vue, Angular, Vanilla JS
 - ✅ **Documentation française** 🇫🇷 - Support communautaire francophone
 - ✅ **Ultra léger (< 25KB)** - Impact minimal sur les performances
 - ✅ **Google Consent Mode v2** - Compatible avec les dernières exigences Google
@@ -308,82 +307,6 @@ const handleConsentChange = (event) => {
 </script>
 ```
 
-### WordPress
-
-```php
-<?php
-// functions.php
-
-function enqueue_cookie_consent() {
-    // Charger le script principal
-    wp_enqueue_script(
-        'cookie-consent',
-        'https://unpkg.com/@synapxlab/cookie-consent@latest/dist/bundle.js',
-        array(),
-        '2.0.0',
-        true
-    );
-    
-    // Ajouter le lien de gestion des cookies
-    wp_add_inline_script('cookie-consent', '
-        document.addEventListener("DOMContentLoaded", function() {
-            // Lien pour ouvrir les préférences
-            const cookieLinks = document.querySelectorAll(".manage-cookies-link");
-            cookieLinks.forEach(function(link) {
-                link.addEventListener("click", function(e) {
-                    e.preventDefault();
-                    window.CookieConsent?.show();
-                });
-            });
-            
-            // Gestion Google Analytics conditionnelle
-            document.addEventListener("cookieConsentChanged", function(event) {
-                const prefs = event.detail.preferences;
-                if (prefs.statistics && typeof gtag === "undefined") {
-                    // Charger GA seulement si accepté et pas déjà chargé
-                    loadGoogleAnalytics();
-                }
-            });
-            
-            function loadGoogleAnalytics() {
-                const script = document.createElement("script");
-                script.src = "https://www.googletagmanager.com/gtag/js?id=' . get_option('ga_tracking_id', 'G-XXXXXXXXXX') . '";
-                script.async = true;
-                document.head.appendChild(script);
-                
-                window.dataLayer = window.dataLayer || [];
-                function gtag(){dataLayer.push(arguments);}
-                gtag("js", new Date());
-                gtag("config", "' . get_option('ga_tracking_id', 'G-XXXXXXXXXX') . '", {
-                    anonymize_ip: true
-                });
-            }
-        });
-    ');
-}
-add_action('wp_enqueue_scripts', 'enqueue_cookie_consent');
-
-// Ajouter un shortcode pour le lien de gestion
-function cookie_management_link_shortcode($atts) {
-    $atts = shortcode_atts(array(
-        'text' => 'Gérer mes cookies',
-        'class' => 'manage-cookies-link'
-    ), $atts);
-    
-    return '<a href="#" class="' . esc_attr($atts['class']) . '">' . esc_html($atts['text']) . '</a>';
-}
-add_shortcode('cookie_management_link', 'cookie_management_link_shortcode');
-?>
-```
-
-Puis dans vos templates WordPress :
-```php
-<!-- Dans le footer -->
-<p>
-    <?php echo do_shortcode('[cookie_management_link text="Paramètres des cookies"]'); ?> |
-    <a href="<?php echo get_privacy_policy_url(); ?>">Politique de confidentialité</a>
-</p>
-```
 
 ### Next.js
 
@@ -511,19 +434,26 @@ window.CookieConsent.enableLogging({
     }
 });
 
-// Les données loggées automatiquement :
-// {
-//     "timestamp": "2024-01-15T10:30:00Z",
-//     "preferences": {
-//         "cookies": true,
-//         "statistics": false,
-//         "marketing": true
-//     },
-//     "action": "save", // ou "accept_all", "reject_all"
-//     "userAgent": "Mozilla/5.0...",
-//     "anonymousId": "uuid-generated",
-//     "url": "https://monsite.com/page"
-// }
+
+//{
+//    "consent_id": "094e6f3b-5a71-4b62-890e-c78032ab79ea",
+//    "timestamp": "2025-09-19T12:45:49.150Z",
+//    "device_id": "cc_6041de70-0fab-425c-bb38-a48d45da7545",
+//    "site_host": "192.168.23.250:3000",
+//    "site_path": "/",
+//    "preferences": {
+//        "cookies": true,
+//        "statistics": true,
+//        "marketing": true
+//    },
+//    "action": "updated",
+//    "locale": "fr-FR",
+//    "referrer": null,
+//    "banner_version": "2.2.0",
+//    "policy_hash": "581f06e8",
+//    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36"
+//}
+
 ```
 
 ## ❓ FAQ
@@ -565,15 +495,22 @@ npm install
 # Serveur de développement avec hot reload
 npm run dev
 
-# Build de production
+# Build de production (génère dist/bundle.js et dist/cookie.js)
 npm run build
 
-# Tests
-npm test
+# Serveur de développement local (httpdocs/index.html)
+npm run dev
 
-# Linting
+# Linting du code (ESLint)
 npm run lint
+
+# Vérification complète (lint + tests)
+npm run check
+
 ```
+
+
+
 
 ### Structure du projet
 
