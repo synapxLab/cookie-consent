@@ -11,7 +11,6 @@ Bannière de consentement cookies **100% conforme RGPD/CNIL** en JavaScript pur,
 
 **[Voir la démo → https://synapx.fr/sdk/cookie/](https://synapx.fr/sdk/cookie/)**
 
-
 ## ⚡ Installation rapide
 
 ```bash
@@ -21,7 +20,43 @@ npm install @synapxlab/cookie-consent
 ```javascript
 import '@synapxlab/cookie-consent';
 
-// C'est tout ! La bannière s'affiche automatiquement
+// C'est tout presque ! La bannière s'affiche automatiquement
+```
+## ⚡ Dans le footer de votre HTML  le lien manuel
+```html
+<a href="#" id="openpolitecookie">[Politique en matière de cookies]</a>
+```
+## ⚡ Exemple : activer Google Analytics (stats)
+Chargement uniquement si l’utilisateur accepte les statistiques :
+```javascript
+const startcall=(prefs)=>{
+  console.log('Préférences reçues:', prefs);
+  const w = window, d = document, GTAG_ID = 'G-VOTRE-ID';
+  if (prefs.statistics && !w.__gtagLoaded) {
+    // évite double-injection si déjà présent
+    if (!d.querySelector(`script[src*="gtag/js?id=${GTAG_ID}"]`)) {
+      const s = d.createElement('script');
+      s.async = true;
+      s.src = `https://www.googletagmanager.com/gtag/js?id=${GTAG_ID}`;
+      d.head.appendChild(s);
+    }
+    w.dataLayer = w.dataLayer || [];
+    w.gtag = w.gtag || function(){ w.dataLayer.push(arguments); };
+    w.gtag('js', new Date());
+    w.gtag('config', GTAG_ID, { anonymize_ip: true, cookie_flags: 'SameSite=None;Secure' });
+    w.__gtagLoaded = true;
+  }
+  // if (prefs?.marketing) 
+}
+document.addEventListener('DOMContentLoaded', () => {
+  const cc = window.CookieConsent;
+  const prefs = cc?.getPreferences?.();
+  if (prefs) startcall(prefs);
+  document.addEventListener('cookieConsentChanged', (e) => {
+    // on relance avec les nouvelles préférences
+    startcall(e.detail?.preferences || {});
+  });
+});
 ```
 
 ## 🎯 Pourquoi ce projet ?
@@ -59,7 +94,7 @@ import '@synapxlab/cookie-consent';
 </head>
 <body>
     <!-- Votre contenu -->
-    
+    <a href="#" id="openpolitecookie">[Politique en matière de cookies]</a>
     <!-- Cookie Consent - Une seule ligne ! -->
     <script src="https://unpkg.com/@synapxlab/cookie-consent@latest/dist/bundle.js"></script>
 </body>

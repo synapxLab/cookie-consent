@@ -2,7 +2,7 @@
  * @synapxlab/cookie-consent
  * Bannière de consentement + Logger - Version corrigée pour accessibilité
  * 
- * @version 2.2.0
+ * @version 2.1.2
  * @author SynapxLab <contact@synapxlab.com>
  * @license MIT
  */
@@ -69,7 +69,7 @@ const logConsentToServer = async (preferences, action = 'updated') => {
     action,
     locale: navigator.language || 'fr-FR',
     referrer: document.referrer || null,
-    banner_version: '2.2.0',
+    banner_version: '2.1.2',
     policy_hash: simpleHash(location.host + '/cookies'),
     ...(LOGGING_CONFIG.includeUserAgent && { user_agent: navigator.userAgent })
   };

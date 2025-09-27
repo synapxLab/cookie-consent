@@ -136,13 +136,13 @@ const startcall=(prefs)=>{
 }
 
 window.CookieConsent.enableLogging({
-  endpoint: '/api/consent/log',       // 📡 URL de ton endpoint Laravel (routes/api.php)
-  includeUserAgent: true,             // 🧭 Ajoute le User-Agent au log (utile comme preuve)
+  // endpoint: '/api/consent/log',       // 📡 URL de ton endpoint Laravel (routes/api.php)
+  // includeUserAgent: true,             // 🧭 Ajoute le User-Agent au log (utile comme preuve)
   anonymousId: true,                  // 🕵️ Génère un ID anonyme si l'utilisateur n'est pas connecté
   headers: {
     // 🛡️ CSRF : utile surtout si tu passes par une route "web".
-    // Pour une route "api" Laravel (stateless), ce header n'est pas requis 😉
-    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content || 'your-token'
+    // Pour une route "api", ce header n'est pas requis 😉  'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content || 'your-token'
+    'X-CSRF-TOKEN': 'document.querySelector('meta[name="csrf-token"]')?.content || 'your-token''
   }
 });
 
