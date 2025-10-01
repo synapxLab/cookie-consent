@@ -130,3 +130,4 @@ credentials/
 .npm
 .node_repl_history
 .yarn-integrity
+temps/
