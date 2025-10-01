@@ -9,13 +9,10 @@ pnpm-lock.yaml
 composer.lock
 
 # ========================================
-# Build outputs
+# Build outputs (généré par webpack)
 # ========================================
-dist/
-build/
-public/assets/js/
-public/assets/css/
-*.tgz
+httpdocs/assets/js/bundle.js
+httpdocs/assets/js/cookie.js
 
 # ========================================
 # Caches
@@ -75,7 +72,6 @@ yarn-error.log*
 lerna-debug.log*
 pnpm-debug.log*
 logs/
-*.log.*
 
 # ========================================
 # Testing
@@ -91,43 +87,15 @@ coverage/
 *.tmp
 *.temp
 *.bak
-*.swp
-*.swo
-*~.nib
-tmp/
-temp/
-
-# ========================================
-# Projet spécifique Cookie Consent
-# ========================================
-# Fichiers de test locaux
-test-local/
-demos/local/
-
-# Fichiers de configuration locale
-config.local.js
-*.local.json
-
-# ========================================
-# Sécurité - Ne JAMAIS commiter
-# ========================================
-*.pem
-*.key
-*.cert
-*.crt
-*.p12
-*.pfx
-secrets/
-.secrets/
-credentials/
-
-# ========================================
-# Autres
-# ========================================
-*.seed
-*.pid
-*.pid.lock
-.npm
-.node_repl_history
-.yarn-integrity
 temps/
+
+# ========================================
+# Fichiers à ne JAMAIS commiter
+# ========================================
+# Fichiers temporaires de travail
+lisezmoi.txt
+claude.html
+
+# Fichiers bizarres
+e à jour*
+*cookie-core"
