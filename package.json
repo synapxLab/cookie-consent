@@ -1,7 +1,7 @@
 {
   "name": "@synapxlab/cookie-consent",
   "version": "2.2.0",
-  "description": "Bannière cookies RGPD ultra-légère (18Ko) - Version light sans logging intégré",
+  "description": "GDPR-compliant cookie consent banner with automatic service detection and 7 languages",
   "main": "dist/cookie.js",
   "types": "dist/cookie.d.ts",
   "files": [
