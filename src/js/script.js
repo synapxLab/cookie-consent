@@ -1,81 +1,20 @@
 import '../scss/style.scss';
 import './cookie';
 
-
-
-// Fonction pour charger Google Analytics
-function loadGoogleAnalytics() {
-  console.log('🔍 Chargement Google Analytics...');
-  
-  const script = document.createElement('script');
-  script.src = 'https://www.googletagmanager.com/gtag/js?id=G-VOTRE-ID';
-  script.async = true;
-  document.head.appendChild(script);
-
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){ window.dataLayer.push(arguments); }
-
-  gtag('js', new Date());
-  gtag('config', 'G-VOTRE-ID', {
-    anonymize_ip: true,
-    cookie_flags: 'SameSite=None;Secure'
-  });
-
-  console.log('Google Analytics chargé');
-}
-
-
-
-// Fonction pour charger les scripts marketing
-function loadMarketingScripts() {
-  console.log('Chargement scripts marketing...');
-  
-  // Facebook Pixel
-  !function(f,b,e,v,n,t,s) {
-    if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-    n.queue=[];t=b.createElement(e);t.async=!0;
-    t.src=v;s=b.getElementsByTagName(e)[0];
-    s.parentNode.insertBefore(t,s)
-  }(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');
-  
-  if (typeof window.fbq === 'function') {
-    window.fbq('init', 'VOTRE-PIXEL-ID');
-    window.fbq('track', 'PageView');
-  }
-
-  // Google Ads / AdSense
-  const adsScript = document.createElement('script');
-  adsScript.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js';
-  adsScript.async = true;
-  document.head.appendChild(adsScript);
-  
-  console.log('Scripts marketing chargés');
-}
-
-function enableFunctionalCookies() {
-  console.log('Activation cookies fonctionnels...');
-  
-  console.log('Cookies fonctionnels activés');
-}
-
-
 /*********************************************************************************************************/
 
-
-
-const js=()=>{
+const js = () => {
   const resetBtn = document.getElementById('btn-reset-consent');
-  const openBtn  = document.getElementById('btn-open-consent');
+  const openBtn = document.getElementById('btn-open-consent');
+  
   resetBtn?.addEventListener('click', () => {
     if (window.CookieConsent?.reset) {
-      window.CookieConsent.reset(); // ouvre la bannière en mode préférences
+      window.CookieConsent.reset();
     } else {
       try {
         localStorage.removeItem('politecookiebanner');
       } catch {
-  // ignore error (par ex. quota plein ou accès interdit)
+        // ignore error
       }
       alert('Consentement effacé. Rechargez la page avec F5 pour voir la bannière.');
     }
@@ -83,77 +22,137 @@ const js=()=>{
 
   openBtn?.addEventListener('click', () => {
     if (window.CookieConsent?.open) {
-      window.CookieConsent.open(true); // ouvre directement avec préférences visibles
+      window.CookieConsent.open(true);
     } else {
       const link = document.querySelector('#openpolitecookie a');
-      if (link) { link.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true })); }
+      if (link) { 
+        link.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true })); 
+      }
     }
   });
-  const THEMES = ['default','brown','dark','blue'];
-  const root = document.body; // applique la classe sur <body>
+  
+  // Gestion des thèmes
+  const THEMES = ['default', 'brown', 'dark', 'blue'];
+  const root = document.body;
+  
   function applyTheme(name) {
     THEMES.forEach(t => root.classList.remove('cookie-theme-' + t));
     root.classList.add('cookie-theme-' + name);
   }
-  // Thème par défaut au chargement si aucune classe présente
+  
   if (!THEMES.some(t => root.classList.contains('cookie-theme-' + t))) {
     root.classList.add('cookie-theme-default');
   }
+  
   document.querySelector('.theme-switch')?.addEventListener('click', (e) => {
     const btn = e.target.closest('button[data-theme]');
     if (!btn) return;
     applyTheme(btn.dataset.theme);
   });
-}
+};
 
-// API pour les développeurs - exemples d'usage
+// API pour les développeurs
 window.addEventListener('load', () => {
   console.log('🚀 API Cookie Consent disponible:');
-  console.log('- window.CookieConsent.show()');
-  console.log('- window.CookieConsent.hide()');
+  console.log('- window.CookieConsent.init(options)');
+  console.log('- window.CookieConsent.open()');
+  console.log('- window.CookieConsent.reset()');
   console.log('- window.CookieConsent.getPreferences()');
   console.log('- window.CookieConsent.hasConsent("statistics")');
-  console.log('- window.CookieConsent.reset()');
-  console.log('- window.CookieConsent.on("change", callback)');
-  
+  console.log('- window.CookieConsent.getConfig()');
 });
 
 
-const startcall=(prefs)=>{
-  console.log('Préférences reçues:', prefs);
-  
-  if (prefs?.statistics) {
-    loadGoogleAnalytics();
-  }
-  
-  if (prefs?.marketing) {
-   loadMarketingScripts();
- }
- 
- if (prefs?.cookies) {
-  enableFunctionalCookies();
-}
-}
-
-window.CookieConsent.enableLogging({
-  // endpoint: '/api/consent/log',       // 📡 URL de ton endpoint Laravel (routes/api.php)
-  // includeUserAgent: true,             // 🧭 Ajoute le User-Agent au log (utile comme preuve)
-  anonymousId: true,                  // 🕵️ Génère un ID anonyme si l'utilisateur n'est pas connecté
-  headers: {
-    // 🛡️ CSRF : utile surtout si tu passes par une route "web".
-    // Pour une route "api", ce header n'est pas requis 😉  'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content || 'your-token'
-    'X-CSRF-TOKEN': 'document.querySelector('meta[name="csrf-token"]')?.content || 'your-token''
+window.CookieConsent.init({
+  statistics: {
+    google_manager_key: 'G-ABC123XYZ'  // ✅ Affichera "Google Analytics"
+  },
+  marketing: {
+    google_AdSense_key: 'ca-pub-1234567890123456',  // ✅ Affichera "Google AdSense"
+    facebook: {
+      key: '123456789012345',  // ✅ Affichera "Facebook Pixel"
+      track: 'PageView'
+    }
   }
 });
+
+// CONFIGURATION - À adapter selon vos besoins
+// window.CookieConsent.init({
+//   // ========== LOGGER ==========
+//   logger: {
+//     enabled: false,                     // Activer le logging serveur
+//     endpoint: '/api/consent/log',       // URL de l'endpoint
+//     apiKey: null,                       // Clé API (optionnel)
+//     anonymousId: true,                  // Génère un ID anonyme
+//     includeUserAgent: true,             // Inclure le User-Agent
+//     headers: {
+//       // 'X-CSRF-TOKEN': 'votre-token'  // Headers personnalisés
+//     }
+//   },
+  
+//   // ========== STATISTICS ==========
+//   statistics: {
+//     google_manager_key: null            // 'G-XXXXXXXXXX' pour activer Google Analytics
+//   },
+  
+//   // ========== MARKETING ==========
+//   marketing: {
+//     google_AdSense_key: null,           // 'ca-pub-XXXXXXXXXXXXXXXX' pour Google Ads
+//     facebook: {
+//       key: null,                        // 'VOTRE-PIXEL-ID' pour Facebook Pixel
+//       track: 'PageView'                 // Événement à tracker (PageView par défaut)
+//     }
+//   }
+// });
 
 document.addEventListener('DOMContentLoaded', () => {
-  if (window.CookieConsent) {
-    const prefs = window.CookieConsent.getPreferences();
-    if (prefs) startcall(prefs);
-  }
-  document.addEventListener('cookieConsentChanged', (event) => {
-    startcall(event.detail.preferences);
-  });
   js();
 });
 
+// ========== EXEMPLES D'UTILISATION ==========
+
+// Exemple 1 : Configuration complète
+/*
+window.CookieConsent.init({
+  logger: {
+    enabled: true,
+    endpoint: '/api/consent/log',
+    apiKey: 'votre-api-key',
+    anonymousId: true,
+    headers: {
+      'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content
+    }
+  },
+  statistics: {
+    google_manager_key: 'G-XXXXXXXXXX'
+  },
+  marketing: {
+    google_AdSense_key: 'ca-pub-XXXXXXXXXXXXXXXX',
+    facebook: {
+      key: 'VOTRE-PIXEL-ID',
+      track: 'PageView'
+    }
+  }
+});
+*/
+
+// Exemple 2 : Ancienne syntaxe (rétrocompatibilité)
+/*
+window.CookieConsent.init({
+  endpoint: '/api/consent/log',
+  anonymousId: true,
+  headers: {
+    'X-CSRF-TOKEN': 'votre-token'
+  },
+  statistics: {
+    google_manager_key: 'G-XXXXXXXXXX'
+  },
+  marketing: {
+    google_AdSense_key: 'ca-pub-XXXXXXXXXXXXXXXX',
+    facebook: {
+      key: 'VOTRE-PIXEL-ID',
+      track: 'PageView'
+    }
+  }
+});
+*/

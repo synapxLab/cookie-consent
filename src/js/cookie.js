@@ -1,41 +1,53 @@
 /**
  * @synapxlab/cookie-consent
- * Bannière de consentement + Logger - Version corrigée pour accessibilité
+ * Bannière de consentement + Logger + Intégration services
  * 
- * @version 2.1.2
+ * @version 2.2.0
  * @author SynapxLab <contact@synapxlab.com>
  * @license MIT
  */
 
 import '../scss/cookie.scss';
+import t from './translat';
 
 const STORAGE_KEY = 'politecookiebanner';
 
-// Configuration du logging
-const LOGGING_CONFIG = {
-  enabled: false,
-  endpoint: '/api/consent/log',
-  apiKey: null,
-  retries: 3,
-  timeout: 5000,
-  includeUserAgent: true,
-  anonymousId: true,
-  headers: {}
+// Configuration centralisée
+const CONFIG = {
+  logger: {
+    enabled: false,
+    endpoint: '/api/consent/log',
+    apiKey: null,
+    retries: 3,
+    timeout: 5000,
+    includeUserAgent: true,
+    anonymousId: true,
+    headers: {}
+  },
+  statistics: {
+    google_manager_key: null,
+  },
+  marketing: {
+    google_AdSense_key: null,
+    facebook: {
+      track: null,
+      key: null,
+    }
+  }  
 };
 
+// ========== UTILITAIRES ==========
 const loadPrefs = () => {
   try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || ''); } catch { return null; }
 };
 
-// Utilitaires pour le logging - UUID simple et efficace
 const generateUUID = () => 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => {
   const r = Math.random() * 16 | 0;
   return (c == 'x' ? r : (r & 0x3 | 0x8)).toString(16);
 });
 
 const getDeviceId = () => {
-  if (!LOGGING_CONFIG.anonymousId) return null;
-  
+  if (!CONFIG.logger.anonymousId) return null;
   const KEY = 'cookie_consent_device_id';
   let id = localStorage.getItem(KEY);
   if (!id) {
@@ -45,7 +57,6 @@ const getDeviceId = () => {
   return id;
 };
 
-// Hash simple pour policy fingerprint
 const simpleHash = str => {
   let hash = 0;
   for (let i = 0; i < str.length; i++) {
@@ -55,9 +66,31 @@ const simpleHash = str => {
   return Math.abs(hash).toString(16);
 };
 
-// Fonction de logging vers le serveur avec retry automatique
+// ========== RÉCUPÉRATION DES SERVICES CONFIGURÉS ==========
+const getConfiguredServices = () => {
+  const services = {
+    statistics: [],
+    marketing: []
+  };
+  
+  if (CONFIG.statistics.google_manager_key) {
+    services.statistics.push('Google Analytics');
+  }
+  
+  if (CONFIG.marketing.google_AdSense_key) {
+    services.marketing.push('Google AdSense');
+  }
+  
+  if (CONFIG.marketing.facebook.key) {
+    services.marketing.push('Facebook Pixel');
+  }
+  
+  return services;
+};
+
+// ========== LOGGING ==========
 const logConsentToServer = async (preferences, action = 'updated') => {
-  if (!LOGGING_CONFIG.enabled) return;
+  if (!CONFIG.logger.enabled) return;
 
   const payload = {
     consent_id: generateUUID(),
@@ -69,138 +102,232 @@ const logConsentToServer = async (preferences, action = 'updated') => {
     action,
     locale: navigator.language || 'fr-FR',
     referrer: document.referrer || null,
-    banner_version: '2.1.2',
+    banner_version: '2.2.0',
     policy_hash: simpleHash(location.host + '/cookies'),
-    ...(LOGGING_CONFIG.includeUserAgent && { user_agent: navigator.userAgent })
+    ...(CONFIG.logger.includeUserAgent && { user_agent: navigator.userAgent })
   };
 
   const headers = {
     'Content-Type': 'application/json',
-    ...LOGGING_CONFIG.headers,
-    ...(LOGGING_CONFIG.apiKey && { Authorization: `Bearer ${LOGGING_CONFIG.apiKey}` })
+    ...CONFIG.logger.headers,
+    ...(CONFIG.logger.apiKey && { Authorization: `Bearer ${CONFIG.logger.apiKey}` })
   };
 
-  // Retry avec backoff exponentiel
-  for (let attempt = 0; attempt < LOGGING_CONFIG.retries; attempt++) {
+  for (let attempt = 0; attempt < CONFIG.logger.retries; attempt++) {
     try {
       const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), LOGGING_CONFIG.timeout);
+      const timeoutId = setTimeout(() => controller.abort(), CONFIG.logger.timeout);
       
-      const response = await fetch(LOGGING_CONFIG.endpoint, {
+      const response = await fetch(CONFIG.logger.endpoint, {
         method: 'POST',
         headers,
         body: JSON.stringify(payload),
         signal: controller.signal
       });
-
+      
       clearTimeout(timeoutId);
-
-      if (response.ok) {
-        // console.debug('[CookieConsent] Logging successful');
-        return;
-      }
-      // console.warn('[CookieConsent] Logging failed:', response.status);
+      if (response.ok) return;
     } catch (error) {
       console.warn('[CookieConsent] Logging error:', error.message);
     }
     
-    // Backoff exponentiel : 1s, 2s, 4s...
-    if (attempt < LOGGING_CONFIG.retries - 1) {
+    if (attempt < CONFIG.logger.retries - 1) {
       await new Promise(resolve => setTimeout(resolve, 1000 * Math.pow(2, attempt)));
     }
+  }
+};
+
+// ========== INTÉGRATION SERVICES ==========
+const loadGoogleAnalytics = () => {
+  if (!CONFIG.statistics.google_manager_key) {
+    console.warn('[CookieConsent] Google Analytics key non configurée');
+    return;
+  }
+  
+  console.log('📊 Chargement Google Analytics...');
+  
+  const script = document.createElement('script');
+  script.src = `https://www.googletagmanager.com/gtag/js?id=${CONFIG.statistics.google_manager_key}`;
+  script.async = true;
+  document.head.appendChild(script);
+
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){ window.dataLayer.push(arguments); }
+
+  gtag('js', new Date());
+  gtag('config', CONFIG.statistics.google_manager_key, {
+    anonymize_ip: true,
+    cookie_flags: 'SameSite=None;Secure'
+  });
+
+  console.log('✅ Google Analytics chargé');
+};
+
+const loadMarketingScripts = () => {
+  console.log('📢 Chargement scripts marketing...');
+  
+  // Facebook Pixel
+  if (CONFIG.marketing.facebook.key) {
+    !function(f,b,e,v,n,t,s) {
+      if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+      n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+      if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+      n.queue=[];t=b.createElement(e);t.async=!0;
+      t.src=v;s=b.getElementsByTagName(e)[0];
+      s.parentNode.insertBefore(t,s)
+    }(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');
+    
+    if (typeof window.fbq === 'function') {
+      window.fbq('init', CONFIG.marketing.facebook.key);
+      if (CONFIG.marketing.facebook.track) {
+        window.fbq('track', CONFIG.marketing.facebook.track);
+      } else {
+        window.fbq('track', 'PageView');
+      }
+    }
+    console.log('✅ Facebook Pixel chargé');
+  }
+
+  // Google Ads / AdSense
+  if (CONFIG.marketing.google_AdSense_key) {
+    const adsScript = document.createElement('script');
+    adsScript.src = `https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${CONFIG.marketing.google_AdSense_key}`;
+    adsScript.async = true;
+    adsScript.crossOrigin = 'anonymous';
+    document.head.appendChild(adsScript);
+    console.log('✅ Google AdSense chargé');
+  }
+  
+  if (!CONFIG.marketing.facebook.key && !CONFIG.marketing.google_AdSense_key) {
+    console.warn('[CookieConsent] Aucune clé marketing configurée');
+  }
+};
+
+const enableFunctionalCookies = () => {
+  console.log('🔧 Activation cookies fonctionnels...');
+  console.log('✅ Cookies fonctionnels activés');
+};
+
+// ========== GESTION DES PRÉFÉRENCES ==========
+const applyPreferences = (prefs) => {
+  if (!prefs) return;
+  
+  console.log('🎯 Application des préférences:', prefs);
+  
+  if (prefs.statistics && CONFIG.statistics.google_manager_key) {
+    loadGoogleAnalytics();
+  }
+  
+  if (prefs.marketing && (CONFIG.marketing.google_AdSense_key || CONFIG.marketing.facebook.key)) {
+    loadMarketingScripts();
+  }
+  
+  if (prefs.cookies) {
+    enableFunctionalCookies();
   }
 };
 
 const savePrefs = obj => {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(obj || {}));
   
-  // Émettre l'événement personnalisé (ancien format pour compatibilité)
   document.dispatchEvent(new CustomEvent('cookieConsentChanged', {
     detail: { preferences: obj }
   }));
 
-  // Logging automatique si activé
-  LOGGING_CONFIG.enabled && logConsentToServer(obj, 'updated');
+  CONFIG.logger.enabled && logConsentToServer(obj, 'updated');
+  
+  applyPreferences(obj);
 };
 
+// ========== INTERFACE ==========
 function renderOnce() {
   if (document.getElementById('politecookiebanner')) return;
 
-  // Template HTML - Structure originale mais accessible (sans éléments interactifs dans summary)
-  const tpl = `<div id="politecookiebanner" class="pmcpli-cookiebanner pmcpli-show" aria-label="cookiebanner" title="cookiebanner" aria-modal="true" data-nosnippet="true" role="dialog" aria-live="polite" style="display:none;">
+  // Récupérer les services configurés
+  const services = getConfiguredServices();
+  
+  // Créer les textes des services
+  const statsServicesText = services.statistics.length > 0 
+    ? `<div class="pmcpli-services">${t('statsServices', { services: services.statistics.join(', ') })}</div>`
+    : '';
+    
+  const marketingServicesText = services.marketing.length > 0
+    ? `<div class="pmcpli-services">${t('marketingServices', { services: services.marketing.join(', ') })}</div>`
+    : '';
+
+  const tpl = `<div id="politecookiebanner" class="pmcpli-cookiebanner pmcpli-show"
+    aria-label="cookiebanner" title="cookiebanner" aria-modal="true" data-nosnippet="true"
+    role="dialog" aria-live="polite" style="display:none;" lang="${t.getLocale()}">
   <div class="pmcpli-header">
-    <div class="pmcpli-title">Gérer le consentement aux cookies</div>
-    <div class="pmcpli-close" tabindex="0" role="button" title="cookiebanner" aria-label="close-cookiebanner" role-js="close">
+    <div class="pmcpli-title">${t('title')}</div>
+    <div class="pmcpli-close" tabindex="0" role="button" title="cookiebanner" aria-label="${t('closeAria')}" role-js="close">
       <svg aria-hidden="true" focusable="false" viewBox="0 0 352 512" class="pmcpli-close-icon"><path fill="currentColor" d="M242.72 256l100.07-100.07c12.28-12.28 12.28-32.19 0-44.48l-22.24-22.24c-12.28-12.28-32.19-12.28-44.48 0L176 189.28 75.93 89.21c-12.28-12.28-32.19-12.28-44.48 0L9.21 111.45c-12.28 12.28-12.28 32.19 0 44.48L109.28 256 9.21 356.07c-12.28 12.28-12.28 32.19 0 44.48l22.24 22.24c12.28 12.28 32.2 12.28 44.48 0L176 322.72l100.07 100.07c12.28 12.28 32.2 12.28 44.48 0l22.24-22.24c12.28-12.28 12.28-32.19 0-44.48L242.72 256z"/></svg>
     </div>
   </div>
   <div class="pmcpli-divider pmcpli-divider-header"></div>
   <div class="pmcpli-body">
-    <div class="pmcpli-message">Pour vous offrir la meilleure expérience possible, on utilise des cookies (pas les gourmands, hélas) pour garder quelques infos sur votre appareil. En acceptant, vous nous aidez à mieux comprendre comment vous naviguez ici. Si vous refusez, certaines fonctionnalités pourraient ne pas marcher aussi bien.</div>
+    <div class="pmcpli-message">${t('message')}</div>
     <div class="pmcpli-categories" style="display:none;">
       <div class="pmcpli-category pmcpli-functional">
         <div class="pmcpli-category-header pmcpli-category-clickable" tabindex="0" role="button" aria-expanded="false">
-          <span class="pmcpli-category-title">Stockage strictement nécessaire</span> 
-          <span class="pmcpli-category-status">Toujours actif</span>
+          <span class="pmcpli-category-title">${t('functionalTitle')}</span>
+          <span class="pmcpli-category-status">${t('alwaysActive')}</span>
           <span class="pmcpli-icon pmcpli-open">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" height="18">
-              <path d="M224 416c-8.188 0-16.38-3.125-22.62-9.375l-192-192c-12.5-12.5-12.5-32.75 0-45.25s32.75-12.5 45.25 0L224 338.8l169.4-169.4c12.5-12.5 32.75-12.5 45.25 0s12.5 32.75 0 45.25l-192 192C240.4 412.9 232.2 416 224 416z"/>
-            </svg>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" height="18"><path d="M224 416c-8.188 0-16.38-3.125-22.62-9.375l-192-192c-12.5-12.5-12.5-32.75 0-45.25s32.75-12.5 45.25 0L224 338.8l169.4-169.4c12.5-12.5 32.75-12.5 45.25 0s12.5 32.75 0 45.25l-192 192C240.4 412.9 232.2 416 224 416z"/></svg>
           </span>
         </div>
         <div class="pmcpli-description" style="display:none;">
-          <span class="pmcpli-description-functional">Le stockage ou l'accès aux informations est uniquement utilisé pour des finalités techniques indispensables.</span>
+          <span class="pmcpli-description-functional">${t('functionalDesc')}</span>
         </div>
       </div>
+
       <div class="pmcpli-category pmcpli-statistics">
         <div class="pmcpli-category-header pmcpli-category-clickable" tabindex="0" role="button" aria-expanded="false">
-          <span class="pmcpli-category-title">Cookies</span>
+          <span class="pmcpli-category-title">${t('cookiesTitle')}</span>
           <div class="checkbox-wrapper">
             <input type="checkbox" id="politecookiecheckboxcookies" name="politecookie['cookies']">
             <label for="politecookiecheckboxcookies"></label>
           </div>
           <span class="pmcpli-icon pmcpli-open">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" height="18">
-              <path d="M224 416c-8.188 0-16.38-3.125-22.62-9.375l-192-192c-12.5-12.5-12.5-32.75 0-45.25s32.75-12.5 45.25 0L224 338.8l169.4-169.4c12.5-12.5 32.75-12.5 45.25 0s12.5 32.75 0 45.25l-192 192C240.4 412.9 232.2 416 224 416z"/>
-            </svg>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" height="18"><path d="M224 416c-8.188 0-16.38-3.125-22.62-9.375l-192-192c-12.5-12.5-12.5-32.75 0-45.25s32.75-12.5 45.25 0L224 338.8l169.4-169.4c12.5-12.5 32.75-12.5 45.25 0s12.5 32.75 0 45.25l-192 192C240.4 412.9 232.2 416 224 416z"/></svg>
           </span>
         </div>
         <div class="pmcpli-description" style="display:none;">
-          <span class="pmcpli-description-statistics-anonymous">Ces cookies ne sont pas utilisés à des fins publicitaires, mais ils jouent un rôle essentiel dans l'amélioration de votre expérience utilisateur.</span>
+          <span class="pmcpli-description-statistics-anonymous">${t('cookiesDesc')}</span>
         </div>
       </div>
+
       <div class="pmcpli-category pmcpli-statistics">
         <div class="pmcpli-category-header pmcpli-category-clickable" tabindex="0" role="button" aria-expanded="false">
-          <span class="pmcpli-category-title">Statistiques</span>
+          <span class="pmcpli-category-title">${t('statsTitle')}</span>
           <div class="checkbox-wrapper">
             <input type="checkbox" id="politecookiecheckboxstatistics" name="politecookie['statistics']">
             <label for="politecookiecheckboxstatistics"></label>
           </div>
           <span class="pmcpli-icon pmcpli-open">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" height="18">
-              <path d="M224 416c-8.188 0-16.38-3.125-22.62-9.375l-192-192c-12.5-12.5-12.5-32.75 0-45.25s32.75-12.5 45.25 0L224 338.8l169.4-169.4c12.5-12.5 32.75-12.5 45.25 0s12.5 32.75 0 45.25l-192 192C240.4 412.9 232.2 416 224 416z"/>
-            </svg>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" height="18"><path d="M224 416c-8.188 0-16.38-3.125-22.62-9.375l-192-192c-12.5-12.5-12.5-32.75 0-45.25s32.75-12.5 45.25 0L224 338.8l169.4-169.4c12.5-12.5 32.75-12.5 45.25 0s12.5 32.75 0 45.25l-192 192C240.4 412.9 232.2 416 224 416z"/></svg>
           </span>
         </div>
         <div class="pmcpli-description" style="display:none;">
-          <span class="pmcpli-description-statistics-anonymous">Le stockage ou l'accès technique est utilisé exclusivement à des fins statistiques.</span>
+          <span class="pmcpli-description-statistics-anonymous">${t('statsDesc')}</span>
+          ${statsServicesText}
         </div>
       </div>
+
       <div class="pmcpli-category pmcpli-marketing">
         <div class="pmcpli-category-header pmcpli-category-clickable" tabindex="0" role="button" aria-expanded="false">
-          <span class="pmcpli-category-title">Marketing</span>
+          <span class="pmcpli-category-title">${t('marketingTitle')}</span>
           <div class="checkbox-wrapper">
             <input type="checkbox" id="politecookiecheckboxmarketing" name="politecookie['marketing']">
             <label for="politecookiecheckboxmarketing"></label>
           </div>
           <span class="pmcpli-icon pmcpli-open">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" height="18">
-              <path d="M224 416c-8.188 0-16.38-3.125-22.62-9.375l-192-192c-12.5-12.5-12.5-32.75 0-45.25s32.75-12.5 45.25 0L224 338.8l169.4-169.4c12.5-12.5 32.75-12.5 45.25 0s12.5 32.75 0 45.25l-192 192C240.4 412.9 232.2 416 224 416z"/>
-            </svg>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" height="18"><path d="M224 416c-8.188 0-16.38-3.125-22.62-9.375l-192-192c-12.5-12.5-12.5-32.75 0-45.25s32.75-12.5 45.25 0L224 338.8l169.4-169.4c12.5-12.5 32.75-12.5 45.25 0s12.5 32.75 0 45.25l-192 192C240.4 412.9 232.2 416 224 416z"/></svg>
           </span>
         </div>
         <div class="pmcpli-description" style="display:none;">
-          <span class="pmcpli-description-marketing">Le stockage ou l'accès technique est nécessaire pour créer des profils d'utilisateurs afin d'envoyer de la publicité.</span>
+          <span class="pmcpli-description-marketing">${t('marketingDesc')}</span>
+          ${marketingServicesText}
         </div>
       </div>
     </div>
@@ -208,11 +335,11 @@ function renderOnce() {
   <div class="pmcpli-links pmcpli-information p-2"></div>
   <div class="pmcpli-divider pmcpli-footer"></div>
   <div class="pmcpli-buttons">
-    <button class="pmcpli-btn pmcpli-accept">Tout Accepter</button>
-    <button class="pmcpli-btn pmcpli-deny">Refuser</button>
-    <button class="pmcpli-btn pmcpli-view-preferences">Les préférences</button>
-    <button class="pmcpli-btn pmcpli-save-preferences" style="display:none;">Enregistrer</button>
-    <button class="pmcpli-btn pmcpli-del-preferences" style="display:none;">Supprimer</button>
+    <button class="pmcpli-btn pmcpli-accept">${t('acceptAll')}</button>
+    <button class="pmcpli-btn pmcpli-deny">${t('denyAll')}</button>
+    <button class="pmcpli-btn pmcpli-view-preferences">${t('viewPrefs')}</button>
+    <button class="pmcpli-btn pmcpli-save-preferences" style="display:none;">${t('savePrefs')}</button>
+    <button class="pmcpli-btn pmcpli-del-preferences" style="display:none;">${t('delPrefs')}</button>
   </div>
   <div class="pmcpli-links pmcpli-documents"></div>
 </div>`;
@@ -225,7 +352,6 @@ const openBanner = (showPrefs = false) => {
   if (!el) return;
   el.style.display = 'block';
   
-  // Focus management pour accessibilité
   setTimeout(() => {
     const firstButton = el.querySelector('button');
     if (firstButton) firstButton.focus();
@@ -246,18 +372,16 @@ function attachHandlers() {
 
   const stored = loadPrefs();
   if (stored) {
-    // Restaurer les préférences existantes
     el.querySelectorAll('input[name^="politecookie["]').forEach(cb => {
       const m = cb.name.match(/^politecookie\['(.+)'\]$/);
       if (m) cb.checked = !!stored[m[1]];
     });
+    applyPreferences(stored);
   } else {
-    // Première visite - afficher la bannière
     el.style.display = 'block';
     el.querySelector('.pmcpli-categories').style.display = 'none';
   }
 
-  // Fonctions utilitaires
   const save = () => {
     const prefs = {};
     el.querySelectorAll('input[name^="politecookie["]').forEach(cb => {
@@ -275,7 +399,7 @@ function attachHandlers() {
       detail: { preferences: null, action: 'deleted' }
     }));
     
-    LOGGING_CONFIG.enabled && logConsentToServer(null, 'deleted');
+    CONFIG.logger.enabled && logConsentToServer(null, 'deleted');
     
     el.querySelectorAll('input[name^="politecookie["]').forEach(cb => cb.checked = false);
     el.style.display = 'none';
@@ -292,7 +416,6 @@ function attachHandlers() {
     viewBtn.style.display = isHidden ? 'none' : 'inline-block';
   };
 
-  // Gestionnaire pour les catégories extensibles - Style original mais accessible
   const toggleCategoryContent = (categoryHeader) => {
     const category = categoryHeader.closest('.pmcpli-category');
     const description = category.querySelector('.pmcpli-description');
@@ -300,7 +423,6 @@ function attachHandlers() {
     
     const isExpanded = categoryHeader.getAttribute('aria-expanded') === 'true';
     
-    // Toggle affichage
     if (isExpanded) {
       description.style.display = 'none';
       categoryHeader.setAttribute('aria-expanded', 'false');
@@ -312,7 +434,6 @@ function attachHandlers() {
     }
   };
 
-  // Event listeners optimisés
   const handlers = {
     '.pmcpli-close': () => el.style.display = 'none',
     '.pmcpli-accept': () => {
@@ -332,15 +453,12 @@ function attachHandlers() {
     el.querySelector(selector)?.addEventListener('click', handler);
   });
 
-  // Gestion des toggles de catégories avec style original
   el.querySelectorAll('.pmcpli-category-clickable').forEach(header => {
     header.addEventListener('click', (e) => {
-      // Empêcher le clic sur la checkbox de déclencher le toggle
       if (e.target.closest('.checkbox-wrapper')) return;
       toggleCategoryContent(header);
     });
     
-    // Support du clavier
     header.addEventListener('keydown', (e) => {
       if (e.key === 'Enter' || e.key === ' ') {
         e.preventDefault();
@@ -349,14 +467,12 @@ function attachHandlers() {
     });
   });
 
-  // Support du clavier pour l'accessibilité
   el.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') {
       el.style.display = 'none';
     }
   });
 
-  // Gestionnaire global pour le lien de gestion des cookies (compatibilité)
   document.addEventListener('click', e => {
     if (e.target.closest('#openpolitecookie, #openpolitecookie a')) {
       e.preventDefault();
@@ -365,11 +481,11 @@ function attachHandlers() {
   });
 }
 
-// API globale optimisée - MAINTIEN DE LA COMPATIBILITÉ TOTALE
+// ========== API GLOBALE ==========
 window.CookieConsent = {
   open: openBanner,
   reset: () => { 
-    localStorage.removeItem(STORAGE_KEY); 
+    localStorage.removeItem(STORAGE_KEY);
     openBanner(true); 
   },
   getPreferences: loadPrefs,
@@ -378,29 +494,51 @@ window.CookieConsent = {
     return !!(prefs?.[category]);
   },
   
-  // Configuration du logging avec fusion d'options optimisée
-  enableLogging: (options = {}) => {
-    Object.assign(LOGGING_CONFIG, {
-      enabled: true,
-      ...options,
-      headers: { ...LOGGING_CONFIG.headers, ...options.headers }
+  init: (options = {}) => {
+    if (options.logger) {
+      Object.assign(CONFIG.logger, {
+        enabled: true,
+        ...options.logger,
+        headers: { ...CONFIG.logger.headers, ...(options.logger.headers || {}) }
+      });
+    }
+    
+    if (options.endpoint || options.apiKey || options.anonymousId !== undefined || options.headers) {
+      CONFIG.logger.enabled = true;
+      if (options.endpoint) CONFIG.logger.endpoint = options.endpoint;
+      if (options.apiKey) CONFIG.logger.apiKey = options.apiKey;
+      if (options.anonymousId !== undefined) CONFIG.logger.anonymousId = options.anonymousId;
+      if (options.headers) Object.assign(CONFIG.logger.headers, options.headers);
+    }
+    
+    if (options.statistics) {
+      Object.assign(CONFIG.statistics, options.statistics);
+    }
+    
+    if (options.marketing) {
+      if (options.marketing.google_AdSense_key) {
+        CONFIG.marketing.google_AdSense_key = options.marketing.google_AdSense_key;
+      }
+      if (options.marketing.facebook) {
+        Object.assign(CONFIG.marketing.facebook, options.marketing.facebook);
+      }
+    }
+    
+    console.log('[CookieConsent] Configuration appliquée:', {
+      logger: CONFIG.logger.enabled,
+      hasGoogleAnalytics: !!CONFIG.statistics.google_manager_key,
+      hasGoogleAds: !!CONFIG.marketing.google_AdSense_key,
+      hasFacebook: !!CONFIG.marketing.facebook.key
     });
-
-    // console.log('[CookieConsent] Logging enabled:', {
-    //   endpoint: LOGGING_CONFIG.endpoint,
-    //   hasApiKey: !!LOGGING_CONFIG.apiKey
-    // });
   },
   
   disableLogging: () => {
-    LOGGING_CONFIG.enabled = false;
-    // console.log('[CookieConsent] Logging disabled');
+    CONFIG.logger.enabled = false;
   },
   
-  getLoggingConfig: () => ({ ...LOGGING_CONFIG })
+  getConfig: () => ({ ...CONFIG })
 };
 
-// Initialisation
 document.addEventListener('DOMContentLoaded', () => {
   renderOnce();
   attachHandlers();

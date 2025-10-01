@@ -4,6 +4,53 @@ Tous les changements notables de `@synapxlab/cookie-consent` seront documentés 
 Le format est basé sur [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 et ce projet respecte le [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.2.0] - 2025-10-01
+
+### Ajouté
+- **Affichage automatique des services** : Les services configurés (Google Analytics, AdSense, Facebook Pixel) sont maintenant automatiquement détectés et affichés dans les descriptions des catégories
+- **3 nouvelles langues** : 
+  - Italien (it)
+  - Néerlandais (nl)
+  - Portugais (pt)
+- **Fonction `getConfiguredServices()`** : Détection automatique des services configurés
+- **Nouvelle clé de traduction** : `statsServices` et `marketingServices` pour afficher les services
+- **Style `.pmcpli-services`** : Design dédié avec support des 4 thèmes
+- **Documentation README** : Version anglaise (README.md) et française (README.fr.md) complètes
+
+### Modifié
+- **CSS entièrement encapsulé** : Tous les styles sont maintenant isolés dans `#politecookiebanner` pour éviter tout conflit avec le site parent
+- **Structure CONFIG** : Centralisation de la configuration avec `logger`, `statistics` et `marketing`
+- **Fonction `init()`** : Support de la nouvelle syntaxe avec rétrocompatibilité totale
+- **Traductions** : 7 langues supportées (était 4 en v2.1.1)
+- **Taille du bundle** : Optimisé à ~5 KB gzippé (ajout de 3 langues = +2 KB seulement)
+
+### Amélioré
+- **Transparence RGPD** : L'utilisateur voit exactement quels services sont utilisés
+- **UX** : Affichage conditionnel (si aucun service configuré, pas de ligne "Services")
+- **Performance** : Chargement des scripts uniquement si les clés sont présentes
+- **Accessibilité** : Reset CSS complet pour éviter les héritages indésirables
+
+### Exemple
+```javascript
+// Configuration
+window.CookieConsent.init({
+  statistics: {
+    google_manager_key: 'G-ABC123XYZ'
+  },
+  marketing: {
+    google_AdSense_key: 'ca-pub-1234567890',
+    facebook: { key: '123456789', track: 'PageView' }
+  }
+});
+
+// Résultat dans la bannière :
+// 📊 Statistiques
+// Services : Google Analytics
+//
+// 📢 Marketing  
+// Services : Google AdSense, Facebook Pixel
+```
+
 ## [2.1.1] - 2025-09-19
 
 ### Corrigé
@@ -110,7 +157,11 @@ npm install @synapxlab/cookie-consent
 import '@synapxlab/cookie-consent/dist/bundle.js';
 
 // API disponible globalement
-window.CookieConsent.show();
+window.CookieConsent.init({
+  statistics: {
+    google_manager_key: 'G-XXXXXXXXXX'
+  }
+});
 ```
 
 ### Version module seul
@@ -120,6 +171,41 @@ import '@synapxlab/cookie-consent/dist/cookie.js';
 ```
 
 ## Migration
+
+### De 2.1.x vers 2.2.x
+```javascript
+// ✅ Aucun changement cassant - Rétrocompatibilité totale
+// Ancienne syntaxe toujours valide :
+window.CookieConsent.init({
+  endpoint: '/api/consent/log',
+  anonymousId: true
+});
+
+// Nouvelle syntaxe (recommandée) :
+window.CookieConsent.init({
+  logger: {
+    enabled: true,
+    endpoint: '/api/consent/log',
+    anonymousId: true
+  },
+  statistics: {
+    google_manager_key: 'G-ABC123XYZ'
+  }
+});
+
+// Nouvelles fonctionnalités disponibles :
+// - Affichage automatique des services dans la bannière
+// - 7 langues supportées (fr, en, es, de, it, nl, pt)
+// - CSS entièrement encapsulé
+```
+
+### De 2.0.x vers 2.1.x
+```javascript
+// ✅ API stable, pas de changement cassant
+// Nouvelles méthodes disponibles :
+window.CookieConsent.hasConsent('statistics');
+window.CookieConsent.on('change', callback);
+```
 
 ### De 1.x vers 2.x
 ```javascript
@@ -133,13 +219,13 @@ cookieConsent.init({
 window.CookieConsent.show(); // Ouvrir manuellement si besoin
 ```
 
-### De 2.0.x vers 2.1.x
-```javascript
-// ✅ API stable, pas de changement cassant
-// Nouvelles méthodes disponibles :
-window.CookieConsent.hasConsent('statistics');
-window.CookieConsent.on('change', callback);
-```
+## Langues supportées
+
+| Version | Langues |
+|---------|---------|
+| 1.x | Français uniquement |
+| 2.0.x - 2.1.x | Français, Anglais, Espagnol, Allemand |
+| 2.2.x | Français, Anglais, Espagnol, Allemand, Italien, Néerlandais, Portugais |
 
 ## Liens utiles
 
@@ -147,3 +233,10 @@ window.CookieConsent.on('change', callback);
 - 🐛 **Issues** : [https://github.com/synapxlab/cookie-consent/issues](https://github.com/synapxlab/cookie-consent/issues)
 - 📦 **npm** : [https://www.npmjs.com/package/@synapxlab/cookie-consent](https://www.npmjs.com/package/@synapxlab/cookie-consent)
 - 💬 **Support** : contact@synapx.fr
+
+---
+
+**Format du versioning** : MAJOR.MINOR.PATCH
+- **MAJOR** : Changements cassants (breaking changes)
+- **MINOR** : Nouvelles fonctionnalités (rétrocompatible)
+- **PATCH** : Corrections de bugs (rétrocompatible)
