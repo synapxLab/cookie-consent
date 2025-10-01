@@ -1,9 +1,132 @@
-node_modules
-*.tgz
-*.hot-update.*
-lisezmoi.txt
-httpdocs/assets/js/*.hot-update.*
+# ========================================
+# Dependencies
+# ========================================
 node_modules/
-app/
-temps/
 vendor/
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+composer.lock
+
+# ========================================
+# Build outputs
+# ========================================
+dist/
+build/
+public/assets/js/
+public/assets/css/
+*.tgz
+
+# ========================================
+# Caches
+# ========================================
+.cache/
+.parcel-cache/
+.webpack-cache/
+.sass-cache/
+.npm/
+.yarn/
+.eslintcache
+*.cache
+
+# ========================================
+# Environment & Config
+# ========================================
+.env
+.env.local
+.env.*.local
+.env.production
+.env.development
+.env.test
+
+# ========================================
+# IDE / Editors
+# ========================================
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+*.sublime-project
+*.sublime-workspace
+.project
+.settings/
+.classpath
+
+# ========================================
+# OS Files
+# ========================================
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+Desktop.ini
+
+# ========================================
+# Logs
+# ========================================
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+pnpm-debug.log*
+logs/
+*.log.*
+
+# ========================================
+# Testing
+# ========================================
+coverage/
+.nyc_output/
+*.lcov
+.jest/
+
+# ========================================
+# Temporary files
+# ========================================
+*.tmp
+*.temp
+*.bak
+*.swp
+*.swo
+*~.nib
+tmp/
+temp/
+
+# ========================================
+# Projet spécifique Cookie Consent
+# ========================================
+# Fichiers de test locaux
+test-local/
+demos/local/
+
+# Fichiers de configuration locale
+config.local.js
+*.local.json
+
+# ========================================
+# Sécurité - Ne JAMAIS commiter
+# ========================================
+*.pem
+*.key
+*.cert
+*.crt
+*.p12
+*.pfx
+secrets/
+.secrets/
+credentials/
+
+# ========================================
+# Autres
+# ========================================
+*.seed
+*.pid
+*.pid.lock
+.npm
+.node_repl_history
+.yarn-integrity
