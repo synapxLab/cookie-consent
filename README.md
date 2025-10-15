@@ -111,11 +111,9 @@ Chaque site client dispose de sa propre configuration isolée et sécurisée.
 |-------------|----------------|-------------|--------------|--------------|--------------|------------------|
 | Prix        | **GRATUIT** 🎁 |    10€      |      25€     |      54€     |     99€      | [Nous contacter](mailto:contact@synapx.fr) |
 
-
-
-
-
 **La bannière est gratuite. Seul le logging est payant au-delà de 300/mois.**
+- 📄 Facture automatique via ERP/CRM [Administralis](https://administralis.fr/)
+
 
 ## 🌍 Langues supportées
 
