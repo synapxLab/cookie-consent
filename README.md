@@ -96,7 +96,9 @@ window.CookieConsent.init({
 | 0 - 300 | **GRATUIT** 🎁 |
 | 301 - 10K | 10€ |
 | 10K - 100K | 25€ |
-| 100K+ | [Nous contacter](mailto:contact@synapxlab.com) |
+| 100K - 500K | 54€ |
+| 500K - 1.5M | 99€ |
+| 1.5M+ | [Nous contacter](mailto:contact@synapx.fr) |
 
 **La bannière est gratuite. Seul le logging est payant au-delà de 300/mois.**
 
@@ -156,10 +158,10 @@ MIT © [SynapxLab](https://synapx.fr)
 
 ## 📧 Support
 
-- Email: contact@synapxlab.com
+- Email: contact@synapx.fr
 - Discord: [Rejoindre la communauté](https://discord.gg/synapxlab)
 - Issues: [GitHub Issues](https://github.com/synapxLab/cookie-consent/issues)
 
 ---
 
-**Made with ❤️ in France** | Hébergé chez OVH 🇫🇷
+**🇪🇺 Solution européenne open source** | **🇫🇷 Développé en France**
