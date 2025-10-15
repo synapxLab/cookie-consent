@@ -6,7 +6,8 @@
 
 Bannière de consentement aux cookies **conforme RGPD/CNIL**, open source et gratuite.
 
-Alternative européenne à Cookiebot, Axeptio et autres solutions payantes.
+Alternative européenne open-source, sans dépendance aux GAFA, à Cookiebot® et Axeptio® (non affiliée).
+
 
 **🎮 [Voir la démo en direct](https://synapx.fr/sdk/cookie_consent/)**
 
@@ -18,7 +19,7 @@ Alternative européenne à Cookiebot, Axeptio et autres solutions payantes.
 - ✅ **16 services pré-configurés** - GA, Facebook Pixel, Hotjar...
 - ✅ **Logging des consentements** - Preuve juridique (Art. 7.1)
 - ✅ **7 langues** - FR, EN, ES, DE, IT, NL, PT
-- ✅ **0 dépendance** - Vanilla JS (~25KB gzippé)
+- ✅ **0 dépendance** - ( Vanilla JS ≈ 66 Ko minifié) (~21 Ko gzippé)
 - ✅ **Thèmes personnalisables** - CSS variables
 - ✅ **Made in France** 🇫🇷
 
