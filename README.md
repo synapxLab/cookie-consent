@@ -8,6 +8,9 @@ Bannière de consentement aux cookies **conforme RGPD/CNIL**, open source et gra
 
 Alternative européenne à Cookiebot, Axeptio et autres solutions payantes.
 
+**🎮 [Voir la démo en direct](https://synapx.fr/sdk/cookie_consent/)**
+
+
 ## ✨ Fonctionnalités
 
 - ✅ **Conformité RGPD native** - Articles 6, 7, 13 respectés
