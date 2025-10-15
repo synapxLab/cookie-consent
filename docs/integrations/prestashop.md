@@ -594,7 +594,7 @@ Même procédure. Les préférences utilisateurs seront perdues (localStorage di
 - 🎓 [Guides PrestaShop](https://synapx.fr/sdk/cookie_consent/integrations/prestashop)
 
 ### Support technique
-- 📧 contact@synapxlab.com
+- 📧 contact@synapx.fr
 - 💬 [Forum PrestaShop](https://www.prestashop.com/forums/)
 - 🐛 [GitHub Issues](https://github.com/synapxLab/prestashop-cookie-consent/issues)
 

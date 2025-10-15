@@ -491,7 +491,7 @@ Obligation : Conserver la mention de licence MIT.
 - 🐛 [GitHub Issues](https://github.com/synapxLab/cookie-consent/issues)
 
 **Support direct :**
-- 📧 contact@synapxlab.com
+- 📧 contact@synapx.fr
 - ⏱️ Délai de réponse : 24-48h
 
 ### Le support est-il gratuit ?
@@ -507,7 +507,7 @@ Obligation : Conserver la mention de licence MIT.
 - Audit de conformité
 - SLA garanti
 
-Contactez-nous : contact@synapxlab.com
+Contactez-nous : contact@synapx.fr
 
 ### Proposez-vous des formations ?
 
@@ -587,7 +587,7 @@ Dashboard SynapxLab > Facturation
 ### Une question non listée ici ?
 
 **Contactez-nous :**
-- 📧 contact@synapxlab.com
+- 📧 contact@synapx.fr
 - 💬 [Discord](https://discord.gg/synapxlab)
 - 🐛 [GitHub Issues](https://github.com/synapxLab/cookie-consent/issues)
 

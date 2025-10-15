@@ -509,6 +509,6 @@ console.log(window.CookieConsent.getConfig());
 
 ## Support
 
-- 📧 contact@synapxlab.com
+- 📧 contact@synapx.fr
 - 🐛 [GitHub Issues](https://github.com/synapxLab/cookie-consent/issues)
 - 📚 [Documentation complète](../configuration.md)

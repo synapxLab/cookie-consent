@@ -180,4 +180,4 @@ t.setLocale('en'); // Forcer une langue
 
 - Documentation : https://synapxlab.com/sdk/
 - GitHub : https://github.com/synapxlab/cookie-consent
-- Email : contact@synapxlab.com
+- Email : contact@synapx.fr

@@ -168,13 +168,13 @@ MIT © [SynapxLab](https://synapx.fr)
 - 📚 [Documentation](./docs/)
 - 💻 [GitHub](https://github.com/synapxLab/cookie-consent)
 - 📦 [npm](https://www.npmjs.com/package/@synapxlab/cookie-consent)
-- 💬 [Discord](https://discord.gg/synapxlab)
+<!-- - 💬 [Discord](https://discord.gg/synapxlab) -->
 
 ## 📧 Support
 
 - Email: contact@synapx.fr
-- Discord: [Rejoindre la communauté](https://discord.gg/synapxlab)
-- Issues: [GitHub Issues](https://github.com/synapxLab/cookie-consent/issues)
+<!-- - Discord: [Rejoindre la communauté](https://discord.gg/synapxlab) -->
+<!-- - Issues: [GitHub Issues](https://github.com/synapxLab/cookie-consent/issues) -->
 
 ---
 

@@ -309,7 +309,7 @@ document.addEventListener('cookieConsentChanged', (event) => {
 ### Besoin d'aide ?
 
 **Questions techniques :**
-- 📧 contact@synapxlab.com
+- 📧 contact@synapx.fr
 - 🐛 [GitHub Issues](https://github.com/synapxLab/cookie-consent/issues)
 
 **Questions juridiques :**

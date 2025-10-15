@@ -438,7 +438,7 @@ Oui, compatible PHP 7.4 à 8.3.
 
 ### Support WordPress
 - 🐛 [Forum WordPress](https://wordpress.org/support/plugin/synapxlab-cookie-consent/)
-- 📧 contact@synapxlab.com
+- 📧 contact@synapx.fr
 
 ### Communauté
 - 💬 [Discord SynapxLab](https://discord.gg/synapxlab)

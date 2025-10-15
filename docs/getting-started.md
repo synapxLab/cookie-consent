@@ -68,6 +68,6 @@ Ouvrez votre navigateur et vous devriez voir :
 
 ## Besoin d'aide ?
 
-- 📧 Email : contact@synapxlab.com
+- 📧 Email : contact@synapx.fr
 - 🐛 Issues : [GitHub Issues](https://github.com/synapxLab/cookie-consent/issues)
 - 💬 Discord : [Communauté SynapxLab](https://discord.gg/synapxlab)

@@ -3,7 +3,7 @@
  * Bannière de consentement + Logger + Intégration services
  * 
  * @version 2.4.0
- * @author SynapxLab <contact@synapxlab.com>
+ * @author SynapxLab <contact@synapx.fr>
  * @license MIT
  */
 

@@ -638,7 +638,7 @@ Créer un document partagé (Google Docs) avec :
 
 ### Support
 
-- 📧 contact@synapxlab.com
+- 📧 contact@synapx.fr
 - 💬 [Discord SynapxLab](https://discord.gg/synapxlab)
 - 📚 [Documentation complète](../configuration.md)
 

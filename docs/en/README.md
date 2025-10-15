@@ -59,7 +59,7 @@ New to Cookie Consent? Start here:
 - 💬 [Discord Community](https://discord.gg/synapxlab)
 
 ### Support
-- 📧 Email: contact@synapxlab.com
+- 📧 Email: contact@synapx.fr
 - 🐛 [GitHub Issues](https://github.com/synapxLab/cookie-consent/issues)
 - ❓ [FAQ](./faq.md)
 

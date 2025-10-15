@@ -337,17 +337,26 @@ app.post('/consent/log', express.json(), (req, res) => {
 
 app.listen(3000);
 ```
+### 🔑 Espace membre & Multi-sites
 
-## Tarification
+**💼 Solution multi-clients** : Idéale pour les agences web et développeurs freelances.
 
-| Volume mensuel | Prix HT/mois |
-|----------------|--------------|
-| 0 - 300 | **GRATUIT** 🎁 |
-| 301 - 10K | 10€ |
-| 10K - 100K | 25€ |
-| 100K - 500K | 54€ |
-| 500K - 1.5M | 99€ |
-| +1.5M | 199€ |
+Connectez-vous sur [https://synapx.fr/sdk/cookie_consent/](https://synapx.fr/sdk/cookie_consent/) pour :
+
+- **Gérer plusieurs sites** depuis un seul compte
+- **Générer des clés API** dédiées par client/domaine
+- **Auto-configurer le code JavaScript** pour chaque projet
+  - Services pré-configurés (Analytics, Pixels, Chat...)
+  - Configuration complète exportable
+  - Gestion centralisée des logs de consentement
+
+Chaque site client dispose de sa propre configuration isolée et sécurisée.
+
+## 💰 Tarification
+
+| Volume/mois | 0 - 300        |  301 - 10K  |  10K - 100K  |  100K - 500K |  500K - 1.5M |     1.5M+        |
+|-------------|----------------|-------------|--------------|--------------|--------------|------------------|
+| Prix        | **GRATUIT** 🎁 |    10€      |      25€     |      54€     |     99€      | [Nous contacter](mailto:contact@synapx.fr) |
 
 **Facturation automatique** selon le volume mensuel réel.
 
@@ -377,6 +386,6 @@ window.CookieConsent.disableLogging();
 ## Support
 
 Questions sur le logging ?
-- 📧 contact@synapxlab.com
+- 📧 contact@synapx.fr
 - 📚 [FAQ](./faq.md)
 - 🐛 [GitHub Issues](https://github.com/synapxLab/cookie-consent/issues)

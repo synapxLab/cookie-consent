@@ -377,7 +377,7 @@ window.CookieConsent.disableLogging();
 ## Support
 
 Questions about logging?
-- 📧 contact@synapxlab.com
+- 📧 contact@synapx.fr
 - 📚 [FAQ](./faq.md)
 - 🐛 [GitHub Issues](https://github.com/synapxLab/cookie-consent/issues)
 
