@@ -63,7 +63,18 @@ window.addEventListener('load', () => {
 });
 
 
-window.CookieConsent.init({
+
+    window.CookieConsent.init({
+      logger: {
+        enabled: true,
+        apiKey: 'fd429de86f2e3cd71c4b18',
+        anonymousId: true,
+        includeUserAgent: true,
+        headers: {
+          'Authorization': 'Bearer apk_e62933f5cb8e1',
+          // 'X-Request-Id': crypto.randomUUID()
+        }
+      },
   statistics: {
     google_manager_key: 'G-ABC123XYZ'  // ✅ Affichera "Google Analytics"
   },
@@ -75,84 +86,6 @@ window.CookieConsent.init({
     }
   }
 });
-
-// CONFIGURATION - À adapter selon vos besoins
-// window.CookieConsent.init({
-//   // ========== LOGGER ==========
-//   logger: {
-//     enabled: false,                     // Activer le logging serveur
-//     endpoint: '/api/consent/log',       // URL de l'endpoint
-//     apiKey: null,                       // Clé API (optionnel)
-//     anonymousId: true,                  // Génère un ID anonyme
-//     includeUserAgent: true,             // Inclure le User-Agent
-//     headers: {
-//       // 'X-CSRF-TOKEN': 'votre-token'  // Headers personnalisés
-//     }
-//   },
-  
-//   // ========== STATISTICS ==========
-//   statistics: {
-//     google_manager_key: null            // 'G-XXXXXXXXXX' pour activer Google Analytics
-//   },
-  
-//   // ========== MARKETING ==========
-//   marketing: {
-//     google_AdSense_key: null,           // 'ca-pub-XXXXXXXXXXXXXXXX' pour Google Ads
-//     facebook: {
-//       key: null,                        // 'VOTRE-PIXEL-ID' pour Facebook Pixel
-//       track: 'PageView'                 // Événement à tracker (PageView par défaut)
-//     }
-//   }
-// });
-
 document.addEventListener('DOMContentLoaded', () => {
   js();
 });
-
-// ========== EXEMPLES D'UTILISATION ==========
-
-// Exemple 1 : Configuration complète
-/*
-window.CookieConsent.init({
-  logger: {
-    enabled: true,
-    endpoint: '/api/consent/log',
-    apiKey: 'votre-api-key',
-    anonymousId: true,
-    headers: {
-      'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content
-    }
-  },
-  statistics: {
-    google_manager_key: 'G-XXXXXXXXXX'
-  },
-  marketing: {
-    google_AdSense_key: 'ca-pub-XXXXXXXXXXXXXXXX',
-    facebook: {
-      key: 'VOTRE-PIXEL-ID',
-      track: 'PageView'
-    }
-  }
-});
-*/
-
-// Exemple 2 : Ancienne syntaxe (rétrocompatibilité)
-/*
-window.CookieConsent.init({
-  endpoint: '/api/consent/log',
-  anonymousId: true,
-  headers: {
-    'X-CSRF-TOKEN': 'votre-token'
-  },
-  statistics: {
-    google_manager_key: 'G-XXXXXXXXXX'
-  },
-  marketing: {
-    google_AdSense_key: 'ca-pub-XXXXXXXXXXXXXXXX',
-    facebook: {
-      key: 'VOTRE-PIXEL-ID',
-      track: 'PageView'
-    }
-  }
-});
-*/

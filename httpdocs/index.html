@@ -12,8 +12,7 @@
 <body>
   <section class="hero-marketing">
     <div style="max-width: 1200px; margin: 0 auto;">
-      <h1>🍪 Bannière Cookies RGPD<br><strong>100% Gratuite</strong></h1>
-      <p class="tagline">Version 2.2.0 - Affichage automatique des services • 7 langues • CSS encapsulé</p>
+      <h1>🍪 Bannière Cookies RGPD<br><strong>Fonctionnalités intégrées</strong></h1>
     </div>
   </section>
   
@@ -40,12 +39,8 @@
       <h2>Sommaire</h2>
       <ul>
         <li><a href="#installation">Installation</a></li>
-        <li><a href="#nouveautes">Nouveautés v2.2.0</a></li>
         <li><a href="#utilisation">Utilisation</a></li>
         <li><a href="#configuration">Configuration</a></li>
-        <li><a href="#i18n">Internationalisation</a></li>
-        <li><a href="#css">Personnalisation CSS</a></li>
-        <li><a href="#demo">Exemple de page</a></li>
         <li><a href="#license">Licence</a></li>
       </ul>
     </nav>
@@ -86,49 +81,22 @@ ReactDOM.createRoot(document.getElementById('root')).render(&lt;App /&gt;);</cod
         </div>
       </details>
 
-      <p><a href="https://synapx.fr/sdk/cookie/">Documentation complète</a></p>
+      <p><a href="https://synapx.fr/sdk/Cookie_consent/">Documentation complète : https://synapx.fr/sdk/Cookie_consent/</a></p>
+
+
+      <div class="callout callout-danger" role="alert">
+        <strong>RÈGLE D'OR :</strong>
+        Tant que l'utilisateur <em>n'a pas consenti</em> à une catégorie,
+        <u>ne chargez pas</u> les <strong>scripts tiers</strong>
+        (Google Analytics, pixels publicitaires, etc.)
+        et <u>ne déposez pas</u> leurs cookies.
+        <br><br>
+        ✅ Strictement nécessaire → toujours actif (non refusables).<br>
+        ❌ Statistiques / Marketing refusés → <strong>rien ne doit être chargé</strong>.
+      </div>
+
     </section>
 
-    <section id="nouveautes">
-      <h2>🆕 Nouveautés v2.2.0</h2>
-      
-      <div class="callout">
-        <h3>Affichage automatique des services</h3>
-        <p>Les services configurés (Google Analytics, AdSense, Facebook Pixel) sont maintenant <strong>automatiquement détectés et affichés</strong> dans les descriptions des catégories.</p>
-        
-        <p><strong>Exemple :</strong></p>
-        <ul>
-          <li>📊 <strong>Statistiques</strong><br>
-            <em>Services : Google Analytics</em></li>
-          <li>📢 <strong>Marketing</strong><br>
-            <em>Services : Google AdSense, Facebook Pixel</em></li>
-        </ul>
-      </div>
-
-      <div class="callout">
-        <h3>7 langues supportées</h3>
-        <p>Ajout de 3 nouvelles langues avec détection automatique :</p>
-        <ul>
-          <li>🇫🇷 Français (défaut)</li>
-          <li>🇬🇧 English</li>
-          <li>🇪🇸 Español</li>
-          <li>🇩🇪 Deutsch</li>
-          <li>🇮🇹 Italiano ✨ <strong>NOUVEAU</strong></li>
-          <li>🇳🇱 Nederlands ✨ <strong>NOUVEAU</strong></li>
-          <li>🇵🇹 Português ✨ <strong>NOUVEAU</strong></li>
-        </ul>
-      </div>
-
-      <div class="callout">
-        <h3>CSS entièrement encapsulé</h3>
-        <p>Tous les styles sont isolés dans <code>#politecookiebanner</code> pour éviter tout conflit avec votre site.</p>
-      </div>
-
-      <div class="callout">
-        <h3>Bundle ultra-léger</h3>
-        <p>Seulement <strong>~5 KB gzippé</strong> (les 7 langues ajoutent moins de 2 KB !)</p>
-      </div>
-    </section>
 
     <section id="utilisation">
       <h2>Utilisation</h2>
@@ -166,45 +134,30 @@ if (window.CookieConsent.hasConsent('statistics')) {
         <button id="btn-reset-consent">Effacer le consentement</button>
         <button id="btn-open-consent">Ouvrir les préférences</button>
       </div>
-
-      <div class="callout callout-danger" role="alert">
-        <strong>RÈGLE D'OR :</strong>
-        Tant que l'utilisateur <em>n'a pas consenti</em> à une catégorie,
-        <u>ne chargez pas</u> les <strong>scripts tiers</strong>
-        (Google Analytics, pixels publicitaires, etc.)
-        et <u>ne déposez pas</u> leurs cookies.
-        <br><br>
-        ✅ Strictement nécessaire → toujours actif (non refusables).<br>
-        ❌ Statistiques / Marketing refusés → <strong>rien ne doit être chargé</strong>.
-      </div>
     </section>
 
     <section id="configuration">
       <h2>Configuration</h2>
       
       <h3>Configuration complète</h3>
-      <pre><code>window.CookieConsent.init({
-  // Logging des consentements (optionnel)
-  logger: {
-    enabled: true,
-    endpoint: '/api/consent/log',
-    apiKey: 'votre-api-key',
-    anonymousId: true,
-    headers: {
-      'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content
-    }
-  },
-  
-  // Google Analytics
+      <pre><code>    window.CookieConsent.init({
+      logger: {
+        enabled: true,
+        apiKey: 'fd429de86f2e3cd71c4b18',
+        anonymousId: true,
+        includeUserAgent: true,
+        headers: {
+          'Authorization': 'Bearer apk_e62933f5cb8e1',
+           'X-Request-Id': crypto.randomUUID()
+        }
+      },
   statistics: {
-    google_manager_key: 'G-XXXXXXXXXX'
+    google_manager_key: 'G-ABC123XYZ'  // ✅ Affichera "Google Analytics"
   },
-  
-  // Services marketing
   marketing: {
-    google_AdSense_key: 'ca-pub-XXXXXXXXXXXXXXXX',
+    google_AdSense_key: 'ca-pub-1234567890123456',  // ✅ Affichera "Google AdSense"
     facebook: {
-      key: 'VOTRE-PIXEL-ID',
+      key: '123456789012345',  // ✅ Affichera "Facebook Pixel"
       track: 'PageView'
     }
   }
@@ -217,103 +170,9 @@ if (window.CookieConsent.hasConsent('statistics')) {
   }
 });</code></pre>
 
-      <div class="callout">
-        <strong>Comportement automatique :</strong>
-        <ul>
-          <li>Si <code>google_manager_key</code> configurée → Affiche "Services : Google Analytics"</li>
-          <li>Si <code>google_AdSense_key</code> configurée → Affiche "Services : Google AdSense"</li>
-          <li>Si <code>facebook.key</code> configurée → Affiche "Services : Facebook Pixel"</li>
-          <li>Si aucune clé → Pas de ligne "Services"</li>
-        </ul>
-      </div>
+
     </section>
 
-    <section id="i18n">
-      <h2>🌍 Internationalisation</h2>
-      
-      <p>La langue est détectée automatiquement via <code>navigator.language</code>.</p>
-
-      <table style="width: 100%; border-collapse: collapse; margin: 1rem 0;">
-        <thead>
-          <tr style="background: var(--cc-surface, #f3f4f6);">
-            <th style="padding: 0.5rem; text-align: left;">Langue</th>
-            <th style="padding: 0.5rem; text-align: left;">Code</th>
-            <th style="padding: 0.5rem; text-align: left;">Exemple</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr><td style="padding: 0.5rem;">🇫🇷 Français</td><td><code>fr</code></td><td>Services : Google Analytics</td></tr>
-          <tr><td style="padding: 0.5rem;">🇬🇧 English</td><td><code>en</code></td><td>Services: Google Analytics</td></tr>
-          <tr><td style="padding: 0.5rem;">🇪🇸 Español</td><td><code>es</code></td><td>Servicios: Google Analytics</td></tr>
-          <tr><td style="padding: 0.5rem;">🇩🇪 Deutsch</td><td><code>de</code></td><td>Dienste: Google Analytics</td></tr>
-          <tr><td style="padding: 0.5rem;">🇮🇹 Italiano</td><td><code>it</code></td><td>Servizi: Google Analytics</td></tr>
-          <tr><td style="padding: 0.5rem;">🇳🇱 Nederlands</td><td><code>nl</code></td><td>Diensten: Google Analytics</td></tr>
-          <tr><td style="padding: 0.5rem;">🇵🇹 Português</td><td><code>pt</code></td><td>Serviços: Google Analytics</td></tr>
-        </tbody>
-      </table>
-
-      <h3>Forcer une langue</h3>
-      <pre><code>import t from '@synapxlab/cookie-consent/src/js/translat';
-t.setLocale('en'); // Force l'anglais</code></pre>
-    </section>
-
-    <section id="css">
-      <h2>Personnalisation CSS</h2>
-      <p>
-        La bannière utilise des <strong>variables CSS</strong> pour une personnalisation facile.
-        4 thèmes intégrés : <code>default</code>, <code>brown</code>, <code>dark</code>, <code>blue</code>.
-      </p>
-
-      <h3>Commutateur de thème (démo)</h3>
-      <div class="theme-switch">
-        <button data-theme="default">Default</button>
-        <button data-theme="brown">Brown</button>
-        <button data-theme="dark">Dark</button>
-        <button data-theme="blue">Blue</button>
-      </div>
-      <p class="note">Appliquez le thème sur <code>&lt;body class="cookie-theme-default"&gt;</code></p>
-
-      <h3>Variables CSS personnalisables</h3>
-      <pre><code>:root {
-  --cc-bg: #ffffff;
-  --cc-text: #111827;
-  --cc-muted: #6b7280;
-  --cc-line: #e5e7eb;
-  --cc-surface: #f3f4f6;
-  --cc-accent: #18a60b;
-}</code></pre>
-    </section>
-
-    <section id="demo">
-      <h2>Exemple de page (démo)</h2>
-      <pre><code>&lt;!doctype html&gt;
-&lt;html lang="fr"&gt;
-&lt;head&gt;
-  &lt;meta charset="utf-8" /&gt;
-  &lt;meta name="viewport" content="width=device-width,initial-scale=1" /&gt;
-  &lt;title&gt;Gérer le consentement aux cookies&lt;/title&gt;
-&lt;/head&gt;
-&lt;body class="cookie-theme-default"&gt;
-  &lt;footer&gt;
-    &lt;div id="openpolitecookie"&gt;
-      &lt;a href="#"&gt;Gérer les cookies&lt;/a&gt;
-    &lt;/div&gt;
-  &lt;/footer&gt;
-
-  &lt;!-- Charger le bundle --&gt;
-  &lt;script src="https://unpkg.com/@synapxlab/cookie-consent@2.2.0/dist/bundle.js"&gt;&lt;/script&gt;
-  
-  &lt;!-- Configuration --&gt;
-  &lt;script&gt;
-    window.CookieConsent.init({
-      statistics: {
-        google_manager_key: 'G-ABC123XYZ'
-      }
-    });
-  &lt;/script&gt;
-&lt;/body&gt;
-&lt;/html&gt;</code></pre>
-    </section>
 
     <section id="license">
       <h2>Licence</h2>
@@ -323,13 +182,6 @@ t.setLocale('en'); // Force l'anglais</code></pre>
         Package : <a href="https://www.npmjs.com/package/@synapxlab/cookie-consent">npm</a><br>
         Contributions et suggestions bienvenues !
       </p>
-      
-      <div class="callout">
-        <strong>Changelog complet :</strong> <a href="https://github.com/synapxlab/cookie-consent/blob/main/CHANGELOG.md">CHANGELOG.md</a><br>
-        <strong>Documentation :</strong> <a href="https://github.com/synapxlab/cookie-consent/blob/main/README.md">README.md (EN)</a> • 
-        <a href="https://github.com/synapxlab/cookie-consent/blob/main/README.fr.md">README.fr.md (FR)</a>
-      </div>
-    </section>
   </main>
 
   <footer class="site-footer">

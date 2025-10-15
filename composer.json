@@ -1,6 +1,6 @@
 {
     "name": "root/cookie",
-    "description": "Bannière de consentement cookies minimaliste (JS pur, zéro dépendance).",
+    "description": "Cookie Consent GDPR — Free, Multilingual & Integrations (Pure JavaScript, Zero Dependencies)",
     "type": "project",
     "license": "MIT",
     "autoload": {

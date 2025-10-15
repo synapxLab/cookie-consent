@@ -1,12 +1,12 @@
 {
   "name": "@synapxlab/cookie-consent",
-  "version": "2.2.0",
-  "description": "GDPR-compliant cookie consent banner with automatic service detection and 7 languages",
+  "version": "2.1.3",
+  "description": "Cookie Consent GDPR — Free, Multilingual & Integrations (Pure JavaScript, Zero Dependencies)",
   "main": "dist/cookie.js",
-  "types": "dist/cookie.d.ts",
   "files": [
     "dist",
     "README.md",
+    "CHANGELOG.md",
     "LICENSE",
     "package.json"
   ],
@@ -31,8 +31,8 @@
     "url": "https://github.com/synapxLab/cookie-consent/issues"
   },
   "author": {
-    "name": "Laurent Lockness",
-    "email": "synapxLab@lockness-informatique.fr",
+    "name": "L. Lockness",
+    "email": "contact@synapx.fr",
     "url": "https://synapx.fr"
   },
   "license": "MIT",

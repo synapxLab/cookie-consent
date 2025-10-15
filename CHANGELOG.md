@@ -4,6 +4,102 @@ Tous les changements notables de `@synapxlab/cookie-consent` seront documentés 
 Le format est basé sur [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 et ce projet respecte le [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.4.0] - 2025-10-14
+
+### Ajouté
+- **Support complet de 15+ services marketing et analytics** :
+  - **Statistics** : Google Analytics, Google Tag Manager, Matomo, Mixpanel, Amplitude, Plausible, Hotjar, Microsoft Clarity
+  - **Marketing** : Google AdSense, Facebook Pixel, TikTok Pixel, LinkedIn Insight Tag
+  - **Cookies (Chat/CRM)** : Intercom, Crisp, HubSpot, Segment
+- **Détection automatique des services** : Les services configurés s'affichent dans les descriptions des catégories
+- **Logger avancé** avec retry et timeout configurables
+- **Pseudonymisation automatique** : Génération de device_id anonyme
+- **En-têtes HTTP personnalisables** dans la configuration logger
+- **Support de plusieurs clés par catégorie** : `google_analytics_key` ET `google_tag_manager_key` supportés simultanément
+- **Fonction `getConfiguredServices()`** : Détection automatique de tous les services actifs
+- **Nouvelles clés de traduction** : `cookiesServices` pour les services de chat/CRM
+- **Catégorie "Cookies de fonctionnalité"** distincte des cookies strictement nécessaires
+
+### Modifié
+- **Structure CONFIG complètement réorganisée** :
+  - `logger` : Configuration centralisée du système de journalisation
+  - `statistics` : Tous les outils d'analyse
+  - `marketing` : Tous les outils publicitaires
+  - `cookies` : Outils de chat et CRM
+- **Fonction `init()`** : Support de la nouvelle syntaxe structurée avec rétrocompatibilité
+- **Affichage conditionnel** : Les sections de services n'apparaissent que si des clés sont configurées
+- **Chargement intelligent** : Chaque service ne se charge que si sa clé est présente
+- **Messages de logging** plus détaillés avec emojis pour meilleure lisibilité
+
+### Amélioré
+- **Conformité RGPD renforcée** : 
+  - Device ID stocké séparément de la clé de consentement
+  - Option `anonymousId` pour désactiver le tracking inter-sessions
+  - Headers personnalisables pour CSRF tokens
+- **Performance** : Lazy loading de tous les scripts tiers
+- **DX (Developer Experience)** : 
+  - Console logs détaillés lors de l'initialisation
+  - Messages explicites lors du chargement de chaque service
+  - Fonction `getConfig()` pour débugger la configuration
+- **Documentation** : Exemples pour tous les services supportés
+
+### Exemple de migration
+```javascript
+// ❌ Ancienne syntaxe (v2.2-2.3)
+window.CookieConsent.init({
+  statistics: {
+    google_manager_key: 'G-ABC123XYZ'
+  }
+});
+
+// ✅ Nouvelle syntaxe (v2.4+) - Plus de services disponibles
+window.CookieConsent.init({
+  logger: {
+    enabled: true,
+    endpoint: '/api/consent/log',
+    apiKey: 'your-key',
+    anonymousId: true,
+    headers: {
+      'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content
+    }
+  },
+  statistics: {
+    google_analytics_key: 'G-ABC123XYZ',    // Nouveau nom de clé
+    google_tag_manager_key: 'GTM-XXXXXXX',
+    matomo: { url: 'https://matomo.example.com/', siteId: '1' },
+    mixpanel_token: 'YOUR_TOKEN',
+    amplitude_key: 'YOUR_KEY',
+    plausible: { domain: 'example.com' },
+    hotjar_site_id: 123456,
+    clarity_project_id: 'ABC123XYZ'
+  },
+  marketing: {
+    google_adsense_key: 'ca-pub-XXXXXXXXXXXXXXXX',
+    facebook_pixel: { key: 'PIXEL_ID', track: 'PageView' },
+    tiktok_pixel_id: 'TIKTOK_PIXEL_ID',
+    linkedin_partner_id: 'PARTNER_ID'
+  },
+  cookies: {
+    intercom_app_id: 'APP_ID',
+    crisp_website_id: 'WEBSITE_ID',
+    hubspot_portal_id: 'PORTAL_ID',
+    segment_write_key: 'WRITE_KEY'
+  }
+});
+```
+
+## [2.3.0] - 2025-10-10
+
+### Ajouté
+- **Catégorie "Preuve de consentement"** affichée quand logger est activé
+- **Message de transparence CNIL** : Explication complète sur la pseudonymisation et la conservation des logs
+- **Support des clés alternatives** : `google_manager_key` accepté comme alias de `google_analytics_key`
+- **Détection Facebook Pixel** : Support de la syntaxe objet `{ key, track }`
+
+### Modifié
+- **Affichage conditionnel de la catégorie logging** : Ne s'affiche que si `logger.enabled === true`
+- **Traductions enrichies** : Ajout de `loggingTitle` et `loggingNotice` dans les 7 langues
+
 ## [2.2.0] - 2025-10-01
 
 ### Ajouté
@@ -30,41 +126,18 @@ et ce projet respecte le [Semantic Versioning](https://semver.org/spec/v2.0.0.ht
 - **Performance** : Chargement des scripts uniquement si les clés sont présentes
 - **Accessibilité** : Reset CSS complet pour éviter les héritages indésirables
 
-### Exemple
-```javascript
-// Configuration
-window.CookieConsent.init({
-  statistics: {
-    google_manager_key: 'G-ABC123XYZ'
-  },
-  marketing: {
-    google_AdSense_key: 'ca-pub-1234567890',
-    facebook: { key: '123456789', track: 'PageView' }
-  }
-});
-
-// Résultat dans la bannière :
-// 📊 Statistiques
-// Services : Google Analytics
-//
-// 📢 Marketing  
-// Services : Google AdSense, Facebook Pixel
-```
-
 ## [2.1.1] - 2025-09-19
 
 ### Corrigé
 - **API globale** : Décommentée `window.CookieConsent` avec toutes les méthodes
 - **Événements** : Ajout de l'événement `cookieConsentChanged` émis automatiquement après sauvegarde
 - **Méthodes API** : 
-  - `show()` - Afficher la bannière avec préférences
-  - `hide()` - Masquer la bannière
-  - `reset()` - Supprimer localStorage et recharger la page
+  - `open()` - Afficher la bannière
+  - `open(true)` - Afficher avec préférences détaillées
+  - `reset()` - Supprimer localStorage et rouvrir la bannière
   - `getPreferences()` - Récupérer les préférences actuelles
   - `hasConsent(category)` - Vérifier une catégorie spécifique
-  - `on('change', callback)` - Écouter les changements
 - **Gestion des scripts tiers** : Chargement conditionnel sans rechargement de page
-- **Messages adaptatifs** : Basculement entre message d'optin et confirmation
 - **Bouton "Del"** : Fonctionnel pour supprimer toutes les préférences
 - **Logs de debug** : Ajout de console.log détaillés pour le développement
 
@@ -138,61 +211,42 @@ window.CookieConsent.init({
 - **Stockage** : Préférences sauvées dans localStorage
 - **Accessibilité** : Navigation clavier et attributs ARIA
 
-## Installation
+## Migration
 
-```bash
-npm install @synapxlab/cookie-consent
-```
-
-## Utilisation
-
-### Version complète (recommandée)
-```html
-<!-- CDN -->
-<script src="https://unpkg.com/@synapxlab/cookie-consent@latest/dist/bundle.js"></script>
-```
-
+### De 2.3.x vers 2.4.x
 ```javascript
-// npm
-import '@synapxlab/cookie-consent/dist/bundle.js';
-
-// API disponible globalement
+// ⚠️ Changement de nom de clé (rétrocompatibilité assurée)
+// Ancienne syntaxe (toujours valide)
 window.CookieConsent.init({
   statistics: {
-    google_manager_key: 'G-XXXXXXXXXX'
+    google_manager_key: 'G-ABC123XYZ'  // ✅ Fonctionne toujours
   }
 });
+
+// Nouvelle syntaxe (recommandée)
+window.CookieConsent.init({
+  statistics: {
+    google_analytics_key: 'G-ABC123XYZ'  // Nouveau nom explicite
+  }
+});
+
+// Nouvelles fonctionnalités disponibles :
+// - 15+ services supportés (Matomo, Mixpanel, Amplitude, Hotjar, Clarity, etc.)
+// - Catégorie "Cookies" séparée pour Intercom, Crisp, HubSpot, Segment
+// - Logger avec retry, timeout et headers personnalisables
 ```
 
-### Version module seul
+### De 2.2.x vers 2.3.x
 ```javascript
-// Pour intégrations custom
-import '@synapxlab/cookie-consent/dist/cookie.js';
+// ✅ Aucun changement cassant
+// Nouveautés :
+// - Catégorie "Preuve de consentement" affichée automatiquement
+// - Message de transparence CNIL intégré
 ```
-
-## Migration
 
 ### De 2.1.x vers 2.2.x
 ```javascript
 // ✅ Aucun changement cassant - Rétrocompatibilité totale
-// Ancienne syntaxe toujours valide :
-window.CookieConsent.init({
-  endpoint: '/api/consent/log',
-  anonymousId: true
-});
-
-// Nouvelle syntaxe (recommandée) :
-window.CookieConsent.init({
-  logger: {
-    enabled: true,
-    endpoint: '/api/consent/log',
-    anonymousId: true
-  },
-  statistics: {
-    google_manager_key: 'G-ABC123XYZ'
-  }
-});
-
 // Nouvelles fonctionnalités disponibles :
 // - Affichage automatique des services dans la bannière
 // - 7 langues supportées (fr, en, es, de, it, nl, pt)
@@ -204,7 +258,7 @@ window.CookieConsent.init({
 // ✅ API stable, pas de changement cassant
 // Nouvelles méthodes disponibles :
 window.CookieConsent.hasConsent('statistics');
-window.CookieConsent.on('change', callback);
+window.CookieConsent.getConfig();
 ```
 
 ### De 1.x vers 2.x
@@ -216,7 +270,7 @@ cookieConsent.init({
 
 // ✅ Nouvelle API (2.x+)
 // Aucune initialisation requise, fonctionne automatiquement
-window.CookieConsent.show(); // Ouvrir manuellement si besoin
+window.CookieConsent.open(); // Ouvrir manuellement si besoin
 ```
 
 ## Langues supportées
@@ -225,7 +279,14 @@ window.CookieConsent.show(); // Ouvrir manuellement si besoin
 |---------|---------|
 | 1.x | Français uniquement |
 | 2.0.x - 2.1.x | Français, Anglais, Espagnol, Allemand |
-| 2.2.x | Français, Anglais, Espagnol, Allemand, Italien, Néerlandais, Portugais |
+| 2.2.x+ | Français, Anglais, Espagnol, Allemand, Italien, Néerlandais, Portugais |
+
+## Services supportés par version
+
+| Version | Services Statistics | Services Marketing | Services Cookies/CRM |
+|---------|--------------------|--------------------|---------------------|
+| 2.0.x - 2.3.x | Google Analytics, Google Tag Manager | Google AdSense, Facebook Pixel | - |
+| 2.4.x | GA, GTM, Matomo, Mixpanel, Amplitude, Plausible, Hotjar, MS Clarity | AdSense, FB Pixel, TikTok Pixel, LinkedIn Insight | Intercom, Crisp, HubSpot, Segment |
 
 ## Liens utiles
 
