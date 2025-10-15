@@ -17,7 +17,7 @@ yarn add @synapxlab/cookie-consent
 ### Via CDN
 
 ```html
-<script src="https://unpkg.com/@synapxlab/cookie-consent/dist/cookie.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@synapxlab/cookie-consent@2.1.3/dist/cookie.min.js"></script>
 ```
 
 ## Basic Usage

@@ -15,7 +15,7 @@
   <!-- Votre contenu -->
   
   <!-- Cookie Consent - À placer avant la fermeture du body -->
-  <script src="https://unpkg.com/@synapxlab/cookie-consent/dist/cookie.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@synapxlab/cookie-consent@2.1.3/dist/cookie.min.js"></script>
   
   <!-- Configuration (optionnelle) -->
   <script>
@@ -37,7 +37,7 @@
 npm install @synapxlab/cookie-consent
 
 # Ou téléchargement direct
-wget https://unpkg.com/@synapxlab/cookie-consent/dist/cookie.js
+wget https://cdn.jsdelivr.net/npm/@synapxlab/cookie-consent@2.1.3/dist/cookie.min.js
 ```
 
 2. **Inclure dans votre HTML**
@@ -50,14 +50,14 @@ wget https://unpkg.com/@synapxlab/cookie-consent/dist/cookie.js
 ### Sans configuration (par défaut)
 
 ```html
-<script src="https://unpkg.com/@synapxlab/cookie-consent/dist/cookie.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@synapxlab/cookie-consent@2.1.3/dist/cookie.min.js"></script>
 <!-- La bannière s'affiche automatiquement -->
 ```
 
 ### Avec Google Analytics
 
 ```html
-<script src="https://unpkg.com/@synapxlab/cookie-consent/dist/cookie.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@synapxlab/cookie-consent@2.1.3/dist/cookie.min.js"></script>
 <script>
   window.CookieConsent.init({
     statistics: {
@@ -70,7 +70,7 @@ wget https://unpkg.com/@synapxlab/cookie-consent/dist/cookie.js
 ### Avec plusieurs services
 
 ```html
-<script src="https://unpkg.com/@synapxlab/cookie-consent/dist/cookie.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@synapxlab/cookie-consent@2.1.3/dist/cookie.min.js"></script>
 <script>
   window.CookieConsent.init({
     // Logging RGPD
@@ -262,7 +262,7 @@ Pour les scripts inline (code directement dans le HTML), utilisez l'événement 
   }
 </style>
 
-<script src="https://unpkg.com/@synapxlab/cookie-consent/dist/cookie.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@synapxlab/cookie-consent@2.1.3/dist/cookie.min.js"></script>
 ```
 
 ### Thème sombre
@@ -292,7 +292,7 @@ Langues supportées : **FR, EN, ES, DE, IT, NL, PT**
 ### Forcer une langue
 
 ```html
-<script src="https://unpkg.com/@synapxlab/cookie-consent/dist/cookie.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@synapxlab/cookie-consent@2.1.3/dist/cookie.min.js"></script>
 <script>
   // Import du module de traduction (si build custom)
   import t from '@synapxlab/cookie-consent/translat';
@@ -383,7 +383,7 @@ location.reload();
   </footer>
   
   <!-- Cookie Consent -->
-  <script src="https://unpkg.com/@synapxlab/cookie-consent/dist/cookie.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@synapxlab/cookie-consent@2.1.3/dist/cookie.min.js"></script>
   <script>
     window.CookieConsent.init({
       statistics: {
@@ -420,7 +420,7 @@ location.reload();
   </footer>
   
   <!-- Cookie Consent -->
-  <script src="https://unpkg.com/@synapxlab/cookie-consent/dist/cookie.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@synapxlab/cookie-consent@2.1.3/dist/cookie.min.js"></script>
   <script>
     window.CookieConsent.init({
       logger: {

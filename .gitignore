@@ -95,7 +95,7 @@ temps/
 # Fichiers temporaires de travail
 lisezmoi.txt
 claude.html
-
+*.tgz
 # Fichiers bizarres
 e à jour*
 *cookie-core"
