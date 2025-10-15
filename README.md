@@ -91,8 +91,9 @@ window.CookieConsent.init({
 
 ## 💰 Tarification
 
-| Volume/mois | 0 - 300  |301 - 10K  |10K - 100K  |100K - 500K |500K - 1.5M | 1.5M+ |
-| Prix| **GRATUIT** 🎁 |10€  |25€ |54€  |99€ | [Nous contacter](mailto:contact@synapx.fr) |
+| Volume/mois | 0 - 300        |  301 - 10K  |  10K - 100K  |  100K - 500K |  500K - 1.5M |     1.5M+        |
+|-------------|----------------|-------------|--------------|--------------|--------------|------------------|
+| Prix        | **GRATUIT** 🎁 |    10€      |      25€     |      54€     |     99€      | [Nous contacter](mailto:contact@synapx.fr) |
 
 
 **La bannière est gratuite. Seul le logging est payant au-delà de 300/mois.**
