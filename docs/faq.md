@@ -578,7 +578,8 @@ Mois 3 : 200 consentements → 0€ (gratuit)
 
 - 💳 Carte bancaire (Stripe)
 - 🏦 Virement (sur demande pour +500€/an)
-- 📄 Facture automatique
+- 📄 Facture automatique via ERP/CRM [Administralis](https://administralis.fr/)
+
 
 Dashboard SynapxLab > Facturation
 
