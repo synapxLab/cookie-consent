@@ -3,7 +3,7 @@
  * Bannière de consentement + Logger + Intégration services
  * 
  * @version 2.4.0
- * @author SynapxLab <contact@synapx.fr>
+ * @author SynapxLab <contact@synapxlab.com>
  * @license MIT
  */
 
@@ -16,7 +16,7 @@ const STORAGE_KEY = 'politecookiebanner';
 const CONFIG = {
   logger: {
     enabled: false,
-    endpoint: 'https://api.synapx.fr/',
+    endpoint: 'https://cookie.synapx.fr/',
     apiKey: null,
     retries: 3,
     timeout: 5000,
@@ -39,7 +39,7 @@ const CONFIG = {
     tiktok_pixel_id: null,
     linkedin_partner_id: null
   },
-  functional: {  // ✅ RENOMMÉ de cookies → functional
+  functional: {  // RENOMMÉ de cookies → functional
     intercom_app_id: null,
     crisp_website_id: null,
     hubspot_portal_id: null,
@@ -256,7 +256,7 @@ const getConfiguredServices = () => {
   if (CONFIG.marketing.tiktok_pixel_id) services.marketing.push('TikTok Pixel');
   if (CONFIG.marketing.linkedin_partner_id) services.marketing.push('LinkedIn Insight');
   
-  // ✅ Functional (ex-Cookies)
+  // Functional (ex-Cookies)
   if (CONFIG.functional.intercom_app_id) services.cookies.push('Intercom');
   if (CONFIG.functional.crisp_website_id) services.cookies.push('Crisp');
   if (CONFIG.functional.hubspot_portal_id) services.cookies.push('HubSpot');
@@ -308,13 +308,13 @@ const logConsentToServer = async (preferences, action = 'accept', method = 'bann
       clearTimeout(timeoutId);
       
       if (response.ok) {
-        console.log('[CookieConsent] ✅ Consentement loggé avec succès');
+       // console.log('[CookieConsent] Consentement loggé avec succès');
         return true;
       } else {
-        console.warn(`[CookieConsent] ⚠️ Échec du log (HTTP ${response.status})`);
+        // console.warn(`[CookieConsent]  Échec du log (HTTP ${response.status})`);
       }
     } catch (error) {
-      console.warn('[CookieConsent] ⚠️ Erreur de logging:', error.message);
+      // console.warn('[CookieConsent] Erreur de logging:', error.message);
     }
     
     if (attempt < CONFIG.logger.retries - 1) {
@@ -322,7 +322,7 @@ const logConsentToServer = async (preferences, action = 'accept', method = 'bann
     }
   }
   
-  console.error('[CookieConsent] ❌ Échec du logging après plusieurs tentatives');
+  // console.error('[CookieConsent] Échec du logging après plusieurs tentatives');
   return false;
 };
 
@@ -330,7 +330,7 @@ const logConsentToServer = async (preferences, action = 'accept', method = 'bann
 const loadGoogleAnalytics = () => {
   if (!CONFIG.statistics.google_analytics_key) return;
   
-  console.log('📊 Chargement Google Analytics...');
+  // console.log('Chargement Google Analytics...');
   
   const script = document.createElement('script');
   script.src = `https://www.googletagmanager.com/gtag/js?id=${CONFIG.statistics.google_analytics_key}`;
@@ -346,13 +346,13 @@ const loadGoogleAnalytics = () => {
     cookie_flags: 'SameSite=None;Secure'
   });
 
-  console.log('✅ Google Analytics chargé');
+  // console.log('Google Analytics chargé');
 };
 
 const loadGoogleTagManager = () => {
   if (!CONFIG.statistics.google_tag_manager_key) return;
   
-  console.log('📊 Chargement Google Tag Manager...');
+  // console.log('Chargement Google Tag Manager...');
   
   (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
   new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
@@ -360,13 +360,13 @@ const loadGoogleTagManager = () => {
   'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
   })(window,document,'script','dataLayer',CONFIG.statistics.google_tag_manager_key);
   
-  console.log('✅ Google Tag Manager chargé');
+  // console.log('Google Tag Manager chargé');
 };
 
 const loadMatomo = () => {
   if (!CONFIG.statistics.matomo) return;
   
-  console.log('📊 Chargement Matomo...');
+  // console.log('Chargement Matomo...');
   
   const { url, siteId } = CONFIG.statistics.matomo;
   window._paq = window._paq || [];
@@ -382,13 +382,13 @@ const loadMatomo = () => {
   script.async = true;
   document.head.appendChild(script);
   
-  console.log('✅ Matomo chargé');
+ //  console.log('Matomo chargé');
 };
 
 const loadMixpanel = () => {
   if (!CONFIG.statistics.mixpanel_token) return;
   
-  console.log('📊 Chargement Mixpanel...');
+  // console.log('Chargement Mixpanel...');
   
   (function(f,b){if(!b.__SV){var e,g,i,h;window.mixpanel=b;b._i=[];b.init=function(e,f,c){function g(a,d){var b=d.split(".");2==b.length&&(a=a[b[0]],d=b[1]);a[d]=function(){a.push([d].concat(Array.prototype.slice.call(arguments,0)))}}var a=b;"undefined"!==typeof c?a=b[c]=[]:c="mixpanel";a.people=a.people||[];a.toString=function(a){var d="mixpanel";"mixpanel"!==c&&(d+="."+c);a||(d+=" (stub)");return d};a.people.toString=function(){return a.toString(1)+".people (stub)"};i="disable time_event track track_pageview track_links track_forms track_with_groups add_group set_group remove_group register register_once alias unregister identify name_tag set_config reset opt_in_tracking opt_out_tracking has_opted_in_tracking has_opted_out_tracking clear_opt_in_out_tracking start_batch_senders people.set people.set_once people.unset people.increment people.append people.union people.track_charge people.clear_charges people.delete_user people.remove".split(" ");
   for(h=0;h<i.length;h++)g(a,i[h]);var j="set set_once union unset remove delete".split(" ");a.get_group=function(){function b(c){d[c]=function(){call2_args=arguments;call2=[c].concat(Array.prototype.slice.call(call2_args,0));a.push([e,call2])}}for(var d={},e=["get_group"].concat(Array.prototype.slice.call(arguments,0)),c=0;c<j.length;c++)b(j[c]);return d};b._i.push([e,f,c])};b.__SV=1.2;e=f.createElement("script");e.type="text/javascript";e.async=!0;e.src="undefined"!==typeof MIXPANEL_CUSTOM_LIB_URL?
@@ -396,13 +396,13 @@ const loadMixpanel = () => {
   
   mixpanel.init(CONFIG.statistics.mixpanel_token);
   
-  console.log('✅ Mixpanel chargé');
+  // console.log('Mixpanel chargé');
 };
 
 const loadAmplitude = () => {
   if (!CONFIG.statistics.amplitude_key) return;
   
-  console.log('📊 Chargement Amplitude...');
+  // console.log('Chargement Amplitude...');
   
   (function(e,t){var n=e.amplitude||{_q:[],_iq:{}};var r=t.createElement("script")
   ;r.type="text/javascript"
@@ -410,7 +410,9 @@ const loadAmplitude = () => {
   ;r.crossOrigin="anonymous";r.async=true
   ;r.src="https://cdn.amplitude.com/libs/amplitude-8.21.4-min.gz.js"
   ;r.onload=function(){if(!e.amplitude.runQueuedFunctions){
-  console.log("[Amplitude] Error: could not load SDK")}};var s=t.getElementsByTagName("script")[0]
+  // console.log("[Amplitude] Error: could not load SDK")
+  }};
+  var s=t.getElementsByTagName("script")[0]
   ;s.parentNode.insertBefore(r,s);function i(e,t){e.prototype[t]=function(){
   this._q.push([t].concat(Array.prototype.slice.call(arguments,0)));return this}}
   var o=function(){this._q=[];return this}
@@ -428,13 +430,13 @@ const loadAmplitude = () => {
   
   amplitude.getInstance().init(CONFIG.statistics.amplitude_key);
   
-  console.log('✅ Amplitude chargé');
+  // console.log('Amplitude chargé');
 };
 
 const loadPlausible = () => {
   if (!CONFIG.statistics.plausible) return;
   
-  console.log('📊 Chargement Plausible...');
+  // console.log('Chargement Plausible...');
   
   const script = document.createElement('script');
   script.defer = true;
@@ -442,14 +444,12 @@ const loadPlausible = () => {
   script.src = 'https://plausible.io/js/script.js';
   document.head.appendChild(script);
   
-  console.log('✅ Plausible chargé');
+  // console.log('Plausible chargé');
 };
 
 const loadHotjar = () => {
   if (!CONFIG.statistics.hotjar_site_id) return;
-  
-  console.log('📊 Chargement Hotjar...');
-  
+  // console.log('Chargement Hotjar...');
   (function(h,o,t,j,a,r){
     h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
     h._hjSettings={hjid:CONFIG.statistics.hotjar_site_id,hjsv:6};
@@ -458,30 +458,24 @@ const loadHotjar = () => {
     r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
     a.appendChild(r);
   })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
-  
-  console.log('✅ Hotjar chargé');
+  // console.log('Hotjar chargé');
 };
 
 const loadClarity = () => {
   if (!CONFIG.statistics.clarity_project_id) return;
-  
-  console.log('📊 Chargement Microsoft Clarity...');
-  
+  // console.log('Chargement Microsoft Clarity...');
   (function(c,l,a,r,i,t,y){
     c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
     t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
     y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
   })(window, document, "clarity", "script", CONFIG.statistics.clarity_project_id);
-  
-  console.log('✅ Microsoft Clarity chargé');
+  // console.log('Microsoft Clarity chargé');
 };
 
 // ========== INTÉGRATION SERVICES MARKETING ==========
 const loadFacebookPixel = () => {
   if (!CONFIG.marketing.facebook_pixel) return;
-  
-  console.log('📢 Chargement Facebook Pixel...');
-  
+  // console.log('Chargement Facebook Pixel...');
   !function(f,b,e,v,n,t,s) {
     if(f.fbq)return;n=f.fbq=function(){n.callMethod?
     n.callMethod.apply(n,arguments):n.queue.push(arguments)};
@@ -495,43 +489,34 @@ const loadFacebookPixel = () => {
     window.fbq('init', CONFIG.marketing.facebook_pixel.key);
     window.fbq('track', CONFIG.marketing.facebook_pixel.track || 'PageView');
   }
-  
-  console.log('✅ Facebook Pixel chargé');
+  // console.log('Facebook Pixel chargé');
 };
 
 const loadGoogleAdSense = () => {
   if (!CONFIG.marketing.google_adsense_key) return;
-  
-  console.log('📢 Chargement Google AdSense...');
-  
+  // console.log('Chargement Google AdSense...');
   const script = document.createElement('script');
   script.src = `https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${CONFIG.marketing.google_adsense_key}`;
   script.async = true;
   script.crossOrigin = 'anonymous';
   document.head.appendChild(script);
-  
-  console.log('✅ Google AdSense chargé');
+  // console.log('Google AdSense chargé');
 };
 
 const loadTikTokPixel = () => {
-  if (!CONFIG.marketing.tiktok_pixel_id) return;
-  
-  console.log('📢 Chargement TikTok Pixel...');
-  
+  if (!CONFIG.marketing.tiktok_pixel_id) return;  
+  // console.log('Chargement TikTok Pixel...');
   !function (w, d, t) {
     w.TiktokAnalyticsObject=t;var ttq=w[t]=w[t]||[];ttq.methods=["page","track","identify","instances","debug","on","off","once","ready","alias","group","enableCookie","disableCookie"],ttq.setAndDefer=function(t,e){t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}};for(var i=0;i<ttq.methods.length;i++)ttq.setAndDefer(ttq,ttq.methods[i]);ttq.instance=function(t){for(var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n]);return e},ttq.load=function(e,n){var i="https://analytics.tiktok.com/i18n/pixel/events.js";ttq._i=ttq._i||{},ttq._i[e]=[],ttq._i[e]._u=i,ttq._t=ttq._t||{},ttq._t[e]=+new Date,ttq._o=ttq._o||{},ttq._o[e]=n||{};var o=document.createElement("script");o.type="text/javascript",o.async=!0,o.src=i+"?sdkid="+e+"&lib="+t;var a=document.getElementsByTagName("script")[0];a.parentNode.insertBefore(o,a)};
     ttq.load(CONFIG.marketing.tiktok_pixel_id);
     ttq.page();
   }(window, document, 'ttq');
-  
-  console.log('✅ TikTok Pixel chargé');
+  // console.log('TikTok Pixel chargé');
 };
 
 const loadLinkedInInsight = () => {
   if (!CONFIG.marketing.linkedin_partner_id) return;
-  
-  console.log('📢 Chargement LinkedIn Insight...');
-  
+  // console.log('Chargement LinkedIn Insight...');
   window._linkedin_data_partner_ids = window._linkedin_data_partner_ids || [];
   window._linkedin_data_partner_ids.push(CONFIG.marketing.linkedin_partner_id);
   
@@ -544,75 +529,62 @@ const loadLinkedInInsight = () => {
     b.src = "https://snap.licdn.com/li.lms-analytics/insight.min.js";
     s.parentNode.insertBefore(b, s);
   })(window.lintrk);
-  
-  console.log('✅ LinkedIn Insight chargé');
+  // console.log('LinkedIn Insight chargé');
 };
 
 // ========== INTÉGRATION SERVICES FUNCTIONAL (ex-Cookies/Chat/CRM) ==========
 const loadIntercom = () => {
-  if (!CONFIG.functional.intercom_app_id) return;  // ✅ MODIFIÉ
-  
-  console.log('💬 Chargement Intercom...');
-  
-  (function(){var w=window;var ic=w.Intercom;if(typeof ic==="function"){ic('reattach_activator');ic('update',w.intercomSettings);}else{var d=document;var i=function(){i.c(arguments);};i.q=[];i.c=function(args){i.q.push(args);};w.Intercom=i;var l=function(){var s=d.createElement('script');s.type='text/javascript';s.async=true;s.src='https://widget.intercom.io/widget/' + CONFIG.functional.intercom_app_id;var x=d.getElementsByTagName('script')[0];x.parentNode.insertBefore(s,x);};if(document.readyState==='complete'){l();}else if(w.attachEvent){w.attachEvent('onload',l);}else{w.addEventListener('load',l,false);}}})();  // ✅ MODIFIÉ
-  
+  if (!CONFIG.functional.intercom_app_id) return;  // MODIFIÉ
+  // console.log('Chargement Intercom...');
+  (function(){var w=window;var ic=w.Intercom;if(typeof ic==="function"){ic('reattach_activator');ic('update',w.intercomSettings);}else{var d=document;var i=function(){i.c(arguments);};i.q=[];i.c=function(args){i.q.push(args);};w.Intercom=i;var l=function(){var s=d.createElement('script');s.type='text/javascript';s.async=true;s.src='https://widget.intercom.io/widget/' + CONFIG.functional.intercom_app_id;var x=d.getElementsByTagName('script')[0];x.parentNode.insertBefore(s,x);};if(document.readyState==='complete'){l();}else if(w.attachEvent){w.attachEvent('onload',l);}else{w.addEventListener('load',l,false);}}})();  // MODIFIÉ
   window.Intercom('boot', {
-    app_id: CONFIG.functional.intercom_app_id  // ✅ MODIFIÉ
+    app_id: CONFIG.functional.intercom_app_id  // MODIFIÉ
 });
   
-  console.log('✅ Intercom chargé');
+  //console.log('Intercom chargé');
 };
 
 const loadCrisp = () => {
-  if (!CONFIG.functional.crisp_website_id) return;  // ✅ MODIFIÉ
-  
-  console.log('💬 Chargement Crisp...');
-  
-  window.$crisp=[];window.CRISP_WEBSITE_ID=CONFIG.functional.crisp_website_id;  // ✅ MODIFIÉ
+  if (!CONFIG.functional.crisp_website_id) return;  // MODIFIÉ
+  // console.log('Chargement Crisp...');
+  window.$crisp=[];window.CRISP_WEBSITE_ID=CONFIG.functional.crisp_website_id;  // MODIFIÉ
   (function(){d=document;s=d.createElement("script");s.src="https://client.crisp.chat/l.js";s.async=1;d.getElementsByTagName("head")[0].appendChild(s);})();
   
-  console.log('✅ Crisp chargé');
+  // console.log('Crisp chargé');
 };
 
 const loadHubSpot = () => {
-  if (!CONFIG.functional.hubspot_portal_id) return;  // ✅ MODIFIÉ
-  
-  console.log('💬 Chargement HubSpot...');
-  
+  if (!CONFIG.functional.hubspot_portal_id) return;  // MODIFIÉ
+  // console.log('Chargement HubSpot...');
   const script = document.createElement('script');
   script.type = 'text/javascript';
   script.id = 'hs-script-loader';
   script.async = true;
   script.defer = true;
-  script.src = `//js.hs-scripts.com/${CONFIG.functional.hubspot_portal_id}.js`;  // ✅ MODIFIÉ
+  script.src = `//js.hs-scripts.com/${CONFIG.functional.hubspot_portal_id}.js`;  // MODIFIÉ
   document.head.appendChild(script);
-  
-  console.log('✅ HubSpot chargé');
+  // console.log('HubSpot chargé');
 };
 
 const loadSegment = () => {
-  if (!CONFIG.functional.segment_write_key) return;  // ✅ MODIFIÉ
-  
-  console.log('💬 Chargement Segment...');
-  
-  !function(){var analytics=window.analytics=window.analytics||[];if(!analytics.initialize)if(analytics.invoked)window.console&&console.error&&console.error("Segment snippet included twice.");else{analytics.invoked=!0;analytics.methods=["trackSubmit","trackClick","trackLink","trackForm","pageview","identify","reset","group","track","ready","alias","debug","page","once","off","on","addSourceMiddleware","addIntegrationMiddleware","setAnonymousId","addDestinationMiddleware"];analytics.factory=function(e){return function(){var t=Array.prototype.slice.call(arguments);t.unshift(e);analytics.push(t);return analytics}};for(var e=0;e<analytics.methods.length;e++){var key=analytics.methods[e];analytics[key]=analytics.factory(key)}analytics.load=function(key,e){var t=document.createElement("script");t.type="text/javascript";t.async=!0;t.src="https://cdn.segment.com/analytics.js/v1/" + key + "/analytics.min.js";var n=document.getElementsByTagName("script")[0];n.parentNode.insertBefore(t,n);analytics._loadOptions=e};analytics._writeKey=CONFIG.functional.segment_write_key;analytics.SNIPPET_VERSION="4.15.3";  // ✅ MODIFIÉ
-  analytics.load(CONFIG.functional.segment_write_key);  // ✅ MODIFIÉ
+  if (!CONFIG.functional.segment_write_key) return;  // MODIFIÉ
+  // console.log('Chargement Segment...');
+  !function(){var analytics=window.analytics=window.analytics||[];if(!analytics.initialize)if(analytics.invoked)window.console&&console.error&&console.error("Segment snippet included twice.");else{analytics.invoked=!0;analytics.methods=["trackSubmit","trackClick","trackLink","trackForm","pageview","identify","reset","group","track","ready","alias","debug","page","once","off","on","addSourceMiddleware","addIntegrationMiddleware","setAnonymousId","addDestinationMiddleware"];analytics.factory=function(e){return function(){var t=Array.prototype.slice.call(arguments);t.unshift(e);analytics.push(t);return analytics}};for(var e=0;e<analytics.methods.length;e++){var key=analytics.methods[e];analytics[key]=analytics.factory(key)}analytics.load=function(key,e){var t=document.createElement("script");t.type="text/javascript";t.async=!0;t.src="https://cdn.segment.com/analytics.js/v1/" + key + "/analytics.min.js";var n=document.getElementsByTagName("script")[0];n.parentNode.insertBefore(t,n);analytics._loadOptions=e};analytics._writeKey=CONFIG.functional.segment_write_key;analytics.SNIPPET_VERSION="4.15.3";  // MODIFIÉ
+  analytics.load(CONFIG.functional.segment_write_key);  // MODIFIÉ
   analytics.page();
   }}();
-  
-  console.log('✅ Segment chargé');
+  // console.log('Segment chargé');
 };
 
 const enableFunctionalCookies = () => {
-  console.log('🔧 Activation cookies fonctionnels...');
-  console.log('✅ Cookies fonctionnels activés');
+  //console.log('Activation cookies fonctionnels...');
+  // console.log('Cookies fonctionnels activés');
 };
 
 // ========== GESTION DES PRÉFÉRENCES ==========
 const applyPreferences = (prefs) => {
   if (!prefs) return;
-  
-  console.log('🎯 Application des préférences:', prefs);
+  // console.log('Application des préférences:', prefs);
   releaseByConsent(prefs);
   
   if (prefs.statistics) {
@@ -644,7 +616,7 @@ const applyPreferences = (prefs) => {
 
 const savePrefs = async (obj, action = 'customize', method = 'banner') => {
   const record = {
-    data: obj,  // ✅ CORRIGÉ (était "obj" au lieu de "data: obj")
+    data: obj,  // CORRIGÉ (était "obj" au lieu de "data: obj")
     timestamp: Date.now(),
     expiresAt: Date.now() + EXPIRATION_MS
   };
@@ -661,9 +633,7 @@ const savePrefs = async (obj, action = 'customize', method = 'banner') => {
     
     return;
   }
-  
-  console.log('[CookieConsent] ✅ Consentement validé - Chargement des services');
-  
+  //  console.log('[CookieConsent] Consentement validé - Chargement des services');
   document.dispatchEvent(new CustomEvent('cookieConsentChanged', {
     detail: { preferences: obj, logged: true }
   }));
@@ -1015,7 +985,7 @@ window.CookieConsent = {
       }
     }
     
-    // ✅ NOUVEAU : Support de "functional" avec rétrocompatibilité "cookies"
+    // NOUVEAU : Support de "functional" avec rétrocompatibilité "cookies"
     if (options.cookies) {
       console.warn('[CookieConsent] ⚠️ "cookies" est déprécié, utilisez "functional" à la place');
       options.functional = options.cookies;
@@ -1036,12 +1006,12 @@ window.CookieConsent = {
       }
     }
     
-    console.log('[CookieConsent] Configuration appliquée:', {
-      logger: CONFIG.logger.enabled,
-      statistics: Object.keys(CONFIG.statistics).filter(k => CONFIG.statistics[k]),
-      marketing: Object.keys(CONFIG.marketing).filter(k => CONFIG.marketing[k]),
-      functional: Object.keys(CONFIG.functional).filter(k => CONFIG.functional[k])  // ✅ MODIFIÉ
-    });
+    // console.log('[CookieConsent] Configuration appliquée:', {
+    //   logger: CONFIG.logger.enabled,
+    //   statistics: Object.keys(CONFIG.statistics).filter(k => CONFIG.statistics[k]),
+    //   marketing: Object.keys(CONFIG.marketing).filter(k => CONFIG.marketing[k]),
+    //   functional: Object.keys(CONFIG.functional).filter(k => CONFIG.functional[k])  // MODIFIÉ
+    // });
   },
   
   disableLogging: () => {

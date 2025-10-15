@@ -3,36 +3,19 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>🍪 Gérer le consentement aux cookies - Solution RGPD gratuite v2.2.0</title>
-  <meta name="description" content="Bannière de consentement cookies RGPD 100% gratuite. Alternative française à Cookiebot - Documentation complète, installation simple, conformité légale.">
+  <title>🍪 Cookie Consent - Solution RGPD gratuite et open source</title>
+  <meta name="description" content="Bannière de consentement cookies RGPD 100% gratuite. Alternative française à Cookiebot - Conforme CNIL, open source, Made in France.">
   <meta name="keywords" content="RGPD, GDPR, bannière cookies, consentement, gratuit, cookiebot alternative, CNIL, open source">
-  <meta property="og:title" content="Cookie Consent RGPD Gratuit - Alternative à Cookiebot">
-  <meta property="og:description" content="Solution française gratuite de consentement cookies. Fini les 50€/mois !">
+  <meta property="og:title" content="Cookie Consent RGPD Gratuit - Alternative française">
+  <meta property="og:description" content="Solution française gratuite et open source. Fini les 50€/mois !">
 </head>
 <body>
   <section class="hero-marketing">
     <div style="max-width: 1200px; margin: 0 auto;">
-      <h1>🍪 Bannière Cookies RGPD<br><strong>Fonctionnalités intégrées</strong></h1>
+      <h1>🍪 Cookie Consent RGPD<br><strong>Open Source & Gratuit</strong></h1>
+
     </div>
   </section>
-  
-  <svg xmlns="http://www.w3.org/2000/svg" style="display:none">
-    <symbol id="ico-pkg" viewBox="0 0 24 24">
-      <path fill="currentColor" d="M3 7.5 12 3l9 4.5v9L12 21 3 16.5v-9Z"/>
-      <path fill="#fff" d="M12 6.5 6 9.5v5l6 3 6-3v-5l-6-3Z" opacity=".25"/>
-    </symbol>
-    <symbol id="ico-code" viewBox="0 0 24 24">
-      <path fill="currentColor" d="M9.4 16.6 5.8 13l3.6-3.6 1.4 1.4L8.6 13l2.2 2.2-1.4 1.4Zm5.2 0-1.4-1.4 2.2-2.2-2.2-2.2 1.4-1.4L18.2 13l-3.6 3.6Z"/>
-    </symbol>
-    <symbol id="ico-npm" viewBox="0 0 24 24">
-      <circle cx="12" cy="12" r="10" fill="#fff"/><circle cx="12" cy="12" r="10" fill="none" stroke="currentColor"/>
-      <text x="50%" y="54%" text-anchor="middle" dominant-baseline="middle" font-size="8" font-family="system-ui" fill="currentColor">npm</text>
-    </symbol>
-    <symbol id="ico-globe" viewBox="0 0 24 24">
-      <circle cx="12" cy="12" r="10" stroke="currentColor" fill="none" stroke-width="2"/>
-      <path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" stroke="currentColor" fill="none" stroke-width="2"/>
-    </symbol>
-  </svg>
 
   <main>
     <nav id="sommaire" aria-label="Sommaire">
@@ -40,162 +23,231 @@
       <ul>
         <li><a href="#installation">Installation</a></li>
         <li><a href="#utilisation">Utilisation</a></li>
+        <li><a href="#espace-membre">Espace membre</a></li>
         <li><a href="#configuration">Configuration</a></li>
         <li><a href="#license">Licence</a></li>
       </ul>
     </nav>
 
     <section id="installation">
-      <h2>Installation</h2>
 
-      <details id="inst-npm" class="acc">
-        <summary><svg class="icon" aria-hidden="true"><use href="#ico-npm"/></svg> Via npm / yarn / pnpm</summary>
+      <p>
+        <a href="https://synapx.fr/sdk/cookie_consent/" style="display:inline-block;padding:12px 24px;background:#e63946;color:#fff;text-decoration:none;border-radius:6px;font-weight:600;">
+          🎮 Voir la démo interactive
+        </a>
+      </p>
+      
+      <h2>📦 Installation</h2>
+
+      <details class="acc" open>
+        <summary>Via npm / yarn / pnpm</summary>
         <div class="acc-body">
           <pre><code>npm install @synapxlab/cookie-consent
-# ou
-yarn add @synapxlab/cookie-consent
-pnpm add @synapxlab/cookie-consent</code></pre>
-          <p class="small">Dans votre bundle (ex: <code>src/js/bundle.js</code>) :</p>
+            # ou
+            yarn add @synapxlab/cookie-consent
+          pnpm add @synapxlab/cookie-consent</code></pre>
+          <p class="small">Dans votre code :</p>
           <pre><code>import '@synapxlab/cookie-consent';</code></pre>
         </div>
       </details>
 
-      <details id="inst-script" class="acc">
-        <summary><svg class="icon" aria-hidden="true"><use href="#ico-code"/></svg> Via balise &lt;script&gt; HTML</summary>
+      <details class="acc">
+        <summary>Via CDN (script HTML)</summary>
         <div class="acc-body">
-          <p class="small">Placez ce script <strong>avant</strong> votre JS principal :</p>
-          <pre><code>&lt;script src="https://unpkg.com/@synapxlab/cookie-consent@2.2.0/dist/bundle.js"&gt;&lt;/script&gt;</code></pre>
+          <pre><code>&lt;script src="https://unpkg.com/@synapxlab/cookie-consent/dist/cookie.js"&gt;&lt;/script&gt;</code></pre>
         </div>
       </details>
 
-      <details id="inst-react" class="acc">
-        <summary><span class="logo">⚛️</span> React (Vite / CRA)</summary>
-        <div class="acc-body">
-          <pre><code>// src/main.jsx
-import '@synapxlab/cookie-consent';
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import App from './App.jsx';
-
-ReactDOM.createRoot(document.getElementById('root')).render(&lt;App /&gt;);</code></pre>
-        </div>
-      </details>
-
-      <p><a href="https://synapx.fr/sdk/Cookie_consent/">Documentation complète : https://synapx.fr/sdk/Cookie_consent/</a></p>
-
-
-      <div class="callout callout-danger" role="alert">
-        <strong>RÈGLE D'OR :</strong>
-        Tant que l'utilisateur <em>n'a pas consenti</em> à une catégorie,
-        <u>ne chargez pas</u> les <strong>scripts tiers</strong>
-        (Google Analytics, pixels publicitaires, etc.)
-        et <u>ne déposez pas</u> leurs cookies.
-        <br><br>
-        ✅ Strictement nécessaire → toujours actif (non refusables).<br>
-        ❌ Statistiques / Marketing refusés → <strong>rien ne doit être chargé</strong>.
-      </div>
-
-    </section>
-
-
-    <section id="utilisation">
-      <h2>Utilisation</h2>
       <p>
-        Le script injecte la bannière au chargement. Les catégories sont <strong>cachées par défaut</strong> et
-        s'affichent uniquement quand l'utilisateur clique sur <em>« Les préférences »</em>. Les choix sont
-        stockés dans <code>localStorage</code> sous la clé <code>politecookiebanner</code>.
+        📚 <strong><a href="https://synapx.fr/sdk/cookie_consent/">Documentation complète</a></strong> - 
+        Installation, configuration, intégrations (WordPress, PrestaShop, GTM...)
       </p>
 
-      <p>Ajouter dans le footer de votre page HTML :</p>
-      <pre><code>&lt;div id="openpolitecookie"&gt;
-  &lt;a href="#"&gt;Gérer les cookies&lt;/a&gt;
-&lt;/div&gt;</code></pre>
+      <div class="callout callout-danger" role="alert">
+        <strong>⚠️ RÈGLE D'OR RGPD :</strong>
+        Ne chargez AUCUN script tiers (Analytics, pixels, chat...) avant le consentement utilisateur.
+        <br><br>
+        ✅ Cookie Consent <strong>bloque automatiquement</strong> tous les traceurs détectés.
+      </div>
+    </section>
+
+    <section id="utilisation">
+      <h2>🚀 Utilisation</h2>
+      
+      <p>Ajoutez ce lien dans votre footer pour permettre la gestion des cookies :</p>
+      <pre><code>&lt;a href="#" id="openpolitecookie"&gt;Gérer les cookies&lt;/a&gt;</code></pre>
 
       <h3>API JavaScript</h3>
       <pre><code>// Ouvrir la bannière
-window.CookieConsent.open();
+        window.CookieConsent.open();
 
-// Ouvrir avec préférences visibles
-window.CookieConsent.open(true);
+        // Ouvrir avec préférences visibles
+        window.CookieConsent.open(true);
 
-// Réinitialiser
-window.CookieConsent.reset();
+        // Réinitialiser
+        window.CookieConsent.reset();
 
-// Obtenir les préférences
-const prefs = window.CookieConsent.getPreferences();
+        // Obtenir les préférences
+        const prefs = window.CookieConsent.getPreferences();
 
-// Vérifier un consentement
-if (window.CookieConsent.hasConsent('statistics')) {
-  console.log('Analytics autorisé');
-}</code></pre>
+        // Vérifier un consentement
+        if (window.CookieConsent.hasConsent('statistics')) {
+          console.log('Analytics autorisé');
+        }</code></pre>
 
-      <h3>Outils de test rapide</h3>
-      <div class="actions-consent">
-        <button id="btn-reset-consent">Effacer le consentement</button>
-        <button id="btn-open-consent">Ouvrir les préférences</button>
+        <h3>🧪 Outils de test</h3>
+        <div class="actions-consent">
+          <button id="btn-reset-consent">Effacer le consentement</button>
+          <button id="btn-open-consent">Ouvrir les préférences</button>
+        </div>
+      </section>
+
+      <section id="espace-membre">
+        <h2>🔑 Espace membre & Multi-sites</h2>
+
+        <div class="callout callout-info">
+          <p><strong>💼 Solution pensée pour les agences web et développeurs</strong></p>
+
+          <p>Connectez-vous sur <strong><a href="https://synapx.fr/sdk/cookie_consent/">https://synapx.fr/sdk/cookie_consent/</a></strong> pour :</p>
+
+          <ul>
+            <li>✅ <strong>Gérer plusieurs sites clients</strong> depuis un seul compte</li>
+            <li>✅ <strong>Générer des clés API</strong> dédiées par projet/domaine</li>
+            <li>✅ <strong>Auto-configurer le code JavaScript</strong> pour chaque site :
+              <ul>
+                <li>Services pré-configurés (Analytics, Pixels, Chat...)</li>
+                <li>Configuration complète exportable</li>
+                <li>Gestion centralisée des logs de consentement</li>
+              </ul>
+            </li>
+          </ul>
+
+          <p>Chaque site dispose de sa propre configuration isolée et sécurisée.</p>
+
+          <p>
+            <a href="https://synapx.fr/sdk/cookie_consent/" style="display:inline-block;padding:10px 20px;background:#3b82f6;color:#fff;text-decoration:none;border-radius:6px;font-weight:600;margin-top:10px;">
+              🔐 Accéder à l'espace membre
+            </a>
+          </p>
+        </div>
+
+        <h3>📊 Tarification du logging</h3>
+        <table style="width:100%;border-collapse:collapse;margin-top:20px;">
+          <thead>
+            <tr style="background:#f3f4f6;">
+              <th style="padding:12px;border:1px solid #e5e7eb;text-align:left;">Volume/mois</th>
+              <th style="padding:12px;border:1px solid #e5e7eb;text-align:left;">Prix HT</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td style="padding:12px;border:1px solid #e5e7eb;">0 - 300</td>
+              <td style="padding:12px;border:1px solid #e5e7eb;"><strong>GRATUIT</strong> 🎁</td>
+            </tr>
+            <tr>
+              <td style="padding:12px;border:1px solid #e5e7eb;">301 - 10K</td>
+              <td style="padding:12px;border:1px solid #e5e7eb;">10€</td>
+            </tr>
+            <tr>
+              <td style="padding:12px;border:1px solid #e5e7eb;">10K - 100K</td>
+              <td style="padding:12px;border:1px solid #e5e7eb;">25€</td>
+            </tr>
+            <tr>
+              <td style="padding:12px;border:1px solid #e5e7eb;">100K - 500K</td>
+              <td style="padding:12px;border:1px solid #e5e7eb;">54€</td>
+            </tr>
+            <tr>
+              <td style="padding:12px;border:1px solid #e5e7eb;">500K - 1.5M</td>
+              <td style="padding:12px;border:1px solid #e5e7eb;">99€</td>
+            </tr>
+            <tr>
+              <td style="padding:12px;border:1px solid #e5e7eb;">1.5M</td>
+              <td style="padding:12px;border:1px solid #e5e7eb;"><a href="https://synapx.fr">Nous contacter</a></td>
+            </tr>
+          </tbody>
+        </table>
+
+        <p style="margin-top:10px;"><small>💡 La bannière est 100% gratuite. Seul le logging (preuve de consentement RGPD) est payant au-delà de 300/mois.
+
+          <br>Chaque consentement correspond à une action enregistrée (acceptation, refus ou modification)..
+        </small></p>
+      </section>
+
+      <section id="configuration">
+        <h2>⚙️ Configuration</h2>
+
+        <h3>Configuration complète (avec logger)</h3>
+        <pre><code>window.CookieConsent.init({
+          logger: {
+            enabled: true,
+            apiKey: 'sk-live-xxxxxxxxxxxxx',  // 🔑 Depuis l'espace membre
+            anonymousId: true,
+            headers: {
+              'Authorization': 'Bearer apk_xxxxx'
+            }
+          },
+          statistics: {
+            google_analytics_key: 'G-XXXXXXXXX',  // ✅ Google Analytics
+            hotjar_site_id: '1234567'             // ✅ Hotjar
+          },
+          marketing: {
+            google_adsense_key: 'ca-pub-xxxxx',   // ✅ Google AdSense
+            facebook_pixel: {
+              key: 'YOUR-PIXEL-ID',
+              track: 'PageView'
+            }
+          }
+        });</code></pre>
+
+        <h3>Configuration minimale (sans logger)</h3>
+        <pre><code>window.CookieConsent.init({
+          statistics: {
+            google_analytics_key: 'G-XXXXXXXXX'
+          }
+        });</code></pre>
+
+        <p>
+          📖 <strong><a href="https://synapx.fr/sdk/cookie_consent/">Voir tous les services supportés</a></strong> 
+          (16 services pré-configurés : GA4, GTM, Matomo, Hotjar, Clarity, Facebook, TikTok, LinkedIn, Intercom, Crisp...)
+        </p>
+      </section>
+
+      <section id="license">
+        <h2>📝 Licence & Support</h2>
+
+        <p><strong>MIT License</strong> - Utilisez, modifiez, redistribuez librement.</p>
+
+        <p>
+          💻 <a href="https://github.com/synapxlab/cookie-consent">GitHub</a> • 
+          📦 <a href="https://www.npmjs.com/package/@synapxlab/cookie-consent">npm</a> • 
+          📚 <a href="https://synapx.fr/sdk/cookie_consent/">Documentation</a> • 
+        </p>
+
+        <p>Contributions et suggestions bienvenues ! 🤝</p>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="copyright">
+        © 2025 <strong>Cookie Consent by SynapxLab</strong>
       </div>
-    </section>
+      <div id="openpolitecookie" class="credits">
+        <a href="#">Gérer les cookies</a>
+      </div>
+      <div class="credits">
+        🇪🇺 Solution européenne open source | 🇫🇷 Développé en France | 🔒 Hébergement souverain OVH
+      </div>
+    </footer>
 
-    <section id="configuration">
-      <h2>Configuration</h2>
-      
-      <h3>Configuration complète</h3>
-      <pre><code>    window.CookieConsent.init({
-      logger: {
-        enabled: true,
-        apiKey: 'fd429de86f2e3cd71c4b18',
-        anonymousId: true,
-        includeUserAgent: true,
-        headers: {
-          'Authorization': 'Bearer apk_e62933f5cb8e1',
-           'X-Request-Id': crypto.randomUUID()
-        }
-      },
-  statistics: {
-    google_manager_key: 'G-ABC123XYZ'  // ✅ Affichera "Google Analytics"
-  },
-  marketing: {
-    google_AdSense_key: 'ca-pub-1234567890123456',  // ✅ Affichera "Google AdSense"
-    facebook: {
-      key: '123456789012345',  // ✅ Affichera "Facebook Pixel"
-      track: 'PageView'
-    }
-  }
-});</code></pre>
-
-      <h3>Configuration minimale</h3>
-      <pre><code>window.CookieConsent.init({
-  statistics: {
-    google_manager_key: 'G-XXXXXXXXXX'
-  }
-});</code></pre>
-
-
-    </section>
-
-
-    <section id="license">
-      <h2>Licence</h2>
-      <p><strong>MIT</strong> — Utilisez, modifiez, redistribuez librement. Merci de conserver la mention de licence.</p>
-      <p class="note">
-        Code source : <a href="https://github.com/synapxlab/cookie-consent">GitHub</a> •
-        Package : <a href="https://www.npmjs.com/package/@synapxlab/cookie-consent">npm</a><br>
-        Contributions et suggestions bienvenues !
-      </p>
-  </main>
-
-  <footer class="site-footer">
-    <div class="copyright">
-      © Copyright 2025 <strong>Cookie Consent by SynapxLab</strong>. All Rights Reserved
-    </div>
-    <div id="openpolitecookie" class="credits">
-      <a href="#">Gérer les cookies</a>
-    </div>
-    <div class="credits">
-      Designed by <a href="https://synapx.fr/">Synapx.fr</a>
-    </div>
-  </footer>
-
-  <script src="/assets/js/bundle.js"></script>
-</body>
-</html>
+    <script src="/assets/js/bundle.js"></script>
+    <script>
+    // Boutons de test
+      document.getElementById('btn-reset-consent')?.addEventListener('click', () => {
+        window.CookieConsent?.reset();
+      });
+      document.getElementById('btn-open-consent')?.addEventListener('click', () => {
+        window.CookieConsent?.open(true);
+      });
+    </script>
+  </body>
+  </html>
