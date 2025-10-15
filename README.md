@@ -89,11 +89,29 @@ window.CookieConsent.init({
 
 [📋 Documentation conformité complète](./docs/compliance-cnil.md)
 
+### 🔑 Espace membre & Multi-sites
+
+**💼 Solution multi-clients** : Idéale pour les agences web et développeurs freelances.
+
+Connectez-vous sur [https://synapx.fr/sdk/cookie_consent/](https://synapx.fr/sdk/cookie_consent/) pour :
+
+- **Gérer plusieurs sites** depuis un seul compte
+- **Générer des clés API** dédiées par client/domaine
+- **Auto-configurer le code JavaScript** pour chaque projet
+  - Services pré-configurés (Analytics, Pixels, Chat...)
+  - Configuration complète exportable
+  - Gestion centralisée des logs de consentement
+
+Chaque site client dispose de sa propre configuration isolée et sécurisée.
+
 ## 💰 Tarification
 
 | Volume/mois | 0 - 300        |  301 - 10K  |  10K - 100K  |  100K - 500K |  500K - 1.5M |     1.5M+        |
 |-------------|----------------|-------------|--------------|--------------|--------------|------------------|
 | Prix        | **GRATUIT** 🎁 |    10€      |      25€     |      54€     |     99€      | [Nous contacter](mailto:contact@synapx.fr) |
+
+
+
 
 
 **La bannière est gratuite. Seul le logging est payant au-delà de 300/mois.**
