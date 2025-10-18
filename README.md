@@ -129,15 +129,15 @@ Log in to [https://synapx.fr/sdk/cookie_consent/](https://synapx.fr/sdk/cookie_c
 
 **Quick Guides:**
 
--   [🚀 Getting Started](./docs/getting-started.md)
--   [⚙️ Configuration](./docs/configuration.md)
--   [⚖️ GDPR Compliance](./docs/compliance-cnil.md)
--   [❓ FAQ](./docs/faq.md)
+-   [🚀 Getting Started](./docs/en/getting-started.md)
+-   [⚙️ Configuration](./docs/en/configuration.md)
+-   [⚖️ GDPR Compliance](./docs/en/compliance-cnil.md)
+-   [❓ FAQ](./docs/en/faq.md)
 
 **Integrations:**
 
--   [Vanilla JS](./docs/integrations/vanilla.md)
--   [Google Tag Manager](./docs/integrations/tag-manager.md)
+-   [Vanilla JS](./docs/en/integrations/vanilla.md)
+-   [Google Tag Manager](./docs/en/integrations/tag-manager.md)
 
 Each client site has its own isolated and secure configuration.
 
@@ -220,7 +220,7 @@ MIT © [SynapxLab](https://synapx.fr)
 ## 🔗 Links
 
 -   🌐 [Official Website](https://synapx.fr/sdk/cookie_consent/)
--   📚 [Documentation](./docs/)
+-   📚 [Documentation fr](./docs/fr/)
 -   💻 [GitHub](https://github.com/synapxLab/cookie-consent)
 -   📦 [npm](https://www.npmjs.com/package/@synapxlab/cookie-consent)
 
