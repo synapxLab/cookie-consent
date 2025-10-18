@@ -79,7 +79,7 @@ Configuration du système de journalisation :
 ```
 ☑️ Activer le logging des consentements
 
-Endpoint API : https://api.synapx.fr/
+Endpoint API : https://cookie.synapx.fr/
 Clé API : sk-live-xxxxxxxxxxxxx
 ```
 

@@ -70,4 +70,3 @@ Ouvrez votre navigateur et vous devriez voir :
 
 - 📧 Email : contact@synapx.fr
 - 🐛 Issues : [GitHub Issues](https://github.com/synapxLab/cookie-consent/issues)
-- 💬 Discord : [Communauté SynapxLab](https://discord.gg/synapxlab)

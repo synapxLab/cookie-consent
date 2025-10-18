@@ -12,7 +12,6 @@ Le système de logging enregistre chaque consentement utilisateur pour garantir 
 window.CookieConsent.init({
   logger: {
     enabled: true,
-    endpoint: 'https://api.synapx.fr/',
     apiKey: 'sk-live-xxxxx',
     anonymousId: true,
     retries: 3,

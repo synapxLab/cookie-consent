@@ -476,7 +476,7 @@ Obligation : Conserver la mention de licence MIT.
 - ⚠️ Vous devez maintenir à jour
 - ⚠️ Vous devez fournir support
 
-**Alternative recommandée** : Devenir partenaire SynapxLab (contactez-nous).
+
 
 ## Support
 
@@ -487,7 +487,6 @@ Obligation : Conserver la mention de licence MIT.
 - 🎓 [Guides d'intégration](./integrations/)
 
 **Communauté :**
-- 💬 [Discord SynapxLab](https://discord.gg/synapxlab)
 - 🐛 [GitHub Issues](https://github.com/synapxLab/cookie-consent/issues)
 
 **Support direct :**
@@ -507,7 +506,6 @@ Obligation : Conserver la mention de licence MIT.
 - Audit de conformité
 - SLA garanti
 
-Contactez-nous : contact@synapx.fr
 
 ### Proposez-vous des formations ?
 
@@ -525,14 +523,9 @@ En attendant :
 **Bannière : GRATUIT** (open source)
 
 **Logging :**
-| Volume/mois | Prix HT |
-|-------------|---------|
-| 0 - 300 | **Gratuit** 🎁 |
-| 301 - 10K | 10€ |
-| 10K - 100K | 25€ |
-| 100K - 500K | 54€ |
-| 500K - 1.5M | 99€ |
-| +1.5M | 199€ |
+| Volume/mois | 0 - 300        |  301 - 10K  |  10K - 100K  |  100K - 500K |  500K - 1.5M |     1.5M+        |
+|-------------|----------------|-------------|--------------|--------------|--------------|------------------|
+| Prix        | **GRATUIT**    |    10€      |      25€     |      54€     |     99€      | [Nous contacter](mailto:contact@synapx.fr) |
 
 **Facturation automatique** selon le volume mensuel.
 
@@ -589,7 +582,6 @@ Dashboard SynapxLab > Facturation
 
 **Contactez-nous :**
 - 📧 contact@synapx.fr
-- 💬 [Discord](https://discord.gg/synapxlab)
 - 🐛 [GitHub Issues](https://github.com/synapxLab/cookie-consent/issues)
 
 **Contribuez à cette FAQ :**

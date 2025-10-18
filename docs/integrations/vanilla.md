@@ -76,7 +76,7 @@ wget https://cdn.jsdelivr.net/npm/@synapxlab/cookie-consent@2.1.3/dist/cookie.mi
     // Logging RGPD
     logger: {
       enabled: true,
-      endpoint: 'https://api.synapx.fr/',
+      endpoint: 'https://cookie.synapx.fr/',
       apiKey: 'sk-live-xxxxx'
     },
     
@@ -425,7 +425,7 @@ location.reload();
     window.CookieConsent.init({
       logger: {
         enabled: true,
-        endpoint: 'https://api.synapx.fr/',
+        endpoint: 'https://cookie.synapx.fr/',
         apiKey: 'sk-live-xxxxx'
       },
       statistics: {

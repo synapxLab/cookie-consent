@@ -43,7 +43,7 @@ Pour activer la journalisation des consentements :
 
 ```
 ☑️ Activer le logging RGPD
-Endpoint API : https://api.synapx.fr/
+Endpoint API : https://cookie.synapx.fr/
 Clé API : sk-live-xxxxx
 ```
 

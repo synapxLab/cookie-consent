@@ -1,34 +1,40 @@
+
 # 🍪 Cookie Consent
 
 [![npm version](https://img.shields.io/npm/v/@synapxlab/cookie-consent.svg)](https://npmjs.com/package/@synapxlab/cookie-consent)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Downloads](https://img.shields.io/npm/dm/@synapxlab/cookie-consent.svg)](https://npmjs.com/package/@synapxlab/cookie-consent)
 
-Bannière de consentement aux cookies **conforme RGPD/CNIL**, open source et gratuite.
 
-Alternative européenne open-source, sans dépendance aux GAFA, à Cookiebot® et Axeptio® (non affiliée).
+**GDPR/CNIL compliant** cookie consent banner, open source and free.
 
+European open-source alternative, with no dependency on Big Tech.
 
-**🎮 [Voir la démo en direct](https://synapx.fr/sdk/cookie_consent/)**
+**🎮 [View Live Demo](https://synapx.fr/sdk/cookie_consent/)** **📚 [Complete French Documentation](./docs/)** **💼 Multi-client Solution**: Ideal for web agencies and freelance developers.
 
+## ✨ Features
 
-## ✨ Fonctionnalités
+-   ✅ **Native GDPR Compliance** - Articles 6, 7, 13 respected
+-   ✅ **Automatic Blocking** - Detects and blocks third-party scripts
+-   ✅ **16 Pre-configured Services** - GA, Facebook Pixel, Hotjar...
+-   ✅ **Consent Logging** - Legal proof (Art. 7.1)
+-   ✅ **7 Languages** - FR, EN, ES, DE, IT, NL, PT
+-   ✅ **Zero Dependencies** - Vanilla JS ≈ 66 KB minified (~21 KB gzipped)
+-   ✅ **Customizable Themes** - CSS variables
+-   ✅ **Made in France** 🇫🇷
 
-- ✅ **Conformité RGPD native** - Articles 6, 7, 13 respectés
-- ✅ **Blocage automatique** - Détecte et bloque les scripts tiers
-- ✅ **16 services pré-configurés** - GA, Facebook Pixel, Hotjar...
-- ✅ **Logging des consentements** - Preuve juridique (Art. 7.1)
-- ✅ **7 langues** - FR, EN, ES, DE, IT, NL, PT
-- ✅ **0 dépendance** - ( Vanilla JS ≈ 66 Ko minifié) (~21 Ko gzippé)
-- ✅ **Thèmes personnalisables** - CSS variables
-- ✅ **Made in France** 🇫🇷
-
-## 🚀 Installation rapide
+## 🚀 Quick Installation Without Logger
 
 ### Via npm
+
+bash
+
 ```bash
 npm install @synapxlab/cookie-consent
 ```
+
+javascript
+
 ```javascript
 import '@synapxlab/cookie-consent';
 
@@ -39,33 +45,31 @@ window.CookieConsent.init({
 });
 ```
 
-### Via CDN
-```html
-<script src="https://cdn.jsdelivr.net/npm/@synapxlab/cookie-consent@2.1.3/dist/cookie.min.js"></script>
+## 🚀 Quick Installation With Logger
+
+### Via npm
+
+bash
+
+```bash
+npm install @synapxlab/cookie-consent
 ```
 
-## 📖 Documentation
+**With Self-hosted Logger - You Manage Your Logs**
 
-📚 **[Documentation complète](./docs/)**
+javascript
 
-**Guides rapides :**
-- [🚀 Démarrage](./docs/getting-started.md)
-- [⚙️ Configuration](./docs/configuration.md)
-- [⚖️ Conformité RGPD](./docs/compliance-cnil.md)
-- [❓ FAQ](./docs/faq.md)
-
-**Intégrations :**
-- [Vanilla JS](./docs/integrations/vanilla.md)
-- [WordPress](./docs/integrations/wordpress.md)
-- [PrestaShop](./docs/integrations/prestashop.md)
-- [Google Tag Manager](./docs/integrations/tag-manager.md)
-
-## 🎯 Exemple complet
 ```javascript
+import '@synapxlab/cookie-consent';
+
 window.CookieConsent.init({
   logger: {
     enabled: true,
-    apiKey: 'sk-live-xxxxx'
+    endpoint: '/api/logger.php',
+    anonymousId: true,
+    headers: {
+      'Authorization': 'csrf-token' // optional
+    }
   },
   statistics: {
     google_analytics_key: 'G-XXXXXXXXX'
@@ -79,43 +83,93 @@ window.CookieConsent.init({
 });
 ```
 
-## 🛡️ Conformité RGPD/CNIL
+**With Automatic Consent Logging 🔑 Member Area & Multi-site**
 
-✅ Consentement préalable  
-✅ Refus aussi simple que l'acceptation  
-✅ Information claire par finalité  
-✅ Preuve horodatée (logging)  
-✅ Révocable à tout moment  
-✅ Expiration 6 mois (recommandation CNIL)
+> The code is automatically generated for each registered domain.
 
-[📋 Documentation conformité complète](./docs/compliance-cnil.md)
+javascript
 
-### 🔑 Espace membre & Multi-sites
+```javascript
+// Code generated automatically in your member area
+```
 
-**💼 Solution multi-clients** : Idéale pour les agences web et développeurs freelances.
+### Block Third-party Scripts Directly in HTML
 
-Connectez-vous sur [https://synapx.fr/sdk/cookie_consent/](https://synapx.fr/sdk/cookie_consent/) pour :
+If you prefer to include your analytics/marketing scripts directly in your HTML rather than via the JavaScript API, you can automatically block them using the `type="text/plain"` and `data-cookie-category` attributes. Scripts are **truly blocked** until user consent (GDPR compliant).
 
-- **Gérer plusieurs sites** depuis un seul compte
-- **Générer des clés API** dédiées par client/domaine
-- **Auto-configurer le code JavaScript** pour chaque projet
-  - Services pré-configurés (Analytics, Pixels, Chat...)
-  - Configuration complète exportable
-  - Gestion centralisée des logs de consentement
+html
 
-Chaque site client dispose de sa propre configuration isolée et sécurisée.
+```html
+<script type="text/plain" data-cookie-category="CATEGORY" src="SCRIPT_URL"></script>
+```
 
-## 💰 Tarification
+## 🛡️ GDPR/CNIL Compliance
 
-| Volume/mois | 0 - 300        |  301 - 10K  |  10K - 100K  |  100K - 500K |  500K - 1.5M |     1.5M+        |
-|-------------|----------------|-------------|--------------|--------------|--------------|------------------|
-| Prix        | **GRATUIT** 🎁 |    10€      |      25€     |      54€     |     99€      | [Nous contacter](mailto:contact@synapx.fr) |
+✅ Prior consent  
+✅ Rejection as easy as acceptance  
+✅ Clear information by purpose  
+✅ Timestamped proof (logging)  
+✅ Revocable at any time  
+✅ 6-month expiration (CNIL recommendation)
 
-**La bannière est gratuite. Seul le logging est payant au-delà de 300/mois.**
-- 📄 Facture automatique via ERP/CRM [Administralis](https://administralis.fr/)
+[📋 Complete Compliance Documentation](https://www.cnil.fr/fr/cookies-solutions-pour-les-outils-de-mesure-daudience)
 
+## 🛡️ Via Member Area
 
-## 🌍 Langues supportées
+Log in to [https://synapx.fr/sdk/cookie_consent/](https://synapx.fr/sdk/cookie_consent/) to:
+
+-   **Manage multiple sites** from a single account
+-   **Generate dedicated API keys** per client/domain
+-   **Auto-configure JavaScript code** for each project
+    -   Pre-configured services (Analytics, Pixels, Chat...)
+    -   Exportable complete configuration
+    -   Centralized consent log management
+
+## 📖 Documentation
+
+**Quick Guides:**
+
+-   [🚀 Getting Started](./docs/getting-started.md)
+-   [⚙️ Configuration](./docs/configuration.md)
+-   [⚖️ GDPR Compliance](./docs/compliance-cnil.md)
+-   [❓ FAQ](./docs/faq.md)
+
+**Integrations:**
+
+-   [Vanilla JS](./docs/integrations/vanilla.md)
+-   [Google Tag Manager](./docs/integrations/tag-manager.md)
+
+Each client site has its own isolated and secure configuration.
+
+## 💰 Pricing: The Banner is Free - Only Logging is Paid
+
+Pricing automatically adjusts based on your monthly volume.  
+Each consent corresponds to a recorded action (acceptance, rejection, or modification).
+
+🎁 **€50 offered** upon registration + **€50 for each successful referral.**  
+📄 Invoice via ERP/CRM [Administralis](https://administralis.fr/)
+| Volume/month |  0 - 20K       |  2K - 20K  |    20K - 200K       |  +200K
+|-------------|----------------|-------------|--------------|--------------|--------------|-----
+| Price (excl. tax)        |   15€         |      35€     |      75€      | [Nous contacter] |(mailto:contact@synapx.fr) |
+
+🎯 **Result:** Even with constant traffic of 3,000 unique visitors,  
+_Most of your returning visitors have already made their choice and it remains valid for 6 months!_
+
+## 🎨 CSS Customization
+The banner uses **CSS variables** (custom properties). This is the easiest way to adapt colors/contrasts to your brand _without touching JS_ and without recoding the SCSS.
+```css
+:root {
+  --cc-bg: #fff;
+  --cc-border: #e5e7eb;
+  --cc-accent: #9b6b5a;   /* accent color (Accept button, ON switch) */
+  --cc-text: #111827;
+  --cc-muted: #6b7280;
+  --cc-line: #e5e7eb;
+  --cc-surface: #f3f4f6;
+}
+```
+
+## 🌍 Supported Languages
 
 | Langue | Code | Statut |
 |--------|------|--------|
@@ -148,33 +202,41 @@ document.addEventListener('cookieConsentChanged', (event) => {
   console.log(event.detail.preferences);
 });
 ```
-
 ## 🤝 Contribuer
-
 Les contributions sont les bienvenues !
-
 - 🐛 [Signaler un bug](https://github.com/synapxLab/cookie-consent/issues)
 - 💡 [Proposer une fonctionnalité](https://github.com/synapxLab/cookie-consent/issues)
 - 🌍 [Ajouter une traduction](./docs/integrations/i18n.md)
 
-## 📝 Licence
+
+## 📝 License
 
 MIT © [SynapxLab](https://synapx.fr)
 
-## 🔗 Liens
+@synapxlab/cookie-consent manages the collection, recording, and proof of consent for trackers (cookies, localStorage, etc.), via an optional logging system. The website operator integrating this module remains responsible for the processing of collected data, including consent logs. This component does not constitute legal advice and does not replace a complete GDPR compliance solution (processing register, DPIA, DPA, rights management, etc.). Always validate your configuration with your DPO or legal counsel.
 
-- 🌐 [Site officiel](https://synapx.fr/sdk/cookie_consent/)
-- 📚 [Documentation](./docs/)
-- 💻 [GitHub](https://github.com/synapxLab/cookie-consent)
-- 📦 [npm](https://www.npmjs.com/package/@synapxlab/cookie-consent)
-<!-- - 💬 [Discord](https://discord.gg/synapxlab) -->
+**Note on exempted analytics:** Cookie Consent manages consent for trackers that require it. For audience measurement tools exempted according to CNIL criteria, refer to [CNIL documentation](https://www.cnil.fr/fr/cookies-solutions-pour-les-outils-de-mesure-daudience) for their compliant deployment.
+
+## 🔗 Links
+
+-   🌐 [Official Website](https://synapx.fr/sdk/cookie_consent/)
+-   📚 [Documentation](./docs/)
+-   💻 [GitHub](https://github.com/synapxLab/cookie-consent)
+-   📦 [npm](https://www.npmjs.com/package/@synapxlab/cookie-consent)
+
+### CDN Installation
+
+html
+
+```html
+<script src="https://cdn.jsdelivr.net/npm/@synapxlab/cookie-consent/dist/cookie.min.js"></script>
+```
 
 ## 📧 Support
-
 - Email: contact@synapx.fr
 <!-- - Discord: [Rejoindre la communauté](https://discord.gg/synapxlab) -->
 <!-- - Issues: [GitHub Issues](https://github.com/synapxLab/cookie-consent/issues) -->
 
 ---
 
-**🇪🇺 Solution européenne open source** | **🇫🇷 Développé en France**
+**Digital independence is no longer an option.**

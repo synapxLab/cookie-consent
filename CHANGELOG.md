@@ -1,3 +1,4 @@
+
 # Journal des modifications
 
 Tous les changements notables de `@synapxlab/cookie-consent` seront documentés dans ce fichier.
@@ -45,13 +46,6 @@ et ce projet respecte le [Semantic Versioning](https://semver.org/spec/v2.0.0.ht
 
 ### Exemple de migration
 ```javascript
-// ❌ Ancienne syntaxe (v2.2-2.3)
-window.CookieConsent.init({
-  statistics: {
-    google_manager_key: 'G-ABC123XYZ'
-  }
-});
-
 // ✅ Nouvelle syntaxe (v2.4+) - Plus de services disponibles
 window.CookieConsent.init({
   logger: {
@@ -158,7 +152,6 @@ window.CookieConsent.init({
 
 ### Corrigé
 - Suppression des balises TypeScript du build vanilla JavaScript
-- Correction du processus de build pour générer du JS vanilla pur sans annotations TS
 - Configuration webpack corrigée pour une sortie JavaScript vanilla pure
 
 ### Ajouté
@@ -187,12 +180,6 @@ window.CookieConsent.init({
 
 ## [1.0.0] - 2025-09-13
 
-### Ajouté
-- Version initiale de la gestion du consentement cookies
-- Implémentation en JavaScript vanilla
-- Bannière cookies conforme RGPD
-- Intégration facile avec n'importe quel site web
-
 ### Fonctionnalités
 - API simple pour la gestion du consentement cookies
 - JavaScript vanilla léger (aucune dépendance)
@@ -215,21 +202,6 @@ window.CookieConsent.init({
 
 ### De 2.3.x vers 2.4.x
 ```javascript
-// ⚠️ Changement de nom de clé (rétrocompatibilité assurée)
-// Ancienne syntaxe (toujours valide)
-window.CookieConsent.init({
-  statistics: {
-    google_manager_key: 'G-ABC123XYZ'  // ✅ Fonctionne toujours
-  }
-});
-
-// Nouvelle syntaxe (recommandée)
-window.CookieConsent.init({
-  statistics: {
-    google_analytics_key: 'G-ABC123XYZ'  // Nouveau nom explicite
-  }
-});
-
 // Nouvelles fonctionnalités disponibles :
 // - 15+ services supportés (Matomo, Mixpanel, Amplitude, Hotjar, Clarity, etc.)
 // - Catégorie "Cookies" séparée pour Intercom, Crisp, HubSpot, Segment
@@ -263,11 +235,6 @@ window.CookieConsent.getConfig();
 
 ### De 1.x vers 2.x
 ```javascript
-// ❌ Ancienne API (1.x)
-cookieConsent.init({
-  // configuration
-});
-
 // ✅ Nouvelle API (2.x+)
 // Aucune initialisation requise, fonctionne automatiquement
 window.CookieConsent.open(); // Ouvrir manuellement si besoin

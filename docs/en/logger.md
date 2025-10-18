@@ -12,7 +12,6 @@ The logging system records every user consent to ensure GDPR compliance (Article
 window.CookieConsent.init({
   logger: {
     enabled: true,
-    endpoint: 'https://api.synapx.fr/',
     apiKey: 'sk-live-xxxxx',
     anonymousId: true,
     retries: 3,
@@ -94,7 +93,7 @@ window.CookieConsent.init({
 ### Endpoint
 
 ```
-POST https://api.synapx.fr/
+POST https://cookie.synapx.fr/
 ```
 
 ### Required headers
@@ -107,7 +106,7 @@ Authorization: Bearer sk-live-xxxxx
 ### Example request
 
 ```bash
-curl -X POST https://api.synapx.fr/ \
+curl -X POST https://cookie.synapx.fr/ \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer sk-live-xxxxx" \
   -d '{

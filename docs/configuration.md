@@ -14,7 +14,6 @@ window.CookieConsent.init(options);
 {
   logger: {
     enabled: true,                      // Activer le logging
-    endpoint: 'https://api.synapx.fr/', // URL de l'API
     apiKey: 'sk-live-xxxxx',           // Clé API
     retries: 3,                        // Nombre de tentatives
     timeout: 5000,                     // Timeout en ms
@@ -124,7 +123,6 @@ window.CookieConsent.init({
   // Logging RGPD
   logger: {
     enabled: true,
-    endpoint: 'https://api.synapx.fr/',
     apiKey: 'sk-live-xxxxx',
     anonymousId: true
   },
