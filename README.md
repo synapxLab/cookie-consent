@@ -240,7 +240,7 @@ The banner uses **CSS variables** (custom properties). This is the easiest way t
 | 🇳🇱 Nederlands | `nl` | ✅ |
 | 🇵🇹 Português | `pt` | ✅ |
 
-[📖 Guide i18n](./docs/integrations/i18n.md)
+[📖 Guide i18n](./docs/en/integrations/i18n.md)
 
 ## 🔧 API JavaScript
 ```javascript
