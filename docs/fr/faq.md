@@ -1,85 +1,85 @@
-# FAQ - Questions Fréquentes
+# FAQ - Frequently Asked Questions
 
-## Général
+## General
 
-### Est-ce que Cookie Consent est gratuit ?
+### Is Cookie Consent free?
 
-**Oui !** La bannière est **100% gratuite et open source** (licence MIT).
+**Yes!** The banner is **100% free and open source** (MIT License).
 
-Le logging des consentements est :
-- **Gratuit** jusqu'à 300 consentements/mois
-- **Payant** au-delà (à partir de 10€/mois pour 10K consentements)
+Consent logging is:
+- **Free** up to 300 consents/month
+- **Paid** beyond that (starting at €10/month for 10K consents)
 
-### Quelle est la différence avec Axeptio/Cookiebot ?
+### What's the difference with Axeptio/Cookiebot?
 
-| Fonctionnalité | Cookie Consent | Axeptio | Cookiebot |
-|---------------|----------------|---------|-----------|
-| **Prix** | Gratuit | 50€/mois | 9€/mois |
+| Feature | Cookie Consent | Axeptio | Cookiebot |
+|---------|----------------|---------|-----------|
+| **Price** | Free | €50/month | €9/month |
 | **Open Source** | ✅ | ❌ | ❌ |
-| **Blocage auto scripts** | ✅ | ✅ | ✅ |
-| **Made in France** | ✅ | ✅ | ❌ (Danemark) |
+| **Auto script blocking** | ✅ | ✅ | ✅ |
+| **Made in France** | ✅ | ✅ | ❌ (Denmark) |
 | **Self-hosted possible** | ✅ | ❌ | ❌ |
-| **Personnalisation CSS** | ✅ Illimitée | ⚠️ Limitée | ⚠️ Limitée |
+| **CSS Customization** | ✅ Unlimited | ⚠️ Limited | ⚠️ Limited |
 
-### C'est conforme RGPD/CNIL ?
+### Is it GDPR/CNIL compliant?
 
-**Oui, à 100%** si vous l'utilisez correctement :
-- ✅ Consentement préalable
-- ✅ Refus aussi simple que l'acceptation
-- ✅ Pas de cookie avant consentement
-- ✅ Durée limitée (6 mois par défaut)
-- ✅ Logging des consentements
+**Yes, 100%** if you use it correctly:
+- ✅ Prior consent
+- ✅ Rejection as easy as acceptance
+- ✅ No cookies before consent
+- ✅ Limited duration (6 months by default)
+- ✅ Consent logging
 
-Voir [Documentation Conformité RGPD](./compliance-cnil.md)
+See [GDPR Compliance Documentation](./compliance-cnil.md)
 
-### Puis-je utiliser sans le logging ?
+### Can I use it without logging?
 
-**Oui**, mais attention :
-- ✅ La bannière fonctionne parfaitement
-- ✅ Le blocage des scripts est actif
-- ⚠️ **Pas de preuve de consentement** (Article 7.1 RGPD)
+**Yes**, but be aware:
+- ✅ The banner works perfectly
+- ✅ Script blocking is active
+- ⚠️ **No proof of consent** (Article 7.1 GDPR)
 
-**Recommandation** : Activez le logging (gratuit jusqu'à 300/mois) pour être en règle.
+**Recommendation**: Enable logging (free up to 300/month) to be compliant.
 
 ## Installation & Configuration
 
-### Comment installer sur un site HTML statique ?
+### How to install on a static HTML site?
 
-Très simple :
+Very simple:
 
 ```html
 <script src="https://cdn.jsdelivr.net/npm/@synapxlab/cookie-consent@2.1.3/dist/cookie.min.js"></script>
 ```
 
-Voir [Guide Vanilla JS](./integrations/vanilla.md)
+See [Vanilla JS Guide](./integrations/vanilla.md)
 
-### Comment installer sur WordPress ?
+### How to install on WordPress?
 
-1. Extensions > Ajouter
-2. Rechercher "SynapxLab Cookie Consent"
-3. Installer et activer
+1. Plugins > Add New
+2. Search "SynapxLab Cookie Consent"
+3. Install and activate
 
-Voir [Guide WordPress](./integrations/wordpress.md)
+See [WordPress Guide](./integrations/wordpress.md)
 
-### Comment installer sur React/Vue/Next.js ?
+### How to install on React/Vue/Next.js?
 
-Via npm :
+Via npm:
 
 ```bash
 npm install @synapxlab/cookie-consent
 ```
 
-Puis dans votre `main.js` ou `app.js` :
+Then in your `main.js` or `app.js`:
 
 ```javascript
 import '@synapxlab/cookie-consent';
 ```
 
-### Dois-je configurer quelque chose ?
+### Do I need to configure anything?
 
-**Non !** La bannière fonctionne sans configuration.
+**No!** The banner works without configuration.
 
-Pour activer des services (Google Analytics, etc.), utilisez `init()` :
+To activate services (Google Analytics, etc.), use `init()`:
 
 ```javascript
 window.CookieConsent.init({
@@ -89,31 +89,31 @@ window.CookieConsent.init({
 });
 ```
 
-Voir [Configuration complète](./configuration.md)
+See [Complete Configuration](./configuration.md)
 
-### Comment obtenir une clé API pour le logging ?
+### How to get an API key for logging?
 
-1. Créer un compte sur [synapx.fr](https://synapx.fr/OAuth/)
-2. Aller dans **SDK > Cookie Consent**
-3. Copier votre clé API (commence par `sk-live-`)
+1. Create an account on [synapx.fr](https://synapx.fr/OAuth/)
+2. Go to **SDK > Cookie Consent**
+3. Copy your API key (starts with `sk-live-`)
 
-## Fonctionnement
+## How It Works
 
-### Comment fonctionne le blocage automatique ?
+### How does automatic blocking work?
 
-Cookie Consent utilise 3 mécanismes :
+Cookie Consent uses 3 mechanisms:
 
-1. **Scan initial** : Détecte tous les `<script src>` et `<iframe src>` au chargement
-2. **Freeze** : Transforme les scripts détectés en `type="text/plain"` (bloqué)
-3. **MutationObserver** : Surveille les injections dynamiques (SPA, GTM)
+1. **Initial scan**: Detects all `<script src>` and `<iframe src>` on page load
+2. **Freeze**: Transforms detected scripts to `type="text/plain"` (blocked)
+3. **MutationObserver**: Monitors dynamic injections (SPA, GTM)
 
-Voir [Documentation technique](./configuration.md#blocage-automatique)
+See [Technical Documentation](./configuration.md#automatic-blocking)
 
-### Quels services sont détectés automatiquement ?
+### Which services are automatically detected?
 
-**Services supportés par défaut :**
+**Supported services by default:**
 
-**Statistiques :**
+**Statistics:**
 - Google Analytics (GA4, Universal)
 - Google Tag Manager
 - Matomo
@@ -123,103 +123,103 @@ Voir [Documentation technique](./configuration.md#blocage-automatique)
 - Amplitude
 - Plausible
 
-**Marketing :**
+**Marketing:**
 - Google AdSense
 - Facebook Pixel
 - TikTok Pixel
 - LinkedIn Insight
 - DoubleClick
 
-**Fonctionnels :**
+**Functional:**
 - Intercom
 - Crisp Chat
 - HubSpot
 - Segment
 - Zendesk
 
-### Et si mon service n'est pas dans la liste ?
+### What if my service isn't in the list?
 
-Le système détecte automatiquement les domaines tiers. Si un service n'est pas listé, il sera quand même bloqué s'il correspond aux patterns (domaines externes).
+The system automatically detects third-party domains. If a service isn't listed, it will still be blocked if it matches the patterns (external domains).
 
-Vous pouvez aussi l'ajouter manuellement en modifiant `CATEGORY_MATCHERS` dans le code source.
+You can also manually add it by modifying `CATEGORY_MATCHERS` in the source code.
 
-### Pourquoi ma bannière ne s'affiche pas ?
+### Why isn't my banner displaying?
 
-**Causes possibles :**
+**Possible causes:**
 
-1. **Consentement déjà donné**
+1. **Consent already given**
    ```javascript
-   // Vérifier
+   // Check
    console.log(localStorage.getItem('politecookiebanner'));
    
-   // Effacer
+   // Clear
    localStorage.removeItem('politecookiebanner');
    location.reload();
    ```
 
-2. **Erreur JavaScript**
-   - Ouvrir la console (F12)
-   - Vérifier les erreurs en rouge
+2. **JavaScript error**
+   - Open the console (F12)
+   - Check for errors in red
 
-3. **Script pas chargé**
+3. **Script not loaded**
    ```javascript
-   // Vérifier
+   // Check
    console.log(window.CookieConsent);
-   // Doit afficher un objet
+   // Should display an object
    ```
 
-4. **Conflit CSS**
-   - Votre CSS masque peut-être la bannière
-   - Inspecter l'élément `#politecookiebanner`
+4. **CSS conflict**
+   - Your CSS might be hiding the banner
+   - Inspect the `#politecookiebanner` element
 
-### Comment tester la bannière ?
+### How to test the banner?
 
 ```javascript
-// Méthode 1 : Reset complet
+// Method 1: Complete reset
 localStorage.removeItem('politecookiebanner');
 location.reload();
 
-// Méthode 2 : Ouvrir manuellement
+// Method 2: Open manually
 window.CookieConsent.open();
 
-// Méthode 3 : Reset et ouvrir
+// Method 3: Reset and open
 window.CookieConsent.reset();
 ```
 
-## Personnalisation
+## Customization
 
-### Comment changer les couleurs ?
+### How to change colors?
 
-Via CSS :
+Via CSS:
 
 ```css
 :root {
-  --cc-bg: #ffffff;        /* Fond */
-  --cc-text: #111827;      /* Texte */
-  --cc-accent: #e63946;    /* Couleur principale */
-  --cc-border: #e5e7eb;    /* Bordures */
+  --cc-bg: #ffffff;        /* Background */
+  --cc-text: #111827;      /* Text */
+  --cc-accent: #e63946;    /* Primary color */
+  --cc-border: #e5e7eb;    /* Borders */
 }
 ```
 
-Voir [Personnalisation CSS](./configuration.md#personnalisation-css)
+See [CSS Customization](./configuration.md#css-customization)
 
-### Comment changer les textes ?
+### How to change texts?
 
-Les textes sont automatiquement traduits en 7 langues (FR, EN, ES, DE, IT, NL, PT).
+Texts are automatically translated into 7 languages (FR, EN, ES, DE, IT, NL, PT).
 
-Pour personnaliser :
+To customize:
 
 ```javascript
 import t from '@synapxlab/cookie-consent/translat';
 
-t.add('fr', {
-  title: "Mon titre personnalisé",
-  message: "Mon message...",
-  acceptAll: "J'accepte"
+t.add('en', {
+  title: "My custom title",
+  message: "My message...",
+  acceptAll: "I accept"
 });
 ```
 
-### Comment ajouter une langue ?
+### How to add a language?
 
 ```javascript
 import t from '@synapxlab/cookie-consent/translat';
@@ -229,166 +229,166 @@ t.add('ja', {
   message: "...",
   acceptAll: "すべて受け入れる",
   denyAll: "すべて拒否",
-  // ... voir translat.js pour toutes les clés
+  // ... see translat.js for all keys
 });
 
 t.setLocale('ja');
 ```
 
-Voir [Internationalisation](./integrations/i18n.md)
+See [Internationalization](./integrations/i18n.md)
 
-### Puis-je modifier le HTML de la bannière ?
+### Can I modify the banner's HTML?
 
-Oui, mais nécessite de forker le projet et modifier `cookie.js`.
+Yes, but requires forking the project and modifying `cookie.js`.
 
-**Alternative recommandée** : Utiliser les variables CSS pour adapter le style sans toucher au HTML.
+**Recommended alternative**: Use CSS variables to adapt the style without touching the HTML.
 
-## Logging & Conformité
+## Logging & Compliance
 
-### Où sont stockés les logs ?
+### Where are logs stored?
 
-**Sans logging activé :**
-- Uniquement en local (localStorage du navigateur)
-- Pas de serveur distant
+**Without logging enabled:**
+- Only locally (browser localStorage)
+- No remote server
 
-**Avec logging activé :**
-- Serveurs OVH en France (RGPD natif)
-- Base de données sécurisée
-- Accès via dashboard SynapxLab
+**With logging enabled:**
+- OVH servers in France (native GDPR)
+- Secure database
+- Access via SynapxLab dashboard
 
-### Quelles données sont loggées ?
+### What data is logged?
 
 ```json
 {
   "consent_id": "uuid",
-  "device_id": "cc_anonyme",
+  "device_id": "cc_anonymous",
   "consent_action": "accept",
   "pref_statistics": true,
   "banner_version": "2.4.0",
-  "locale": "fr-FR",
+  "locale": "en-US",
   "timezone": "Europe/Paris"
 }
 ```
 
-**Données NON collectées :**
-- ❌ Adresse IP
-- ❌ Nom, email
-- ❌ Fingerprint navigateur
-- ❌ Données personnelles
+**Data NOT collected:**
+- ❌ IP address
+- ❌ Name, email
+- ❌ Browser fingerprint
+- ❌ Personal data
 
-Voir [Documentation Logging](./logger.md)
+See [Logging Documentation](./logger.md)
 
-### Comment exporter mes logs ?
+### How to export my logs?
 
-Dashboard SynapxLab > Cookie Consent > Exporter
+SynapxLab Dashboard > Cookie Consent > Export
 
-Formats disponibles :
+Available formats:
 - CSV (Excel)
 - JSON (API)
 - PDF (Audit)
 
-### Combien de temps sont conservés les logs ?
+### How long are logs retained?
 
-**Par défaut : 13 mois** (maximum recommandé CNIL)
+**Default: 13 months** (CNIL recommended maximum)
 
-Vous pouvez réduire à 6 ou 12 mois dans les paramètres.
+You can reduce to 6 or 12 months in settings.
 
-### Comment prouver la conformité RGPD ?
+### How to prove GDPR compliance?
 
-1. **Activer le logging** (preuve de consentement)
-2. **Exporter les logs** régulièrement
-3. **Documenter** votre configuration
-4. **Tenir un registre** des traitements (obligation RGPD)
+1. **Enable logging** (proof of consent)
+2. **Export logs** regularly
+3. **Document** your configuration
+4. **Maintain a register** of processing activities (GDPR obligation)
 
-En cas de contrôle CNIL, vous pourrez fournir :
-- ✅ Les logs horodatés des consentements
-- ✅ La version de la bannière utilisée
-- ✅ La configuration des services
-- ✅ Les exports CSV/PDF
+In case of CNIL audit, you can provide:
+- ✅ Timestamped consent logs
+- ✅ Banner version used
+- ✅ Services configuration
+- ✅ CSV/PDF exports
 
 ## Performance
 
-### Quel est l'impact sur la vitesse du site ?
+### What is the impact on site speed?
 
-**Très faible :**
-- Taille du script : ~25Ko (gzippé)
-- Chargement asynchrone (pas de blocage)
-- Pas de dépendances externes
+**Very low:**
+- Script size: ~25KB (gzipped)
+- Asynchronous loading (non-blocking)
+- No external dependencies
 
-**Impact Lighthouse :**
-- Performance : 0 à -2 points
-- Best Practices : +10 points (conformité)
+**Lighthouse impact:**
+- Performance: 0 to -2 points
+- Best Practices: +10 points (compliance)
 
-### Le script bloque-t-il le rendering ?
+### Does the script block rendering?
 
-**Non**, si chargé correctement :
+**No**, if loaded correctly:
 
 ```html
-<!-- ✅ CORRECT : Pas de blocage -->
+<!-- ✅ CORRECT: No blocking -->
 <script src="cookie.js" defer></script>
 
-<!-- ❌ ÉVITER : Bloque le parsing -->
+<!-- ❌ AVOID: Blocks parsing -->
 <script src="cookie.js"></script>
 ```
 
-### Compatible avec WP Rocket / Autoptimize ?
+### Compatible with WP Rocket / Autoptimize?
 
-**Oui**, mais exclure cookie.js de l'agrégation :
+**Yes**, but exclude cookie.js from aggregation:
 
-**WP Rocket :**
-Réglages > Fichiers JavaScript > Exclure :
+**WP Rocket:**
+Settings > JavaScript Files > Exclude:
 ```
 /cookie.js
 ```
 
-**Autoptimize :**
-Réglages > JavaScript > Exclure :
+**Autoptimize:**
+Settings > JavaScript > Exclude:
 ```
 cookie.js
 ```
 
-## Intégrations
+## Integrations
 
-### Compatible avec Google Tag Manager ?
+### Compatible with Google Tag Manager?
 
-**Oui !** GTM est même l'une des meilleures intégrations.
+**Yes!** GTM is actually one of the best integrations.
 
-Le système bloque les tags GTM jusqu'au consentement, puis les active conditionnellement.
+The system blocks GTM tags until consent, then activates them conditionally.
 
-Voir [Guide Google Tag Manager](./integrations/tag-manager.md)
+See [Google Tag Manager Guide](./integrations/tag-manager.md)
 
-### Compatible avec WordPress ?
+### Compatible with WordPress?
 
-**Oui !** Plugin officiel disponible :
+**Yes!** Official plugin available:
 
-WordPress Admin > Extensions > Ajouter > "SynapxLab Cookie Consent"
+WordPress Admin > Plugins > Add New > "SynapxLab Cookie Consent"
 
-Voir [Guide WordPress](./integrations/wordpress.md)
+See [WordPress Guide](./integrations/wordpress.md)
 
-### Compatible avec PrestaShop ?
+### Compatible with PrestaShop?
 
-**Oui !** Module en cours de finalisation (bêta disponible).
+**Yes!** Module in finalization (beta available).
 
-### Compatible avec Shopify ?
+### Compatible with Shopify?
 
-Oui, via intégration manuelle (pas encore d'app officielle).
+Yes, via manual integration (no official app yet).
 
-### Compatible avec React/Vue/Angular/Svelte ?
+### Compatible with React/Vue/Angular/Svelte?
 
-**Oui, tous !**
+**Yes, all of them!**
 
 ```bash
 npm install @synapxlab/cookie-consent
 ```
 
 ```javascript
-// Dans votre main.js
+// In your main.js
 import '@synapxlab/cookie-consent';
 ```
 
-### Compatible avec Next.js ?
+### Compatible with Next.js?
 
-**Oui !** Ajouter dans `_app.js` :
+**Yes!** Add in `_app.js`:
 
 ```javascript
 import '@synapxlab/cookie-consent';
@@ -398,17 +398,17 @@ export default function App({ Component, pageProps }) {
 }
 ```
 
-## Développement
+## Development
 
-### Puis-je contribuer au projet ?
+### Can I contribute to the project?
 
-**Oui !** Le projet est open source (MIT License).
+**Yes!** The project is open source (MIT License).
 
-- 🐛 Signaler des bugs : [GitHub Issues](https://github.com/synapxLab/cookie-consent/issues)
-- 💻 Proposer du code : [Pull Requests](https://github.com/synapxLab/cookie-consent/pulls)
-- 💬 Rejoindre la communauté : [Discord](https://discord.gg/synapxlab)
+- 🐛 Report bugs: [GitHub Issues](https://github.com/synapxLab/cookie-consent/issues)
+- 💻 Propose code: [Pull Requests](https://github.com/synapxLab/cookie-consent/pulls)
+- 💬 Join the community: [Discord](https://discord.gg/synapxlab)
 
-### Comment compiler depuis les sources ?
+### How to compile from sources?
 
 ```bash
 git clone https://github.com/synapxLab/cookie-consent.git
@@ -417,176 +417,172 @@ npm install
 npm run build
 ```
 
-Le fichier compilé sera dans `/dist/cookie.js`.
+The compiled file will be in `/dist/cookie.js`.
 
-### Où trouver le code source ?
+### Where to find the source code?
 
-- **GitHub** : [github.com/synapxLab/cookie-consent](https://github.com/synapxLab/cookie-consent)
-- **npm** : [npmjs.com/package/@synapxlab/cookie-consent](https://www.npmjs.com/package/@synapxlab/cookie-consent)
+- **GitHub**: [github.com/synapxLab/cookie-consent](https://github.com/synapxLab/cookie-consent)
+- **npm**: [npmjs.com/package/@synapxlab/cookie-consent](https://www.npmjs.com/package/@synapxlab/cookie-consent)
 
-### Comment signaler un bug ?
+### How to report a bug?
 
-1. Vérifier qu'il n'existe pas déjà : [Issues GitHub](https://github.com/synapxLab/cookie-consent/issues)
-2. Créer une nouvelle issue avec :
-   - Description du problème
-   - Étapes pour reproduire
-   - Navigateur et version
-   - Console logs si possible
+1. Check if it doesn't already exist: [GitHub Issues](https://github.com/synapxLab/cookie-consent/issues)
+2. Create a new issue with:
+   - Problem description
+   - Steps to reproduce
+   - Browser and version
+   - Console logs if possible
 
-## Juridique
+## Legal
 
-### Qui est responsable en cas de non-conformité ?
+### Who is responsible in case of non-compliance?
 
-**Vous**, en tant que responsable du traitement.
+**You**, as the data controller.
 
-SynapxLab fournit l'outil, mais vous êtes responsable de :
-- Configurer correctement la bannière
-- Respecter les consentements
-- Tenir un registre des traitements
-- Répondre aux demandes RGPD
+SynapxLab provides the tool, but you are responsible for:
+- Correctly configuring the banner
+- Respecting consents
+- Maintaining a processing register
+- Responding to GDPR requests
 
-Voir [Responsabilités légales](./compliance-cnil.md#responsabilités)
+See [Legal Responsibilities](./compliance-cnil.md#responsibilities)
 
-### Dois-je quand même consulter un avocat ?
+### Should I still consult a lawyer?
 
-**Oui, c'est recommandé**, surtout si :
-- Vous traitez des données sensibles
-- Vous avez un trafic important (>100K visiteurs/mois)
-- Vous faites du profilage/ciblage
-- Vous êtes dans un secteur réglementé (santé, finance, etc.)
+**Yes, it's recommended**, especially if:
+- You process sensitive data
+- You have significant traffic (>100K visitors/month)
+- You do profiling/targeting
+- You're in a regulated sector (health, finance, etc.)
 
-Cookie Consent vous aide techniquement, mais ne remplace pas un conseil juridique.
+Cookie Consent helps you technically, but doesn't replace legal advice.
 
-### Puis-je utiliser pour un site commercial ?
+### Can I use it for a commercial site?
 
-**Oui !** Licence MIT = usage commercial autorisé.
+**Yes!** MIT License = commercial use authorized.
 
-Vous pouvez :
-- ✅ L'utiliser gratuitement
-- ✅ Sur des sites commerciaux
-- ✅ Pour des clients
-- ✅ Le modifier
+You can:
+- ✅ Use it for free
+- ✅ On commercial sites
+- ✅ For clients
+- ✅ Modify it
 
-Obligation : Conserver la mention de licence MIT.
+Obligation: Preserve the MIT license mention.
 
-### Puis-je revendre le plugin ?
+### Can I resell the plugin?
 
-**Techniquement oui** (licence MIT), mais :
-- ❌ Pas éthique sans contribuer au projet
-- ⚠️ Vous devez maintenir à jour
-- ⚠️ Vous devez fournir support
-
-
+**Technically yes** (MIT license), but:
+- ❌ Not ethical without contributing to the project
+- ⚠️ You must maintain updates
+- ⚠️ You must provide support
 
 ## Support
 
-### Où trouver de l'aide ?
+### Where to find help?
 
-**Documentation :**
-- 📚 [Documentation complète](https://synapx.fr/sdk/cookie_consent/)
-- 🎓 [Guides d'intégration](./integrations/)
+**Documentation:**
+- 📚 [Complete Documentation](https://synapx.fr/sdk/cookie_consent/)
+- 🎓 [Integration Guides](./integrations/)
 
-**Communauté :**
+**Community:**
 - 🐛 [GitHub Issues](https://github.com/synapxLab/cookie-consent/issues)
 
-**Support direct :**
+**Direct support:**
 - 📧 contact@synapx.fr
-- ⏱️ Délai de réponse : 24-48h
+- ⏱️ Response time: 24-48h
 
-### Le support est-il gratuit ?
+### Is support free?
 
-**Oui !** Pour :
-- Questions générales
+**Yes!** For:
+- General questions
 - Bugs
-- Suggestions d'amélioration
+- Improvement suggestions
 
-**Support premium disponible** pour :
-- Configuration personnalisée
-- Intégration sur mesure
-- Audit de conformité
-- SLA garanti
+**Premium support available** for:
+- Custom configuration
+- Custom integration
+- Compliance audit
+- Guaranteed SLA
 
+### Do you offer training?
 
-### Proposez-vous des formations ?
+Not yet, but it's planned!
 
-Pas encore, mais c'est prévu !
+Meanwhile:
+- 📚 Complete documentation available
+- 🎥 Video tutorials in preparation
+- 💬 Join our Discord for advice
 
-En attendant :
-- 📚 Documentation complète disponible
-- 🎥 Tutoriels vidéo en préparation
-- 💬 Rejoignez notre Discord pour des conseils
+## Pricing
 
-## Tarification
+### What is the price?
 
-### Quel est le prix ?
+**Banner: FREE** (open source)
 
-**Bannière : GRATUIT** (open source)
+**Logging:**
+| Volume/month | 0 - 300 | 301 - 10K | 10K - 100K | 100K - 500K | 500K - 1.5M | 1.5M+ |
+|--------------|---------|-----------|------------|-------------|-------------|-------|
+| Price | **FREE** | €10 | €25 | €54 | €99 | [Contact us](mailto:contact@synapx.fr) |
 
-**Logging :**
-| Volume/mois | 0 - 300        |  301 - 10K  |  10K - 100K  |  100K - 500K |  500K - 1.5M |     1.5M+        |
-|-------------|----------------|-------------|--------------|--------------|--------------|------------------|
-| Prix        | **GRATUIT**    |    10€      |      25€     |      54€     |     99€      | [Nous contacter](mailto:contact@synapx.fr) |
+**Automatic billing** based on monthly volume.
 
-**Facturation automatique** selon le volume mensuel.
+### How is volume calculated?
 
-### Comment est calculé le volume ?
+**1 consent = 1 recorded action**
 
-**1 consentement = 1 action enregistrée**
+Examples of actions:
+- Accept all
+- Reject all
+- Customize
+- Modify preferences
 
-Exemples d'actions :
-- Accepter tout
-- Refuser tout
-- Personnaliser
-- Modifier ses préférences
+**Example:**
+- 10,000 unique visitors/month
+- 30% accept = 3,000 consents
+- 20% reject = 2,000 consents
+- Total: 5,000 consents → **€10/month plan**
 
-**Exemple :**
-- 10 000 visiteurs uniques/mois
-- 30% acceptent = 3 000 consentements
-- 20% refusent = 2 000 consentements
-- Total : 5 000 consentements → **Forfait 10€/mois**
+### Are there hidden fees?
 
-### Y a-t-il des frais cachés ?
+**No, none!**
 
-**Non, aucun !**
+- ✅ Free banner
+- ✅ No page view limit
+- ✅ No domain limit
+- ✅ All services included
+- ✅ Free support
 
-- ✅ Bannière gratuite
-- ✅ Pas de limite de pages vues
-- ✅ Pas de limite de domaines
-- ✅ Tous les services inclus
-- ✅ Support gratuit
+Only logging beyond 300/month is paid.
 
-Seul le logging au-delà de 300/mois est payant.
+### Can I change plans?
 
-### Puis-je changer de forfait ?
+**Yes, automatically!**
 
-**Oui, automatiquement !**
+The plan adjusts each month based on your actual volume.
 
-Le forfait s'ajuste chaque mois selon votre volume réel.
+Month 1: 500 consents → €10
+Month 2: 15,000 consents → €25
+Month 3: 200 consents → €0 (free)
 
-Mois 1 : 500 consentements → 10€
-Mois 2 : 15 000 consentements → 25€
-Mois 3 : 200 consentements → 0€ (gratuit)
+### How to pay?
 
-### Comment payer ?
+- 💳 Credit card (Stripe)
+- 🏦 Bank transfer (on request for >€500/year)
+- 📄 Automatic invoice via ERP/CRM [Administralis](https://administralis.fr/)
 
-- 💳 Carte bancaire (Stripe)
-- 🏦 Virement (sur demande pour +500€/an)
-- 📄 Facture automatique via ERP/CRM [Administralis](https://administralis.fr/)
+SynapxLab Dashboard > Billing
 
+## Other Questions
 
-Dashboard SynapxLab > Facturation
+### A question not listed here?
 
-## Autres questions
-
-### Une question non listée ici ?
-
-**Contactez-nous :**
+**Contact us:**
 - 📧 contact@synapx.fr
 - 🐛 [GitHub Issues](https://github.com/synapxLab/cookie-consent/issues)
 
-**Contribuez à cette FAQ :**
-Proposez votre question via une Pull Request sur GitHub !
+**Contribute to this FAQ:**
+Suggest your question via a Pull Request on GitHub!
 
 ---
 
-**Dernière mise à jour : Janvier 2025**
+**Last updated: January 2025**

@@ -75,17 +75,19 @@ window.addEventListener('load', () => {
           // 'X-Request-Id': crypto.randomUUID()
         }
       },
-  statistics: {
-    google_manager_key: 'G-ABC123XYZ'  // ✅ Affichera "Google Analytics"
+statistics: {
+    google_analytics_key: 'G-ABC123XYZ'
   },
   marketing: {
-    google_AdSense_key: 'ca-pub-1234567890123456',  // ✅ Affichera "Google AdSense"
-    facebook: {
-      key: '123456789012345',  // ✅ Affichera "Facebook Pixel"
+    google_adsense_key: 'ca-pub-1234567890123456',
+    facebook_pixel: {
+      key: '123456789012345',
       track: 'PageView'
     }
   }
 });
 document.addEventListener('DOMContentLoaded', () => {
+
+  console.log(window.CookieConsent.getConfig());
   js();
 });

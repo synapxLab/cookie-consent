@@ -9,6 +9,12 @@
 
 import '../scss/cookie.scss';
 import t from './translat';
+import { 
+  initGoogleConsentMode, 
+  updateGoogleConsent, 
+  getGoogleConsentState,
+  GCM_DEFAULT_CONFIG 
+} from './google-consent-mode';
 
 const STORAGE_KEY = 'politecookiebanner';
 
@@ -48,10 +54,40 @@ const CONFIG = {
   storage: {
     expiration_months: 6, // CNIL recommande 6 mois max
     auto_renew: false     // ne pas prolonger automatiquement à chaque visite
-  }  
+  },
+  google_consent_mode: GCM_DEFAULT_CONFIG
 };
 
 const EXPIRATION_MS = Math.max(1, Number(CONFIG.storage.expiration_months || 6)) * 30 * 24 * 60 * 60 * 1000;
+
+
+// ✅ Protection globale contre les erreurs GCM
+const safeGCM = {
+  init: (config) => {
+    try {
+      return initGoogleConsentMode(config);
+    } catch (e) {
+      console.error('[CookieConsent] GCM init failed:', e);
+      return false;
+    }
+  },
+  update: (prefs, config) => {
+    try {
+      return updateGoogleConsent(prefs, config);
+    } catch (e) {
+      console.error('[CookieConsent] GCM update failed:', e);
+      return false;
+    }
+  },
+  getState: (prefs) => {
+    try {
+      return getGoogleConsentState(prefs);
+    } catch (e) {
+      console.error('[CookieConsent] GCM getState failed:', e);
+      return null;
+    }
+  }
+};
 
 // ========== UTILITAIRES ==========
 const loadPrefs = () => {
@@ -585,6 +621,7 @@ const enableFunctionalCookies = () => {
 const applyPreferences = (prefs) => {
   if (!prefs) return;
   // console.log('Application des préférences:', prefs);
+   updateGoogleConsent(prefs, CONFIG.google_consent_mode);
   releaseByConsent(prefs);
   
   if (prefs.statistics) {
@@ -791,6 +828,13 @@ const openBanner = (showPrefs = false) => {
 function attachHandlers() {
   const el = document.getElementById('politecookiebanner');
   if (!el) return;
+
+  try {
+    initGoogleConsentMode(CONFIG.google_consent_mode);
+  } catch (error) {
+    console.error('[CookieConsent] Erreur initialisation Google Consent Mode:', error);
+    // Continue quand même
+  }
 
   const stored = loadPrefs();
   if (stored) {
@@ -1006,6 +1050,52 @@ window.CookieConsent = {
       }
     }
     
+
+  try {
+    if (options.google_consent_mode !== undefined) {
+      if (typeof options.google_consent_mode === 'boolean') {
+        CONFIG.google_consent_mode.enabled = options.google_consent_mode;
+      } else if (typeof options.google_consent_mode === 'object' && options.google_consent_mode !== null) {
+        // Validation des propriétés
+        const validConfig = {};
+        
+        if (typeof options.google_consent_mode.enabled === 'boolean') {
+          validConfig.enabled = options.google_consent_mode.enabled;
+        }
+        
+        if (typeof options.google_consent_mode.wait_for_update === 'number' && 
+            options.google_consent_mode.wait_for_update >= 0) {
+          validConfig.wait_for_update = options.google_consent_mode.wait_for_update;
+        }
+        
+        if (typeof options.google_consent_mode.ads_data_redaction === 'boolean') {
+          validConfig.ads_data_redaction = options.google_consent_mode.ads_data_redaction;
+        }
+        
+        if (typeof options.google_consent_mode.url_passthrough === 'boolean') {
+          validConfig.url_passthrough = options.google_consent_mode.url_passthrough;
+        }
+        
+        if (Array.isArray(options.google_consent_mode.region)) {
+          validConfig.region = options.google_consent_mode.region.filter(r => typeof r === 'string');
+        }
+        
+        Object.assign(CONFIG.google_consent_mode, validConfig);
+      }
+    }
+  } catch (error) {
+    console.error('[CookieConsent] Erreur configuration Google Consent Mode:', error);
+  }
+  
+  console.log('[CookieConsent] Configuration appliquée:', {
+    logger: CONFIG.logger.enabled,
+    google_consent_mode: CONFIG.google_consent_mode?.enabled || false,
+    statistics: Object.keys(CONFIG.statistics).filter(k => CONFIG.statistics[k]),
+    marketing: Object.keys(CONFIG.marketing).filter(k => CONFIG.marketing[k]),
+    functional: Object.keys(CONFIG.functional).filter(k => CONFIG.functional[k])
+  });
+
+
     // console.log('[CookieConsent] Configuration appliquée:', {
     //   logger: CONFIG.logger.enabled,
     //   statistics: Object.keys(CONFIG.statistics).filter(k => CONFIG.statistics[k]),
@@ -1018,10 +1108,55 @@ window.CookieConsent = {
     CONFIG.logger.enabled = false;
   },
   
-  getConfig: () => ({ ...CONFIG })
+  getConfig: () => ({ ...CONFIG }),
+
+  getGoogleConsent: () => {
+    try {
+      const prefs = loadPrefs();
+      const state = getGoogleConsentState(prefs);
+      
+      if (!state) {
+        console.warn('[CookieConsent] Impossible de récupérer l\'état Google Consent');
+        return null;
+      }
+      
+      return state;
+    } catch (error) {
+      console.error('[CookieConsent] Erreur getGoogleConsent:', error);
+      return null;
+    }
+  },
+  
+  updateGoogleConsent: (customConsent) => {
+    try {
+      if (!customConsent || typeof customConsent !== 'object') {
+        console.warn('[CookieConsent] Consentement invalide');
+        return false;
+      }
+      
+      if (typeof window.gtag !== 'function') {
+        console.warn('[CookieConsent] gtag() non disponible');
+        return false;
+      }
+      
+      window.gtag('consent', 'update', customConsent);
+      console.log('[CookieConsent] Google Consent Mode mis à jour manuellement');
+      return true;
+    } catch (error) {
+      console.error('[CookieConsent] Erreur updateGoogleConsent:', error);
+      return false;
+    }
+  }
+
 };
 
 document.addEventListener('DOMContentLoaded', () => {
+  try {
+    initGoogleConsentMode(CONFIG.google_consent_mode);
+  } catch (error) {
+    console.error('[CookieConsent] Erreur initialisation Google Consent Mode au chargement:', error);
+    // Continue quand même - ne pas bloquer le chargement du banner
+  }
   renderOnce();
   attachHandlers();
   scanAndFreezeThirdParty(loadPrefs());
