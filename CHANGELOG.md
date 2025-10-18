@@ -5,6 +5,150 @@ Tous les changements notables de `@synapxlab/cookie-consent` seront documentés 
 Le format est basé sur [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 et ce projet respecte le [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+
+## [2.5.0] - 2025-10-18
+
+### 🎉 Ajouté
+
+#### Google Consent Mode v2
+- **Support natif de Google Consent Mode v2** pour conformité avec les exigences Google Ads (obligatoire depuis mars 2024 en Europe)
+- **Module `google-consent-mode.js`** : Gestion complète des signaux de consentement Google
+  - Initialisation automatique en mode "denied" par défaut
+  - Mise à jour dynamique des signaux selon les préférences utilisateur
+  - Mapping automatique : `statistics` → `analytics_storage`, `marketing` → `ad_storage`
+- **10 fonctions exportées** avec gestion d'erreurs robuste :
+  - `initGoogleConsentMode()` : Initialisation avec configuration personnalisable
+  - `updateGoogleConsent()` : Mise à jour des signaux en temps réel
+  - `getGoogleConsentState()` : Récupération de l'état actuel
+  - `forceUpdateGoogleConsent()` : Mise à jour manuelle
+  - `isGoogleConsentModeAvailable()` : Vérification de disponibilité
+  - `getConsentHistory()` : Historique des événements (debug)
+  - `resetGoogleConsentMode()` : Réinitialisation (développement)
+  - `createGCMConfig()` : Création de configuration personnalisée
+  - `onGoogleConsentChange()` : Écoute des changements (event listener)
+- **Configuration avancée** :
+  - `wait_for_update` : Délai d'attente avant timeout (défaut: 500ms)
+  - `ads_data_redaction` : Masquage des données pub si refusé (défaut: true)
+  - `url_passthrough` : Passage de paramètres URL entre domaines (défaut: false)
+  - `region` : Application par région géographique (ex: ['EU', 'US-CA'])
+- **Event personnalisé `googleConsentUpdated`** : Notifications temps réel des changements de consentement
+- **Badge GCM ultra-discret** dans le banner :
+  - Position : À côté du titre "Gérer le consentement aux cookies"
+  - Style : `📊 Google Consent Mode v2` avec tooltip informatif
+  - Affichage conditionnel : Uniquement si GCM activé ET Google Analytics/GTM configuré
+- **Section GCM dans mode Personnaliser** :
+  - Bloc d'information dédié avec fond coloré (bleu Google)
+  - Texte explicatif complet conforme RGPD
+  - Support des 4 thèmes (default, dark, blue, brown)
+- **Traductions GCM** dans les 7 langues :
+  - `gcmBadge` : Texte du badge header
+  - `gcmDesc` : Description complète dans Personnaliser
+- **Documentation complète** en français :
+  - Guide d'utilisation avec exemples
+  - Configuration avancée
+  - Cas d'usage
+  - FAQ GCM v2
+  - Comparaison avec/sans GCM
+  - Conformité RGPD/CNIL
+
+#### Mouse Analytics (préparation)
+- **Architecture préparée** pour service Mouse Analytics propriétaire
+  - Workers chargés depuis CDN externe (code propriétaire protégé)
+  - Configuration `mouse_analytics` dans `CONFIG.statistics`
+  - Fonction `loadMouseAnalytics()` pour chargement dynamique
+  - Fonction `stopMouseAnalytics()` pour arrêt propre
+  - Intégration dans `applyPreferences()`
+- **Support WebSocket temps réel** via infrastructure Synapx Chat
+  - 2 Web Workers : `mouse-tracker.worker.js` + `websocket-sender.worker.js`
+  - Tracking : mouvements souris, clics, scroll, hover avec ID éléments
+  - Envoi par batch configurable
+
+### 🔧 Modifié
+
+- **Fichier `cookie.js`** :
+  - Import du module `google-consent-mode.js`
+  - Ajout de `google_consent_mode` dans CONFIG (par défaut activé)
+  - Appel `initGoogleConsentMode()` au chargement et dans `attachHandlers()`
+  - Appel `updateGoogleConsent()` dans `applyPreferences()` AVANT chargement des services
+  - Support de la config GCM dans `init()` avec validation des propriétés
+  - API publique enrichie : `getGoogleConsent()` et `updateGoogleConsent()`
+  - Gestion d'erreurs complète avec try/catch sur tous les appels GCM
+
+- **Fichier `translat.js`** :
+  - Ajout `gcmBadge` : Label du badge (7 langues)
+  - Ajout `gcmDesc` : Description GCM dans Personnaliser (7 langues)
+
+- **Fichier `cookie.scss`** :
+  - Classe `.pmcpli-gcm-badge` : Badge header discret avec hover
+  - Classe `.pmcpli-gcm-category` : Bloc d'information dans Personnaliser
+  - Support des 4 thèmes pour les 2 classes
+  - Dégradé bleu-vert (couleurs Google) pour cohérence visuelle
+
+- **Fichier `renderOnce()`** :
+  - Création dynamique `gcmBadge` (conditionnel)
+  - Création dynamique `gcmCategory` (conditionnel)
+  - Insertion dans le template HTML
+
+### 🛡️ Sécurité
+
+- **Protection contre tous les crashs GCM** :
+  - Vérification `typeof window === 'undefined'` (compatibilité SSR)
+  - Vérification `typeof window.gtag === 'function'` avant usage
+  - Validation `Array.isArray(window.dataLayer)` avant lecture
+  - Validation des types de toutes les entrées utilisateur
+  - Try/catch sur dispatch d'événements (CustomEvent)
+  - Try/catch sur tous les callbacks (event listeners)
+  - Gestion des erreurs de réseau (timeout, retry)
+- **Mode dégradé gracieux** :
+  - Si GCM plante, le reste de Cookie Consent continue de fonctionner
+  - Logs d'erreur détaillés sans bloquer l'exécution
+  - Retours `false`/`null` explicites en cas d'échec
+
+### 📚 Documentation
+
+- **Nouveau fichier** : `docs/google-consent-mode-v2.md` (français)
+  - Qu'est-ce que GCM v2 ?
+  - Installation et configuration
+  - Exemples d'utilisation (basique et avancé)
+  - API JavaScript complète
+  - Cas d'usage avancés
+  - Comparaison avec/sans GCM v2
+  - Conformité RGPD/CNIL
+  - FAQ (10 questions)
+  - Dépannage (4 problèmes courants)
+  - Ressources (liens officiels Google et CNIL)
+
+### 🐛 Corrections
+
+- **Noms de propriétés corrigés** dans la documentation :
+  - ❌ `google_manager_key` → ✅ `google_analytics_key`
+  - ❌ `google_AdSense_key` → ✅ `google_adsense_key` (minuscule)
+  - ❌ `facebook` → ✅ `facebook_pixel`
+
+### 🔄 Compatibilité
+
+- **Rétrocompatibilité totale** : GCM v2 activé par défaut mais peut être désactivé
+- **Zéro breaking change** : Aucune modification de l'API existante
+- **Compatible SSR/Node.js** : Détection automatique et désactivation propre
+- **Compatible tous navigateurs modernes** : Chrome, Firefox, Safari, Edge
+
+### 📦 Performance
+
+- **Impact minimal** : +5KB non gzippé (~1.5KB gzippé) pour le module GCM
+- **Chargement asynchrone** : N'impacte pas le temps de chargement initial
+- **Lazy loading** : Badge et catégorie GCM créés uniquement si activé
+
+### 🎯 Avantages GCM v2
+
+- ✅ Collecte de données agrégées même sans consentement (mode "ping")
+- ✅ Amélioration significative de la qualité des conversions Google
+- ✅ Conformité obligatoire pour Google Ads en Europe (depuis mars 2024)
+- ✅ Compatible GA4, Google Tag Manager, Google Ads
+- ✅ Respect total du choix utilisateur (conforme RGPD)
+
+---
+
+
 ## [2.4.0] - 2025-10-14
 
 ### Ajouté

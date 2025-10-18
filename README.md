@@ -14,14 +14,26 @@ European open-source alternative, with no dependency on Big Tech.
 
 ## ✨ Features
 
--   ✅ **Native GDPR Compliance** - Articles 6, 7, 13 respected
--   ✅ **Automatic Blocking** - Detects and blocks third-party scripts
--   ✅ **16 Pre-configured Services** - GA, Facebook Pixel, Hotjar...
--   ✅ **Consent Logging** - Legal proof (Art. 7.1)
--   ✅ **7 Languages** - FR, EN, ES, DE, IT, NL, PT
--   ✅ **Zero Dependencies** - Vanilla JS ≈ 66 KB minified (~21 KB gzipped)
--   ✅ **Customizable Themes** - CSS variables
--   ✅ **Made in France** 🇫🇷
+### Core Features
+- ✅ **Native GDPR Compliance** - Articles 6, 7, 13 respected
+- ✅ **Automatic Script Blocking** - Detects and blocks third-party scripts
+- ✅ **16 Pre-configured Services** - GA, Facebook Pixel, Hotjar...
+- ✅ **Consent Registry** - Legal proof (Art. 7.1)
+- ✅ **7 Languages** - FR, EN, ES, DE, IT, NL, PT
+- ✅ **Zero Dependencies** - Vanilla JS ≈ 66 KB minified (~21 KB gzipped)
+- ✅ **Customizable Themes** - CSS variables
+- ✅ **Made in France** 🇫🇷
+
+### 🆕 New in v2.5.0
+
+- ✅ **Google Consent Mode v2** - Native integration with Google Analytics & Ads
+  - Automatic consent signals to Google
+  - Ping mode for aggregated data collection
+  - Required for Google Ads in EU (since March 2024)
+  - Zero configuration needed - works out of the box
+- ✅ **Ultra-discrete badge** - Small "📊 GCM v2" indicator in banner
+- ✅ **Robust error handling** - Graceful degradation if GCM fails
+- ✅ **SSR compatible** - Auto-detects server-side rendering
 
 ## 🚀 Quick Installation Without Logger
 
@@ -102,6 +114,54 @@ html
 ```html
 <script type="text/plain" data-cookie-category="CATEGORY" src="SCRIPT_URL"></script>
 ```
+
+
+## 🎯 Google Consent Mode v2
+
+Cookie Consent includes **native support for Google Consent Mode v2** (required for Google Ads in Europe since March 2024).
+
+### ✨ Features
+
+- **Automatic integration** - Works out of the box, no config needed
+- **Consent signals** - Automatically updates Google tags based on user choice
+- **Ping mode** - Collects aggregated anonymous data even without consent
+- **GDPR compliant** - Respects user privacy while improving data quality
+
+### 🚀 Quick Start
+
+**Basic usage (automatic):**
+```javascript
+window.CookieConsent.init({
+  statistics: {
+    google_analytics_key: 'G-XXXXXXXXX'
+  }
+  // Google Consent Mode v2 is enabled by default!
+});
+```
+
+**Advanced configuration:**
+```javascript
+window.CookieConsent.init({
+  google_consent_mode: {
+    enabled: true,
+    wait_for_update: 500,
+    ads_data_redaction: true,
+    region: ['US-CA', 'EU']
+  },
+  statistics: {
+    google_analytics_key: 'G-XXXXXXXXX'
+  }
+});
+```
+
+**Disable GCM:**
+```javascript
+window.CookieConsent.init({
+  google_consent_mode: false
+});
+```
+
+
 
 ## 🛡️ GDPR/CNIL Compliance
 
