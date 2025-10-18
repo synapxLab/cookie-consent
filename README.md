@@ -148,9 +148,9 @@ Each consent corresponds to a recorded action (acceptance, rejection, or modific
 
 🎁 **€50 offered** upon registration + **€50 for each successful referral.**  
 📄 Invoice via ERP/CRM [Administralis](https://administralis.fr/)
-| Volume/month |  0 - 20K       |  2K - 20K  |    20K - 200K       |  +200K
-|-------------|----------------|-------------|--------------|--------------|--------------|-----
-| Price (excl. tax)        |   15€         |      35€     |      75€      | [Nous contacter] |(mailto:contact@synapx.fr) |
+| Volume/month        |  0 - 20K  |  2K - 20K  |   20K - 200K |  +200K       |-----
+|-------------------  |-----------|------------|--------------|--------------|-----------
+| Price (excl. tax)   |   15€     |    35€     |      75€     | [Nous contacter] (mailto:contact@synapx.fr)|-----
 
 🎯 **Result:** Even with constant traffic of 3,000 unique visitors,  
 _Most of your returning visitors have already made their choice and it remains valid for 6 months!_
