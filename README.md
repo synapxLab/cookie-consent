@@ -131,7 +131,6 @@ Log in to [https://synapx.fr/sdk/cookie_consent/](https://synapx.fr/sdk/cookie_c
 
 -   [🚀 Getting Started](./docs/en/getting-started.md)
 -   [⚙️ Configuration](./docs/en/configuration.md)
--   [⚖️ GDPR Compliance](./docs/en/compliance-cnil.md)
 -   [❓ FAQ](./docs/en/faq.md)
 
 **Integrations:**
