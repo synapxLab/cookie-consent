@@ -9,6 +9,7 @@
 
 import '../scss/cookie.scss';
 import t from './translat';
+import v from './version';
 import { 
   initGoogleConsentMode, 
   updateGoogleConsent, 
@@ -45,21 +46,20 @@ const CONFIG = {
     tiktok_pixel_id: null,
     linkedin_partner_id: null
   },
-  functional: {  // RENOMMÉ de cookies → functional
+  functional: {
     intercom_app_id: null,
     crisp_website_id: null,
     hubspot_portal_id: null,
     segment_write_key: null
   },
   storage: {
-    expiration_months: 6, // CNIL recommande 6 mois max
-    auto_renew: false     // ne pas prolonger automatiquement à chaque visite
+    expiration_months: 6,
+    auto_renew: false
   },
   google_consent_mode: GCM_DEFAULT_CONFIG
 };
 
-const EXPIRATION_MS = Math.max(1, Number(CONFIG.storage.expiration_months || 6)) * 30 * 24 * 60 * 60 * 1000;
-
+const EXPIRATION_MS = Math.max(1,Number(CONFIG.storage.expiration_months || 6)) * 30 * 24 * 60 * 60 * 1000;
 
 // ✅ Protection globale contre les erreurs GCM
 const safeGCM = {
@@ -98,13 +98,12 @@ const loadPrefs = () => {
     const parsed = JSON.parse(raw || '{}');
     if (!parsed || typeof parsed !== 'object') return null;
 
-    // ⏳ Vérifie la date d'expiration
     if (parsed.expiresAt && Date.now() > parsed.expiresAt) {
       localStorage.removeItem(STORAGE_KEY);
-      return null; // Consentement expiré → redemander
+      return null;
     }
 
-    return parsed.data || parsed; // compatibilité ancienne structure
+    return parsed.data || parsed;
   } catch {
     return null;
   }
@@ -126,19 +125,13 @@ const getDeviceId = () => {
   return id;
 };
 
-
-// ========== BLOQUEUR TIERS (Scan + Freeze + Release) ==========
-/**
- * Mots-clés par catégorie pour classer automatiquement les ressources tierces.
- * Ajuste librement (ordre important : on s'arrête au premier match).
- */
+// ========== BLOQUEUR TIERS ==========
 const CATEGORY_MATCHERS = [
   { cat: 'statistics', kw: ['google-analytics','gtag','tagmanager','matomo','plausible','hotjar','clarity','mixpanel','amplitude'] },
   { cat: 'marketing',  kw: ['adsense','doubleclick','facebook','fbq','tiktok','linkedin','snap.licdn','googlesyndication'] },
   { cat: 'cookies',    kw: ['intercom','crisp.chat','hubspot','hs-scripts.com','segment.com/analytics'] }
 ];
 
-/** Détecte la catégorie à partir d'une URL */
 const detectCategoryFromUrl = (url='') => {
   const u = url.toLowerCase();
   for (const {cat, kw} of CATEGORY_MATCHERS) {
@@ -147,27 +140,23 @@ const detectCategoryFromUrl = (url='') => {
   return null;
 };
 
-/** Convertit <script/iframe> en élément inerte tant que pas consenti */
 const freezeElement = (el, cat) => {
   if (!cat || el.dataset.cookieBlocked === 'true') return;
 
   el.dataset.cookieBlocked = 'true';
   el.dataset.cookieCategory = cat;
 
-  // On remplace par un "placeholder" neutre pour éviter l'exécution immédiate
   const placeholder = document.createElement(el.tagName);
   placeholder.setAttribute('type', 'text/plain');
   placeholder.dataset.cookieBlocked = 'true';
   placeholder.dataset.cookieCategory = cat;
 
-  // On sauvegarde les attributs d'origine
   const attrs = {};
   for (const {name, value} of [...el.attributes]) {
     attrs[name] = value;
   }
   placeholder.dataset.cookieOrigAttrs = JSON.stringify(attrs);
 
-  // On garde aussi le contenu inline si présent
   if (el.textContent && el.textContent.trim()) {
     placeholder.textContent = el.textContent;
   }
@@ -175,7 +164,6 @@ const freezeElement = (el, cat) => {
   el.replaceWith(placeholder);
 };
 
-/** Restaure un élément bloqué (selon consentement) en script/iframe exécutable */
 const restoreElement = (placeholder) => {
   if (placeholder.dataset.cookieBlocked !== 'true') return;
 
@@ -183,30 +171,24 @@ const restoreElement = (placeholder) => {
   const attrs = JSON.parse(placeholder.dataset.cookieOrigAttrs || '{}');
   const real = document.createElement(placeholder.tagName);
 
-  // Réinjecte attributs
   for (const [k,v] of Object.entries(attrs)) {
-    // Si c'était un <script> inline, on rétablira via textContent
     if (k === 'type') continue;
     real.setAttribute(k, v);
   }
 
-  // Si on avait congelé un <script> inline, on remet le code
   if (!attrs.src && placeholder.textContent) {
     real.textContent = placeholder.textContent;
   }
 
-  // Nettoie les marqueurs
   real.removeAttribute('data-cookie-blocked');
   real.removeAttribute('data-cookie-category');
   real.removeAttribute('data-cookie-orig-attrs');
 
   placeholder.replaceWith(real);
 
-  // Cas inline sans src : forcer exécution en recréant un <script> "vrai"
   if (real.tagName === 'SCRIPT' && !real.src && real.textContent) {
     const exec = document.createElement('script');
     exec.textContent = real.textContent;
-    // Copie quelques attributs utiles (async/defer/nomodule, etc.)
     ['async','defer','nomodule','crossorigin','integrity','referrerpolicy'].forEach(a=>{
       if (real.hasAttribute(a)) exec.setAttribute(a, real.getAttribute(a));
     });
@@ -214,7 +196,6 @@ const restoreElement = (placeholder) => {
   }
 };
 
-/** Débloque tous les placeholders si la catégorie correspondante est consentie */
 const releaseByConsent = (prefs) => {
   const allowed = {
     statistics: !!prefs?.statistics,
@@ -227,7 +208,6 @@ const releaseByConsent = (prefs) => {
   });
 };
 
-/** Scanne la page et gèle <script src> et <iframe src> tierces non consenties */
 const scanAndFreezeThirdParty = (prefs) => {
   const nodes = document.querySelectorAll('script[src], iframe[src]');
   nodes.forEach(el => {
@@ -240,7 +220,6 @@ const scanAndFreezeThirdParty = (prefs) => {
   });
 };
 
-/** Observe les ajouts dynamiques (SPA / GTM) et bloque à la volée si non consenti */
 let __cookieObserver = null;
 const startObserver = (prefs) => {
   if (__cookieObserver) return;
@@ -248,13 +227,11 @@ const startObserver = (prefs) => {
     muts.forEach(mu => {
       mu.addedNodes && [...mu.addedNodes].forEach(node => {
         if (!(node instanceof Element)) return;
-        // Si on injecte un <script> ou <iframe> on tente de bloquer
         if ((node.tagName === 'SCRIPT' || node.tagName === 'IFRAME') && node.getAttribute('src')) {
           const src = node.getAttribute('src');
           const cat = detectCategoryFromUrl(src);
           if (cat && !(prefs && prefs[cat])) freezeElement(node, cat);
         }
-        // Et si un conteneur complet arrive, on rescane localement
         node.querySelectorAll && node.querySelectorAll('script[src],iframe[src]').forEach(child => {
           const s = child.getAttribute('src');
           const c = detectCategoryFromUrl(s || '');
@@ -266,8 +243,6 @@ const startObserver = (prefs) => {
   __cookieObserver.observe(document.documentElement, { childList: true, subtree: true });
 };
 
-
-
 // ========== RÉCUPÉRATION DES SERVICES CONFIGURÉS ==========
 const getConfiguredServices = () => {
   const services = {
@@ -276,7 +251,6 @@ const getConfiguredServices = () => {
     cookies: []
   };
   
-  // Statistics
   if (CONFIG.statistics.google_analytics_key) services.statistics.push('Google Analytics');
   if (CONFIG.statistics.google_tag_manager_key) services.statistics.push('Google Tag Manager');
   if (CONFIG.statistics.matomo) services.statistics.push('Matomo');
@@ -286,13 +260,11 @@ const getConfiguredServices = () => {
   if (CONFIG.statistics.hotjar_site_id) services.statistics.push('Hotjar');
   if (CONFIG.statistics.clarity_project_id) services.statistics.push('Microsoft Clarity');
   
-  // Marketing
   if (CONFIG.marketing.google_adsense_key) services.marketing.push('Google AdSense');
   if (CONFIG.marketing.facebook_pixel) services.marketing.push('Facebook Pixel');
   if (CONFIG.marketing.tiktok_pixel_id) services.marketing.push('TikTok Pixel');
   if (CONFIG.marketing.linkedin_partner_id) services.marketing.push('LinkedIn Insight');
   
-  // Functional (ex-Cookies)
   if (CONFIG.functional.intercom_app_id) services.cookies.push('Intercom');
   if (CONFIG.functional.crisp_website_id) services.cookies.push('Crisp');
   if (CONFIG.functional.hubspot_portal_id) services.cookies.push('HubSpot');
@@ -309,18 +281,14 @@ const logConsentToServer = async (preferences, action = 'accept', method = 'bann
     consent_id: generateUUID(),
     device_id: getDeviceId(),
     site_path: location.pathname,
-    
     consent_action: action,
     consent_method: method,
-    
     pref_cookies: preferences?.cookies || false,
     pref_statistics: preferences?.statistics || false,
     pref_marketing: preferences?.marketing || false,
-    
     banner_version: '2.4.0',
     locale: navigator.language || 'fr-FR',
     timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
-    
     ...(CONFIG.logger.apiKey && { apiKey: CONFIG.logger.apiKey }),
   };
 
@@ -343,14 +311,9 @@ const logConsentToServer = async (preferences, action = 'accept', method = 'bann
       
       clearTimeout(timeoutId);
       
-      if (response.ok) {
-       // console.log('[CookieConsent] Consentement loggé avec succès');
-        return true;
-      } else {
-        // console.warn(`[CookieConsent]  Échec du log (HTTP ${response.status})`);
-      }
+      if (response.ok) return true;
     } catch (error) {
-      // console.warn('[CookieConsent] Erreur de logging:', error.message);
+      // Silent fail
     }
     
     if (attempt < CONFIG.logger.retries - 1) {
@@ -358,96 +321,65 @@ const logConsentToServer = async (preferences, action = 'accept', method = 'bann
     }
   }
   
-  // console.error('[CookieConsent] Échec du logging après plusieurs tentatives');
   return false;
 };
 
-// ========== INTÉGRATION SERVICES STATISTICS ==========
+// ========== INTÉGRATION SERVICES ==========
 const loadGoogleAnalytics = () => {
   if (!CONFIG.statistics.google_analytics_key) return;
-  
-  // console.log('Chargement Google Analytics...');
-  
   const script = document.createElement('script');
   script.src = `https://www.googletagmanager.com/gtag/js?id=${CONFIG.statistics.google_analytics_key}`;
   script.async = true;
   document.head.appendChild(script);
-
   window.dataLayer = window.dataLayer || [];
   function gtag(){ window.dataLayer.push(arguments); }
-
   gtag('js', new Date());
   gtag('config', CONFIG.statistics.google_analytics_key, {
     anonymize_ip: true,
     cookie_flags: 'SameSite=None;Secure'
   });
-
-  // console.log('Google Analytics chargé');
 };
 
 const loadGoogleTagManager = () => {
   if (!CONFIG.statistics.google_tag_manager_key) return;
-  
-  // console.log('Chargement Google Tag Manager...');
-  
   (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
   new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
   j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
   })(window,document,'script','dataLayer',CONFIG.statistics.google_tag_manager_key);
-  
-  // console.log('Google Tag Manager chargé');
 };
 
 const loadMatomo = () => {
   if (!CONFIG.statistics.matomo) return;
-  
-  // console.log('Chargement Matomo...');
-  
   const { url, siteId } = CONFIG.statistics.matomo;
   window._paq = window._paq || [];
   window._paq.push(['trackPageView']);
   window._paq.push(['enableLinkTracking']);
-  
   const u = url.endsWith('/') ? url : url + '/';
   window._paq.push(['setTrackerUrl', u + 'matomo.php']);
   window._paq.push(['setSiteId', siteId]);
-  
   const script = document.createElement('script');
   script.src = u + 'matomo.js';
   script.async = true;
   document.head.appendChild(script);
-  
- //  console.log('Matomo chargé');
 };
 
 const loadMixpanel = () => {
   if (!CONFIG.statistics.mixpanel_token) return;
-  
-  // console.log('Chargement Mixpanel...');
-  
   (function(f,b){if(!b.__SV){var e,g,i,h;window.mixpanel=b;b._i=[];b.init=function(e,f,c){function g(a,d){var b=d.split(".");2==b.length&&(a=a[b[0]],d=b[1]);a[d]=function(){a.push([d].concat(Array.prototype.slice.call(arguments,0)))}}var a=b;"undefined"!==typeof c?a=b[c]=[]:c="mixpanel";a.people=a.people||[];a.toString=function(a){var d="mixpanel";"mixpanel"!==c&&(d+="."+c);a||(d+=" (stub)");return d};a.people.toString=function(){return a.toString(1)+".people (stub)"};i="disable time_event track track_pageview track_links track_forms track_with_groups add_group set_group remove_group register register_once alias unregister identify name_tag set_config reset opt_in_tracking opt_out_tracking has_opted_in_tracking has_opted_out_tracking clear_opt_in_out_tracking start_batch_senders people.set people.set_once people.unset people.increment people.append people.union people.track_charge people.clear_charges people.delete_user people.remove".split(" ");
   for(h=0;h<i.length;h++)g(a,i[h]);var j="set set_once union unset remove delete".split(" ");a.get_group=function(){function b(c){d[c]=function(){call2_args=arguments;call2=[c].concat(Array.prototype.slice.call(call2_args,0));a.push([e,call2])}}for(var d={},e=["get_group"].concat(Array.prototype.slice.call(arguments,0)),c=0;c<j.length;c++)b(j[c]);return d};b._i.push([e,f,c])};b.__SV=1.2;e=f.createElement("script");e.type="text/javascript";e.async=!0;e.src="undefined"!==typeof MIXPANEL_CUSTOM_LIB_URL?
   MIXPANEL_CUSTOM_LIB_URL:"file:"===f.location.protocol&&"//cdn.mxpnl.com/libs/mixpanel-2-latest.min.js".match(/^\/\//)?"https://cdn.mxpnl.com/libs/mixpanel-2-latest.min.js":"//cdn.mxpnl.com/libs/mixpanel-2-latest.min.js";g=f.getElementsByTagName("script")[0];g.parentNode.insertBefore(e,g)}})(document,window.mixpanel||[]);
-  
   mixpanel.init(CONFIG.statistics.mixpanel_token);
-  
-  // console.log('Mixpanel chargé');
 };
 
 const loadAmplitude = () => {
   if (!CONFIG.statistics.amplitude_key) return;
-  
-  // console.log('Chargement Amplitude...');
-  
   (function(e,t){var n=e.amplitude||{_q:[],_iq:{}};var r=t.createElement("script")
   ;r.type="text/javascript"
   ;r.integrity="sha384-+EO59vL/X7v6VE2TJlBECHx/uaPlWB9hXD/WvJOg5BDSeG7RcKvvFhg2nLNdDhY+"
   ;r.crossOrigin="anonymous";r.async=true
   ;r.src="https://cdn.amplitude.com/libs/amplitude-8.21.4-min.gz.js"
-  ;r.onload=function(){if(!e.amplitude.runQueuedFunctions){
-  // console.log("[Amplitude] Error: could not load SDK")
-  }};
+  ;r.onload=function(){if(!e.amplitude.runQueuedFunctions){}};
   var s=t.getElementsByTagName("script")[0]
   ;s.parentNode.insertBefore(r,s);function i(e,t){e.prototype[t]=function(){
   this._q.push([t].concat(Array.prototype.slice.call(arguments,0)));return this}}
@@ -463,29 +395,20 @@ const loadAmplitude = () => {
   e=(!e||e.length===0?"$default_instance":e).toLowerCase()
   ;if(!Object.prototype.hasOwnProperty.call(n._iq,e)){n._iq[e]={_q:[]};v(n._iq[e])}
   return n._iq[e]};e.amplitude=n})(window,document);
-  
   amplitude.getInstance().init(CONFIG.statistics.amplitude_key);
-  
-  // console.log('Amplitude chargé');
 };
 
 const loadPlausible = () => {
   if (!CONFIG.statistics.plausible) return;
-  
-  // console.log('Chargement Plausible...');
-  
   const script = document.createElement('script');
   script.defer = true;
   script.dataset.domain = CONFIG.statistics.plausible.domain;
   script.src = 'https://plausible.io/js/script.js';
   document.head.appendChild(script);
-  
-  // console.log('Plausible chargé');
 };
 
 const loadHotjar = () => {
   if (!CONFIG.statistics.hotjar_site_id) return;
-  // console.log('Chargement Hotjar...');
   (function(h,o,t,j,a,r){
     h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
     h._hjSettings={hjid:CONFIG.statistics.hotjar_site_id,hjsv:6};
@@ -494,24 +417,19 @@ const loadHotjar = () => {
     r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
     a.appendChild(r);
   })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
-  // console.log('Hotjar chargé');
 };
 
 const loadClarity = () => {
   if (!CONFIG.statistics.clarity_project_id) return;
-  // console.log('Chargement Microsoft Clarity...');
   (function(c,l,a,r,i,t,y){
     c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
     t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
     y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
   })(window, document, "clarity", "script", CONFIG.statistics.clarity_project_id);
-  // console.log('Microsoft Clarity chargé');
 };
 
-// ========== INTÉGRATION SERVICES MARKETING ==========
 const loadFacebookPixel = () => {
   if (!CONFIG.marketing.facebook_pixel) return;
-  // console.log('Chargement Facebook Pixel...');
   !function(f,b,e,v,n,t,s) {
     if(f.fbq)return;n=f.fbq=function(){n.callMethod?
     n.callMethod.apply(n,arguments):n.queue.push(arguments)};
@@ -520,42 +438,34 @@ const loadFacebookPixel = () => {
     t.src=v;s=b.getElementsByTagName(e)[0];
     s.parentNode.insertBefore(t,s)
   }(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');
-  
   if (typeof window.fbq === 'function') {
     window.fbq('init', CONFIG.marketing.facebook_pixel.key);
     window.fbq('track', CONFIG.marketing.facebook_pixel.track || 'PageView');
   }
-  // console.log('Facebook Pixel chargé');
 };
 
 const loadGoogleAdSense = () => {
   if (!CONFIG.marketing.google_adsense_key) return;
-  // console.log('Chargement Google AdSense...');
   const script = document.createElement('script');
   script.src = `https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${CONFIG.marketing.google_adsense_key}`;
   script.async = true;
   script.crossOrigin = 'anonymous';
   document.head.appendChild(script);
-  // console.log('Google AdSense chargé');
 };
 
 const loadTikTokPixel = () => {
   if (!CONFIG.marketing.tiktok_pixel_id) return;  
-  // console.log('Chargement TikTok Pixel...');
   !function (w, d, t) {
     w.TiktokAnalyticsObject=t;var ttq=w[t]=w[t]||[];ttq.methods=["page","track","identify","instances","debug","on","off","once","ready","alias","group","enableCookie","disableCookie"],ttq.setAndDefer=function(t,e){t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}};for(var i=0;i<ttq.methods.length;i++)ttq.setAndDefer(ttq,ttq.methods[i]);ttq.instance=function(t){for(var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n]);return e},ttq.load=function(e,n){var i="https://analytics.tiktok.com/i18n/pixel/events.js";ttq._i=ttq._i||{},ttq._i[e]=[],ttq._i[e]._u=i,ttq._t=ttq._t||{},ttq._t[e]=+new Date,ttq._o=ttq._o||{},ttq._o[e]=n||{};var o=document.createElement("script");o.type="text/javascript",o.async=!0,o.src=i+"?sdkid="+e+"&lib="+t;var a=document.getElementsByTagName("script")[0];a.parentNode.insertBefore(o,a)};
     ttq.load(CONFIG.marketing.tiktok_pixel_id);
     ttq.page();
   }(window, document, 'ttq');
-  // console.log('TikTok Pixel chargé');
 };
 
 const loadLinkedInInsight = () => {
   if (!CONFIG.marketing.linkedin_partner_id) return;
-  // console.log('Chargement LinkedIn Insight...');
   window._linkedin_data_partner_ids = window._linkedin_data_partner_ids || [];
   window._linkedin_data_partner_ids.push(CONFIG.marketing.linkedin_partner_id);
-  
   (function(l) {
     if (!l){window.lintrk = function(a,b){window.lintrk.q.push([a,b])};
     window.lintrk.q=[]}
@@ -565,63 +475,45 @@ const loadLinkedInInsight = () => {
     b.src = "https://snap.licdn.com/li.lms-analytics/insight.min.js";
     s.parentNode.insertBefore(b, s);
   })(window.lintrk);
-  // console.log('LinkedIn Insight chargé');
 };
 
-// ========== INTÉGRATION SERVICES FUNCTIONAL (ex-Cookies/Chat/CRM) ==========
 const loadIntercom = () => {
-  if (!CONFIG.functional.intercom_app_id) return;  // MODIFIÉ
-  // console.log('Chargement Intercom...');
-  (function(){var w=window;var ic=w.Intercom;if(typeof ic==="function"){ic('reattach_activator');ic('update',w.intercomSettings);}else{var d=document;var i=function(){i.c(arguments);};i.q=[];i.c=function(args){i.q.push(args);};w.Intercom=i;var l=function(){var s=d.createElement('script');s.type='text/javascript';s.async=true;s.src='https://widget.intercom.io/widget/' + CONFIG.functional.intercom_app_id;var x=d.getElementsByTagName('script')[0];x.parentNode.insertBefore(s,x);};if(document.readyState==='complete'){l();}else if(w.attachEvent){w.attachEvent('onload',l);}else{w.addEventListener('load',l,false);}}})();  // MODIFIÉ
-  window.Intercom('boot', {
-    app_id: CONFIG.functional.intercom_app_id  // MODIFIÉ
-});
-  
-  //console.log('Intercom chargé');
+  if (!CONFIG.functional.intercom_app_id) return;
+  (function(){var w=window;var ic=w.Intercom;if(typeof ic==="function"){ic('reattach_activator');ic('update',w.intercomSettings);}else{var d=document;var i=function(){i.c(arguments);};i.q=[];i.c=function(args){i.q.push(args);};w.Intercom=i;var l=function(){var s=d.createElement('script');s.type='text/javascript';s.async=true;s.src='https://widget.intercom.io/widget/' + CONFIG.functional.intercom_app_id;var x=d.getElementsByTagName('script')[0];x.parentNode.insertBefore(s,x);};if(document.readyState==='complete'){l();}else if(w.attachEvent){w.attachEvent('onload',l);}else{w.addEventListener('load',l,false);}}})();
+  window.Intercom('boot', { app_id: CONFIG.functional.intercom_app_id });
 };
 
 const loadCrisp = () => {
-  if (!CONFIG.functional.crisp_website_id) return;  // MODIFIÉ
-  // console.log('Chargement Crisp...');
-  window.$crisp=[];window.CRISP_WEBSITE_ID=CONFIG.functional.crisp_website_id;  // MODIFIÉ
+  if (!CONFIG.functional.crisp_website_id) return;
+  window.$crisp=[];window.CRISP_WEBSITE_ID=CONFIG.functional.crisp_website_id;
   (function(){d=document;s=d.createElement("script");s.src="https://client.crisp.chat/l.js";s.async=1;d.getElementsByTagName("head")[0].appendChild(s);})();
-  
-  // console.log('Crisp chargé');
 };
 
 const loadHubSpot = () => {
-  if (!CONFIG.functional.hubspot_portal_id) return;  // MODIFIÉ
-  // console.log('Chargement HubSpot...');
+  if (!CONFIG.functional.hubspot_portal_id) return;
   const script = document.createElement('script');
   script.type = 'text/javascript';
   script.id = 'hs-script-loader';
   script.async = true;
   script.defer = true;
-  script.src = `//js.hs-scripts.com/${CONFIG.functional.hubspot_portal_id}.js`;  // MODIFIÉ
+  script.src = `//js.hs-scripts.com/${CONFIG.functional.hubspot_portal_id}.js`;
   document.head.appendChild(script);
-  // console.log('HubSpot chargé');
 };
 
 const loadSegment = () => {
-  if (!CONFIG.functional.segment_write_key) return;  // MODIFIÉ
-  // console.log('Chargement Segment...');
-  !function(){var analytics=window.analytics=window.analytics||[];if(!analytics.initialize)if(analytics.invoked)window.console&&console.error&&console.error("Segment snippet included twice.");else{analytics.invoked=!0;analytics.methods=["trackSubmit","trackClick","trackLink","trackForm","pageview","identify","reset","group","track","ready","alias","debug","page","once","off","on","addSourceMiddleware","addIntegrationMiddleware","setAnonymousId","addDestinationMiddleware"];analytics.factory=function(e){return function(){var t=Array.prototype.slice.call(arguments);t.unshift(e);analytics.push(t);return analytics}};for(var e=0;e<analytics.methods.length;e++){var key=analytics.methods[e];analytics[key]=analytics.factory(key)}analytics.load=function(key,e){var t=document.createElement("script");t.type="text/javascript";t.async=!0;t.src="https://cdn.segment.com/analytics.js/v1/" + key + "/analytics.min.js";var n=document.getElementsByTagName("script")[0];n.parentNode.insertBefore(t,n);analytics._loadOptions=e};analytics._writeKey=CONFIG.functional.segment_write_key;analytics.SNIPPET_VERSION="4.15.3";  // MODIFIÉ
-  analytics.load(CONFIG.functional.segment_write_key);  // MODIFIÉ
+  if (!CONFIG.functional.segment_write_key) return;
+  !function(){var analytics=window.analytics=window.analytics||[];if(!analytics.initialize)if(analytics.invoked)window.console&&console.error&&console.error("Segment snippet included twice.");else{analytics.invoked=!0;analytics.methods=["trackSubmit","trackClick","trackLink","trackForm","pageview","identify","reset","group","track","ready","alias","debug","page","once","off","on","addSourceMiddleware","addIntegrationMiddleware","setAnonymousId","addDestinationMiddleware"];analytics.factory=function(e){return function(){var t=Array.prototype.slice.call(arguments);t.unshift(e);analytics.push(t);return analytics}};for(var e=0;e<analytics.methods.length;e++){var key=analytics.methods[e];analytics[key]=analytics.factory(key)}analytics.load=function(key,e){var t=document.createElement("script");t.type="text/javascript";t.async=!0;t.src="https://cdn.segment.com/analytics.js/v1/" + key + "/analytics.min.js";var n=document.getElementsByTagName("script")[0];n.parentNode.insertBefore(t,n);analytics._loadOptions=e};analytics._writeKey=CONFIG.functional.segment_write_key;analytics.SNIPPET_VERSION="4.15.3";
+  analytics.load(CONFIG.functional.segment_write_key);
   analytics.page();
   }}();
-  // console.log('Segment chargé');
 };
 
-const enableFunctionalCookies = () => {
-  //console.log('Activation cookies fonctionnels...');
-  // console.log('Cookies fonctionnels activés');
-};
+const enableFunctionalCookies = () => {};
 
 // ========== GESTION DES PRÉFÉRENCES ==========
 const applyPreferences = (prefs) => {
   if (!prefs) return;
-  // console.log('Application des préférences:', prefs);
-   updateGoogleConsent(prefs, CONFIG.google_consent_mode);
+  updateGoogleConsent(prefs, CONFIG.google_consent_mode);
   releaseByConsent(prefs);
   
   if (prefs.statistics) {
@@ -653,7 +545,7 @@ const applyPreferences = (prefs) => {
 
 const savePrefs = async (obj, action = 'customize', method = 'banner') => {
   const record = {
-    data: obj,  // CORRIGÉ (était "obj" au lieu de "data: obj")
+    data: obj,
     timestamp: Date.now(),
     expiresAt: Date.now() + EXPIRATION_MS
   };
@@ -662,20 +554,39 @@ const savePrefs = async (obj, action = 'customize', method = 'banner') => {
   const logSuccess = await logConsentToServer(obj, action, method);
   
   if (!logSuccess) {
-    console.error('[CookieConsent] ❌ Échec du logging - Services tiers non chargés pour garantir la conformité RGPD');
-    
+    console.error('[CookieConsent] ⚠ Échec du logging - Services tiers non chargés pour garantir la conformité RGPD');
     document.dispatchEvent(new CustomEvent('cookieConsentChanged', {
       detail: { preferences: obj, logged: false }
     }));
-    
     return;
   }
-  //  console.log('[CookieConsent] Consentement validé - Chargement des services');
+  
   document.dispatchEvent(new CustomEvent('cookieConsentChanged', {
     detail: { preferences: obj, logged: true }
   }));
   
   applyPreferences(obj);
+};
+
+// ========== GÉNÉRATION DU SÉLECTEUR DE LANGUE ==========
+const generateLanguageSelector = () => {
+  const languages = t.dict;
+  const currentLang = t.getLocale();
+  
+  let options = '';
+  for (const [code, data] of Object.entries(languages)) {
+    const selected = code === currentLang ? 'selected' : '';
+    options += `<option value="${code}" ${selected}>${data.label}</option>`;
+  }
+  
+  return `
+    <div class="pmcpli-lang-selector">
+      <select id="pmcpli-lang-select" aria-label="Choisir la langue">${options}</select>
+      <svg class="pmcpli-lang-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="16" height="16">
+        <path fill="currentColor" d="M352 256c0 22.2-1.2 43.6-3.3 64H163.3c-2.2-20.4-3.3-41.8-3.3-64s1.2-43.6 3.3-64H348.7c2.2 20.4 3.3 41.8 3.3 64zm28.8-64H503.9c5.3 20.5 8.1 41.9 8.1 64s-2.8 43.5-8.1 64H380.8c2.1-20.6 3.2-42 3.2-64s-1.1-43.4-3.2-64zm112.6-32H376.7c-10-63.9-29.8-117.4-55.3-151.6c78.3 20.7 142 77.5 171.9 151.6zm-149.1 0H167.7c6.1-36.4 15.5-68.6 27-94.7c10.5-23.6 22.2-40.7 33.5-51.5C239.4 3.2 248.7 0 256 0s16.6 3.2 27.8 13.8c11.3 10.8 23 27.9 33.5 51.5c11.6 26 20.9 58.2 27 94.7zm-209 0H18.6C48.6 85.9 112.2 29.1 190.6 8.4C165.1 42.6 145.3 96.1 135.3 160zM8.1 192H131.2c-2.1 20.6-3.2 42-3.2 64s1.1 43.4 3.2 64H8.1C2.8 299.5 0 278.1 0 256s2.8-43.5 8.1-64zM194.7 446.6c-11.6-26-20.9-58.2-27-94.6H344.3c-6.1 36.4-15.5 68.6-27 94.6c-10.5 23.6-22.2 40.7-33.5 51.5C272.6 508.8 263.3 512 256 512s-16.6-3.2-27.8-13.8c-11.3-10.8-23-27.9-33.5-51.5zM135.3 352c10 63.9 29.8 117.4 55.3 151.6C112.2 482.9 48.6 426.1 18.6 352H135.3zm358.1 0c-30 74.1-93.6 130.9-171.9 151.6c25.5-34.2 45.2-87.7 55.3-151.6H493.4z"/>
+      </svg>
+    </div>
+  `;
 };
 
 // ========== INTERFACE ==========
@@ -715,9 +626,7 @@ function renderOnce() {
     role="dialog" aria-live="polite" style="display:none;" lang="${t.getLocale()}">
   <div class="pmcpli-header">
     <div class="pmcpli-title">${t('title')}</div>
-    <div class="pmcpli-close" tabindex="0" role="button" title="cookiebanner" aria-label="${t('closeAria')}" role-js="close">
-      <svg aria-hidden="true" focusable="false" viewBox="0 0 352 512" class="pmcpli-close-icon"><path fill="currentColor" d="M242.72 256l100.07-100.07c12.28-12.28 12.28-32.19 0-44.48l-22.24-22.24c-12.28-12.28-32.19-12.28-44.48 0L176 189.28 75.93 89.21c-12.28-12.28-32.19-12.28-44.48 0L9.21 111.45c-12.28 12.28-12.28 32.19 0 44.48L109.28 256 9.21 356.07c-12.28 12.28-12.28 32.19 0 44.48l22.24 22.24c12.28 12.28 32.2 12.28 44.48 0L176 322.72l100.07 100.07c12.28 12.28 32.2 12.28 44.48 0l22.24-22.24c12.28-12.28 12.28-32.19 0-44.48L242.72 256z"/></svg>
-    </div>
+    ${generateLanguageSelector()}
   </div>
   <div class="pmcpli-divider pmcpli-divider-header"></div>
   <div class="pmcpli-body">
@@ -825,6 +734,98 @@ const openBanner = (showPrefs = false) => {
   }
 };
 
+// ========== FONCTION DE RAFRAÎCHISSEMENT DU CONTENU ==========
+const refreshBannerContent = () => {
+  const el = document.getElementById('politecookiebanner');
+  if (!el) return;
+
+  // Sauvegarder l'état des checkboxes
+  const checkboxStates = {};
+  el.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+    checkboxStates[cb.id] = cb.checked;
+  });
+
+  // Sauvegarder l'état des catégories (ouvertes/fermées)
+  const categoryStates = {};
+  el.querySelectorAll('.pmcpli-category-clickable').forEach(header => {
+    const category = header.closest('.pmcpli-category');
+    const className = Array.from(category.classList).find(c => c.startsWith('pmcpli-'));
+    categoryStates[className] = header.getAttribute('aria-expanded') === 'true';
+  });
+
+  // Mettre à jour l'attribut lang
+  el.setAttribute('lang', t.getLocale());
+
+  // Mettre à jour les textes
+  el.querySelector('.pmcpli-title').textContent = t('title');
+  el.querySelector('.pmcpli-message').textContent = t('message');
+
+  // Mettre à jour les catégories
+  const categories = [
+    { selector: '.pmcpli-functional .pmcpli-category-title', key: 'functionalTitle' },
+    { selector: '.pmcpli-functional .pmcpli-category-status', key: 'alwaysActive' },
+    { selector: '.pmcpli-functional .pmcpli-description-functional', key: 'functionalDesc' },
+    { selector: '.pmcpli-cookies .pmcpli-category-title', key: 'cookiesTitle' },
+    { selector: '.pmcpli-cookies .pmcpli-description-cookies', key: 'cookiesDesc' },
+    { selector: '.pmcpli-statistics .pmcpli-category-title', key: 'statsTitle' },
+    { selector: '.pmcpli-statistics .pmcpli-description-statistics-anonymous', key: 'statsDesc' },
+    { selector: '.pmcpli-marketing .pmcpli-category-title', key: 'marketingTitle' },
+    { selector: '.pmcpli-marketing .pmcpli-description-marketing', key: 'marketingDesc' }
+  ];
+
+  categories.forEach(({ selector, key }) => {
+    const elem = el.querySelector(selector);
+    if (elem) elem.textContent = t(key);
+  });
+
+  // Mettre à jour les boutons
+  const buttons = [
+    { selector: '.pmcpli-accept', key: 'acceptAll' },
+    { selector: '.pmcpli-deny', key: 'denyAll' },
+    { selector: '.pmcpli-view-preferences', key: 'viewPrefs' },
+    { selector: '.pmcpli-save-preferences', key: 'savePrefs' },
+    { selector: '.pmcpli-del-preferences', key: 'delPrefs' }
+  ];
+
+  buttons.forEach(({ selector, key }) => {
+    const btn = el.querySelector(selector);
+    if (btn) btn.textContent = t(key);
+  });
+
+  // Mettre à jour le logging si présent
+  const loggingTitle = el.querySelector('.pmcpli-logging .pmcpli-category-title');
+  if (loggingTitle) loggingTitle.textContent = t('loggingTitle');
+  
+  const loggingDesc = el.querySelector('.pmcpli-logging .pmcpli-description span');
+  if (loggingDesc) loggingDesc.innerHTML = t('loggingNotice');
+
+  // Restaurer l'état des checkboxes
+  Object.entries(checkboxStates).forEach(([id, checked]) => {
+    const cb = el.querySelector(`#${id}`);
+    if (cb) cb.checked = checked;
+  });
+
+  // Restaurer l'état des catégories
+  Object.entries(categoryStates).forEach(([className, isExpanded]) => {
+    const category = el.querySelector(`.${className}`);
+    if (category) {
+      const header = category.querySelector('.pmcpli-category-clickable');
+      const description = category.querySelector('.pmcpli-description');
+      const icon = header.querySelector('.pmcpli-icon svg');
+      
+      if (isExpanded) {
+        description.style.display = 'block';
+        header.setAttribute('aria-expanded', 'true');
+        icon.style.transform = 'rotate(180deg)';
+      } else {
+        description.style.display = 'none';
+        header.setAttribute('aria-expanded', 'false');
+        icon.style.transform = 'rotate(0deg)';
+      }
+    }
+  });
+};
+
 function attachHandlers() {
   const el = document.getElementById('politecookiebanner');
   if (!el) return;
@@ -833,7 +834,6 @@ function attachHandlers() {
     initGoogleConsentMode(CONFIG.google_consent_mode);
   } catch (error) {
     console.error('[CookieConsent] Erreur initialisation Google Consent Mode:', error);
-    // Continue quand même
   }
 
   const stored = loadPrefs();
@@ -850,6 +850,16 @@ function attachHandlers() {
 
   scanAndFreezeThirdParty(stored);
   startObserver(stored);
+
+  // ========== GESTIONNAIRE DE CHANGEMENT DE LANGUE ==========
+  const langSelect = el.querySelector('#pmcpli-lang-select');
+  if (langSelect) {
+    langSelect.addEventListener('change', (e) => {
+      const newLang = e.target.value;
+      t.setLocale(newLang);
+      refreshBannerContent();
+    });
+  }
 
   const save = async (action = 'customize', method = 'settings') => {
     const prefs = {};
@@ -908,7 +918,6 @@ function attachHandlers() {
   };
 
   const handlers = {
-    '.pmcpli-close': () => el.style.display = 'none',
     '.pmcpli-accept': async () => {
       el.querySelectorAll('input[name^="politecookie["]').forEach(cb => cb.checked = true);
       await save('accept', 'banner');
@@ -968,7 +977,6 @@ window.CookieConsent = {
   },
   
   init: (options = {}) => {
-    // Logger
     if (options.logger) {
       Object.assign(CONFIG.logger, {
         enabled: true,
@@ -985,7 +993,6 @@ window.CookieConsent = {
       if (options.headers) Object.assign(CONFIG.logger.headers, options.headers);
     }
     
-    // Statistics
     if (options.statistics) {
       if (options.statistics.google_analytics_key) {
         CONFIG.statistics.google_analytics_key = options.statistics.google_analytics_key;
@@ -1013,7 +1020,6 @@ window.CookieConsent = {
       }
     }
     
-    // Marketing
     if (options.marketing) {
       if (options.marketing.google_adsense_key) {
         CONFIG.marketing.google_adsense_key = options.marketing.google_adsense_key;
@@ -1029,7 +1035,6 @@ window.CookieConsent = {
       }
     }
     
-    // NOUVEAU : Support de "functional" avec rétrocompatibilité "cookies"
     if (options.cookies) {
       console.warn('[CookieConsent] ⚠️ "cookies" est déprécié, utilisez "functional" à la place');
       options.functional = options.cookies;
@@ -1049,59 +1054,49 @@ window.CookieConsent = {
         CONFIG.functional.segment_write_key = options.functional.segment_write_key;
       }
     }
-    
 
-  try {
-    if (options.google_consent_mode !== undefined) {
-      if (typeof options.google_consent_mode === 'boolean') {
-        CONFIG.google_consent_mode.enabled = options.google_consent_mode;
-      } else if (typeof options.google_consent_mode === 'object' && options.google_consent_mode !== null) {
-        // Validation des propriétés
-        const validConfig = {};
-        
-        if (typeof options.google_consent_mode.enabled === 'boolean') {
-          validConfig.enabled = options.google_consent_mode.enabled;
+    try {
+      if (options.google_consent_mode !== undefined) {
+        if (typeof options.google_consent_mode === 'boolean') {
+          CONFIG.google_consent_mode.enabled = options.google_consent_mode;
+        } else if (typeof options.google_consent_mode === 'object' && options.google_consent_mode !== null) {
+          const validConfig = {};
+          
+          if (typeof options.google_consent_mode.enabled === 'boolean') {
+            validConfig.enabled = options.google_consent_mode.enabled;
+          }
+          
+          if (typeof options.google_consent_mode.wait_for_update === 'number' && 
+              options.google_consent_mode.wait_for_update >= 0) {
+            validConfig.wait_for_update = options.google_consent_mode.wait_for_update;
+          }
+          
+          if (typeof options.google_consent_mode.ads_data_redaction === 'boolean') {
+            validConfig.ads_data_redaction = options.google_consent_mode.ads_data_redaction;
+          }
+          
+          if (typeof options.google_consent_mode.url_passthrough === 'boolean') {
+            validConfig.url_passthrough = options.google_consent_mode.url_passthrough;
+          }
+          
+          if (Array.isArray(options.google_consent_mode.region)) {
+            validConfig.region = options.google_consent_mode.region.filter(r => typeof r === 'string');
+          }
+          
+          Object.assign(CONFIG.google_consent_mode, validConfig);
         }
-        
-        if (typeof options.google_consent_mode.wait_for_update === 'number' && 
-            options.google_consent_mode.wait_for_update >= 0) {
-          validConfig.wait_for_update = options.google_consent_mode.wait_for_update;
-        }
-        
-        if (typeof options.google_consent_mode.ads_data_redaction === 'boolean') {
-          validConfig.ads_data_redaction = options.google_consent_mode.ads_data_redaction;
-        }
-        
-        if (typeof options.google_consent_mode.url_passthrough === 'boolean') {
-          validConfig.url_passthrough = options.google_consent_mode.url_passthrough;
-        }
-        
-        if (Array.isArray(options.google_consent_mode.region)) {
-          validConfig.region = options.google_consent_mode.region.filter(r => typeof r === 'string');
-        }
-        
-        Object.assign(CONFIG.google_consent_mode, validConfig);
       }
+    } catch (error) {
+      console.error('[CookieConsent] Erreur configuration Google Consent Mode:', error);
     }
-  } catch (error) {
-    console.error('[CookieConsent] Erreur configuration Google Consent Mode:', error);
-  }
-  
-  console.log('[CookieConsent] Configuration appliquée:', {
-    logger: CONFIG.logger.enabled,
-    google_consent_mode: CONFIG.google_consent_mode?.enabled || false,
-    statistics: Object.keys(CONFIG.statistics).filter(k => CONFIG.statistics[k]),
-    marketing: Object.keys(CONFIG.marketing).filter(k => CONFIG.marketing[k]),
-    functional: Object.keys(CONFIG.functional).filter(k => CONFIG.functional[k])
-  });
-
-
-    // console.log('[CookieConsent] Configuration appliquée:', {
-    //   logger: CONFIG.logger.enabled,
-    //   statistics: Object.keys(CONFIG.statistics).filter(k => CONFIG.statistics[k]),
-    //   marketing: Object.keys(CONFIG.marketing).filter(k => CONFIG.marketing[k]),
-    //   functional: Object.keys(CONFIG.functional).filter(k => CONFIG.functional[k])  // MODIFIÉ
-    // });
+    
+    console.log('[CookieConsent] Configuration appliquée:', {
+      logger: CONFIG.logger.enabled,
+      google_consent_mode: CONFIG.google_consent_mode?.enabled || false,
+      statistics: Object.keys(CONFIG.statistics).filter(k => CONFIG.statistics[k]),
+      marketing: Object.keys(CONFIG.marketing).filter(k => CONFIG.marketing[k]),
+      functional: Object.keys(CONFIG.functional).filter(k => CONFIG.functional[k])
+    });
   },
   
   disableLogging: () => {
@@ -1147,7 +1142,6 @@ window.CookieConsent = {
       return false;
     }
   }
-
 };
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -1155,10 +1149,9 @@ document.addEventListener('DOMContentLoaded', () => {
     initGoogleConsentMode(CONFIG.google_consent_mode);
   } catch (error) {
     console.error('[CookieConsent] Erreur initialisation Google Consent Mode au chargement:', error);
-    // Continue quand même - ne pas bloquer le chargement du banner
   }
   renderOnce();
   attachHandlers();
   scanAndFreezeThirdParty(loadPrefs());
   startObserver(loadPrefs());
-});    
+});

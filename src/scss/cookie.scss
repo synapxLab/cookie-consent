@@ -6,10 +6,10 @@
 
 /* --------- Thèmes (multi-variants) --------- */
 $cookie-themes: (
-  "default": (bg:#ffffff, text:#111827, muted:#6b7280, line:#e5e7eb, surface:#f3f4f6, accent:#18a60b),
+  "default": (bg:#ffffff, text:#111827, muted:#6b7280, line:#e5e7eb, surface:#f3f4f6, accent:#0063CB),
   "brown":   (bg:#ffffff, text:#1f2937, muted:#6b7280, line:#e5e7eb, surface:#f8f5f2, accent:#8b5e3c),
   "dark":    (bg:#0b1220, text:#e5e7eb, muted:#94a3b8, line:#1f2937, surface:#141b2b, accent:#9b6b5a),
-  "blue":    (bg:#ffffff, text:#0f172a, muted:#475569, line:#e2e8f0, surface:#f1f5f9, accent:#2563eb)
+  "red":    (bg:#ffffff, text:#0f172a, muted:#475569, line:#e2e8f0, surface:#f1f5f9, accent:#FF2900)
 );
 
 @mixin cookie-vars($vars) {
@@ -84,24 +84,62 @@ $cookie-themes: (
     font-size: 16px; 
     line-height: 1.2; 
     color: var(--cc-text);
+    flex: 1;
   }
   
-  .pmcpli-close { 
-    cursor: pointer; 
-    color: #6b7280;
-    background: none;
-    border: none;
-    padding: 4px;
+  /* ========== NOUVEAU: Sélecteur de langue ========== */
+  .pmcpli-lang-selector {
+    position: relative;
     display: flex;
     align-items: center;
-    
-    &:hover { color: #374151; }
-  }
-  
-  .pmcpli-close-icon { 
-    width: 18px; 
-    height: 18px; 
-    display: block;
+    gap: 6px;
+    background: var(--cc-surface);
+    border: 1px solid var(--cc-line);
+    border-radius: 6px;
+    //padding: 6px 10px;
+    padding: 0 5px 0 0;
+    transition: all 0.2s ease;
+
+    &:hover {
+      background: var(--cc-bg);
+      border-color: var(--cc-accent);
+    }
+
+    select {
+      all: initial;
+      font-family: inherit;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--cc-text);
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      padding: 3px 6px;
+      margin: 0;
+      outline: none;
+      appearance: none;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+
+      option {
+        background: var(--cc-bg);
+        color: var(--cc-text);
+         padding: 3px 6px;
+        font-family: inherit;
+      }
+
+      &:focus {
+        outline: none;
+      }
+    }
+
+    .pmcpli-lang-icon {
+      width: 16px;
+      height: 16px;
+      color: var(--cc-muted);
+      pointer-events: none;
+      flex-shrink: 0;
+    }
   }
 
   /* Séparateurs */
@@ -406,10 +444,18 @@ $cookie-themes: (
     background: var(--cc-accent);
     color: #fff;
     border-color: var(--cc-accent);
+    &:hover {
+      background: #004a96;
+    }    
   }
   
   .pmcpli-deny {
-    background: #f9fafb;
+    background: var(--cc-accent);
+    color: #fff;
+    border-color: var(--cc-accent);
+    &:hover {
+      background: #004a96;
+    }
   }
   
   .pmcpli-save-preferences,
@@ -437,6 +483,25 @@ $cookie-themes: (
     left: 12px;
     bottom: 12px;
     width: auto;
+    
+    .pmcpli-header {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 10px;
+    }
+    
+    .pmcpli-title {
+      width: 100%;
+    }
+    
+    .pmcpli-lang-selector {
+      width: 100%;
+      justify-content: space-between;
+      
+      select {
+        flex: 1;
+      }
+    }
     
     .pmcpli-buttons {
       flex-direction: column;
