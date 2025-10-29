@@ -2,7 +2,9 @@
  * @synapxlab/cookie-consent - Google Consent Mode v2
  * Module d'intégration Google Consent Mode v2
  * 
- * @version 2.5.0
+ * ✅ v3.0.0: Support des 4 catégories (necessary, preferences, statistics, marketing)
+ * 
+ * @version 3.0.0
  * @author SynapxLab <contact@synapxlab.com>
  * @license MIT
  */
@@ -16,7 +18,7 @@ export const GCM_DEFAULT_CONFIG = {
   wait_for_update: 500, // ms avant timeout
   ads_data_redaction: true,
   url_passthrough: false,
-  region: [] // ['US-CA', 'EU'] pour ciblage régional
+  region: ['US-CA', 'EU'] // ['US-CA', 'EU'] pour ciblage régional
 };
 
 /**
@@ -28,13 +30,11 @@ export const GCM_DEFAULT_CONFIG = {
 export const initGoogleConsentMode = (config = GCM_DEFAULT_CONFIG) => {
   try {
     if (!config || !config.enabled) {
-      console.log('[CookieConsent] Google Consent Mode v2 désactivé');
       return false;
     }
     
     // Vérifier que l'environnement est compatible
     if (typeof window === 'undefined') {
-      console.warn('[CookieConsent] Environnement non compatible (pas de window)');
       return false;
     }
     
@@ -51,7 +51,7 @@ export const initGoogleConsentMode = (config = GCM_DEFAULT_CONFIG) => {
       'analytics_storage': 'denied',
       'functionality_storage': 'denied',
       'personalization_storage': 'denied',
-      'security_storage': 'granted', // Toujours autorisé (cookies techniques)
+      'security_storage': 'granted', // ✅ Toujours autorisé (cookies nécessaires)
       'wait_for_update': config.wait_for_update || 500
     });
 
@@ -70,11 +70,10 @@ export const initGoogleConsentMode = (config = GCM_DEFAULT_CONFIG) => {
       });
     }
     
-    console.log('[CookieConsent] ✅ Google Consent Mode v2 initialisé');
     return true;
     
   } catch (error) {
-    console.error('[CookieConsent] ❌ Erreur initialisation Google Consent Mode:', error);
+    console.error('[CookieConsent] Erreur initialisation Google Consent Mode:', error);
     return false;
   }
 };
@@ -82,7 +81,10 @@ export const initGoogleConsentMode = (config = GCM_DEFAULT_CONFIG) => {
 /**
  * Met à jour Google Consent Mode selon les préférences utilisateur
  * 
- * @param {Object} preferences - Préférences Cookie Consent {statistics, marketing, cookies}
+ * ✅ v3.0.0: Support des 4 catégories
+ * 
+ * @param {Object} preferences - Préférences Cookie Consent 
+ *                               {necessary, preferences, statistics, marketing}
  * @param {Object} config - Configuration GCM
  */
 export const updateGoogleConsent = (preferences, config = GCM_DEFAULT_CONFIG) => {
@@ -94,15 +96,22 @@ export const updateGoogleConsent = (preferences, config = GCM_DEFAULT_CONFIG) =>
     window.gtag = function() { window.dataLayer.push(arguments); };
   }
   
-  // Mapping des catégories Cookie Consent → Google Consent Mode
+  // ✅ NOUVEAU MAPPING: 4 catégories → Google Consent Mode
   const consentMap = {
+    // Marketing
     ad_storage: preferences?.marketing || false,
     ad_user_data: preferences?.marketing || false,
     ad_personalization: preferences?.marketing || false,
+    
+    // Statistics
     analytics_storage: preferences?.statistics || false,
-    functionality_storage: preferences?.cookies || false,
-    personalization_storage: preferences?.cookies || false,
-    security_storage: true // Toujours granted
+    
+    // Preferences (anciennement functional)
+    functionality_storage: preferences?.preferences || false,
+    personalization_storage: preferences?.preferences || false,
+    
+    // Necessary (toujours granted)
+    security_storage: true
   };
   
   // Convertir boolean → 'granted'/'denied'
@@ -113,8 +122,6 @@ export const updateGoogleConsent = (preferences, config = GCM_DEFAULT_CONFIG) =>
   
   // Envoyer la mise à jour à Google
   window.gtag('consent', 'update', consentUpdate);
-  
-  console.log('[CookieConsent] ✅ Google Consent Mode v2 mis à jour:', consentUpdate);
   
   // Dispatch event pour intégrations tierces
   document.dispatchEvent(new CustomEvent('googleConsentUpdated', {
@@ -129,6 +136,8 @@ export const updateGoogleConsent = (preferences, config = GCM_DEFAULT_CONFIG) =>
 /**
  * Récupère l'état actuel du consentement Google
  * 
+ * ✅ v3.0.0: Support des 4 catégories
+ * 
  * @param {Object} preferences - Préférences Cookie Consent
  * @returns {Object} État des consentements Google
  */
@@ -138,9 +147,9 @@ export const getGoogleConsentState = (preferences) => {
     ad_user_data: preferences?.marketing ? 'granted' : 'denied',
     ad_personalization: preferences?.marketing ? 'granted' : 'denied',
     analytics_storage: preferences?.statistics ? 'granted' : 'denied',
-    functionality_storage: preferences?.cookies ? 'granted' : 'denied',
-    personalization_storage: preferences?.cookies ? 'granted' : 'denied',
-    security_storage: 'granted'
+    functionality_storage: preferences?.preferences ? 'granted' : 'denied',
+    personalization_storage: preferences?.preferences ? 'granted' : 'denied',
+    security_storage: 'granted' // ✅ Toujours granted (necessary)
   };
 };
 
@@ -157,7 +166,6 @@ export const forceUpdateGoogleConsent = (customConsent) => {
   }
   
   window.gtag('consent', 'update', customConsent);
-  console.log('[CookieConsent] ✅ Google Consent Mode mis à jour manuellement:', customConsent);
   
   return true;
 };
@@ -194,7 +202,6 @@ export const resetGoogleConsentMode = () => {
     window.dataLayer.length = 0;
   }
   delete window.gtag;
-  console.log('[CookieConsent] ⚠️ Google Consent Mode réinitialisé');
 };
 
 /**

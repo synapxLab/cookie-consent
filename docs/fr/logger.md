@@ -321,7 +321,7 @@ app.post('/consent/log', express.json(), (req, res) => {
     consent_action,
     pref_cookies,
     pref_statistics,
-    pref_marketing
+    pref_marketing  
   } = req.body;
   
   // Sauvegarder dans votre BDD

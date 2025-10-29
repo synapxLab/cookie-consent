@@ -17,7 +17,7 @@ European open-source alternative, with no dependency on Big Tech.
 ### Core Features
 - ✅ **Native GDPR Compliance** - Articles 6, 7, 13 respected
 - ✅ **Automatic Script Blocking** - Detects and blocks third-party scripts
-- ✅ **16 Pre-configured Services** - GA, Facebook Pixel, Hotjar...
+- ✅ **16 Pre-configured Services** - GA, Facebook Pixel, Hotjar, Google v2 ... 
 - ✅ **Consent Registry** - Legal proof (Art. 7.1)
 - ✅ **7 Languages** - FR, EN, ES, DE, IT, NL, PT
 - ✅ **Zero Dependencies** - Vanilla JS ≈ 66 KB minified (~21 KB gzipped)
@@ -94,28 +94,6 @@ window.CookieConsent.init({
   }
 });
 ```
-
-**With Automatic Consent Logging 🔑 Member Area & Multi-site**
-
-> The code is automatically generated for each registered domain.
-
-javascript
-
-```javascript
-// Code generated automatically in your member area
-```
-
-### Block Third-party Scripts Directly in HTML
-
-If you prefer to include your analytics/marketing scripts directly in your HTML rather than via the JavaScript API, you can automatically block them using the `type="text/plain"` and `data-cookie-category` attributes. Scripts are **truly blocked** until user consent (GDPR compliant).
-
-html
-
-```html
-<script type="text/plain" data-cookie-category="CATEGORY" src="SCRIPT_URL"></script>
-```
-
-
 ## 🎯 Google Consent Mode v2
 
 Cookie Consent includes **native support for Google Consent Mode v2** (required for Google Ads in Europe since March 2024).
@@ -162,6 +140,27 @@ window.CookieConsent.init({
 ```
 
 
+**With Automatic Consent Logging 🔑 Member Area & Multi-site**
+
+> The code is automatically generated for each registered domain.
+
+**🎮 [View Live Demo](https://synapx.fr/sdk/cookie_consent/)** **📚 [Complete French Documentation](./docs/)** **💼 Multi-client Solution**: Ideal for web agencies and freelance developers.
+
+javascript
+
+```javascript
+// Code generated automatically in your member area
+```
+
+### Block Third-party Scripts Directly in HTML
+
+If you prefer to include your analytics/marketing scripts directly in your HTML rather than via the JavaScript API, you can automatically block them using the `type="text/plain"` and `data-cookie-category` attributes. Scripts are **truly blocked** until user consent (GDPR compliant).
+
+html
+
+```html
+<script type="text/plain" data-cookie-category="CATEGORY" src="SCRIPT_URL"></script>
+```
 
 ## 🛡️ GDPR/CNIL Compliance
 

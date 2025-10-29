@@ -1,8 +1,0 @@
-/**
- * @synapxlab/cookie-consent - Google Consent Mode v2
- * Module d'intégration Google Consent Mode v2
- * 
- * @version 2.5.0
- * @author SynapxLab <contact@synapxlab.com>
- * @license MIT
- */

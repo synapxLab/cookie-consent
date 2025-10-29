@@ -1,26 +1,43 @@
 
-> **Télémétrie légère (opt-in / opt-out)**  
-> Ce projet peut, à faible fréquence (~1/300 vues), contacter `version.synapx.fr/ping.php` pour :  
-> – récupérer la dernière version disponible,  
-> – compter de manière agrégée les domaines utilisant la librairie.  
-> **Données envoyées :** _nom de domaine_ uniquement.  
-> **Désactiver :**
-> 
-> `<script>window.CookieConsent = { disableVersionCheck: true };</script> <script  src="/js/cookie.min.js"></script>` 
-> 
-> **Activer explicitement :**
-> 
-> `<script  src="/js/cookie.min.js"  data-check-version="1"></script>` 
-> 
-> **Rétention :** 30 jours max, agrégation statistique.  
-> **Finalité :** mesurer l’adoption et notifier des mises à jour de sécurité.  
-> Aucun suivi individuel, aucun cookie, aucune IP/UA stockée.
+Le SDK SynapxLab Cookie Consent vérifie occasionnellement la disponibilité de nouvelles versions via `version.synapx.fr/cookie.json`.
 
-## Bonus “safe by default”
+## Comportement
 
--   Respecter `Do-Not-Track` : si `navigator.doNotTrack == "1"`, **ne pas ping**.
-    
--   Côté serveur, accepter `?optout=1` (au cas où certains veulent router le script via un proxy et couper le ping).
-    
+-   **Fréquence** : ~10% des chargements (échantillonnage aléatoire)
+-   **Délai** : 10 secondes après le chargement
+-   **Exécution** : Pendant les périodes d'inactivité CPU (`requestIdleCallback`)
+-   **Annulation** : Automatique si la page se ferme ou l'onglet devient inactif
 
-Bref : **MIT + télémétrie minimale documentée + opt-out = ok**.
+## Garanties de confidentialité
+
+✅ **Aucune donnée envoyée** (requête GET simple)  
+✅ **Aucun cookie**  
+✅ **Aucun tracking**  
+✅ **Notification console uniquement**
+
+## Messages console
+
+```
+⚠️ Synapx Cookie: v2.4.0 non supportée → 3.0.0
+```
+Version obsolète détectée.
+```
+ℹ️ Synapx Cookie: v2.4.0 → 2.5.0 disponible
+```
+
+Mise à jour disponible.
+
+## Configuration
+
+Modifier dans le code source :
+
+javascript
+
+```javascript
+const CHANCE = 0.10;   // Probabilité (0-1)
+const DELAY_MS = 10_000; // Délai (ms)
+```
+
+----------
+
+**RGPD-friendly** • **Licence MIT**

@@ -2,8 +2,11 @@
   "name": "@synapxlab/cookie-consent",
   "version": "2.1.3",
   "description": "Bannière cookies RGPD/CNIL en Vanilla JS. 0 dépendance. Blocage auto des scripts tiers. Logging optionnel (≥300 évts/mois). Alternative européenne à Cookiebot/Axeptio (non affiliée).",
-  "homepage": "https://synapx.fr/sdk/cookie_consent/",
-  "repository": { "type": "git", "url": "git+https://github.com/synapxLab/cookie-consent.git" },
+  "homepage": "https://github.com/synapxLab/cookie-consent",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/synapxLab/cookie-consent.git"
+  },
   "main": "dist/cookie.js",
   "files": [
     "dist",
@@ -13,13 +16,17 @@
     "package.json"
   ],
   "keywords": [
-    "cookie","consent","gdpr","rgpd","cnil","cmp","privacy","vanilla-js","no-deps","cookiebanner"
+    "cookie",
+    "consent",
+    "gdpr",
+    "rgpd",
+    "cnil",
+    "cmp",
+    "privacy",
+    "vanilla-js",
+    "no-deps",
+    "cookiebanner"
   ],
-  "homepage": "https://github.com/synapxLab/cookie-consent",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/synapxLab/cookie-consent.git"
-  },
   "bugs": {
     "url": "https://github.com/synapxLab/cookie-consent/issues"
   },
@@ -55,5 +62,8 @@
   "funding": {
     "type": "individual",
     "url": "https://github.com/sponsors/synapxLab"
+  },
+  "dependencies": {
+    "@synapxlab/tracking-npm": "^2.1.4"
   }
 }

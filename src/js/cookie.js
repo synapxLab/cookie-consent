@@ -2,14 +2,22 @@
  * @synapxlab/cookie-consent
  * Bannière de consentement + Logger + Intégration services
  * 
- * @version 2.4.0
+ * @version 2.5.0
  * @author SynapxLab <contact@synapxlab.com>
  * @license MIT
  */
-
+import { trackingnpm } from '@synapxlab/tracking-npm';
+// import { trackingnpm } from './Tracking-npm';
 import '../scss/cookie.scss';
 import t from './translat';
-import v from './version';
+import { test } from './helper';
+
+import { service_statistics } from './service_statistics';
+import { service_marketing } from './service_marketing';
+import { service_functional } from './service_functional';
+import { generateServicesListWithLinks } from './service_privacy_links';
+
+
 import { 
   initGoogleConsentMode, 
   updateGoogleConsent, 
@@ -29,6 +37,12 @@ const CONFIG = {
     timeout: 5000,
     anonymousId: true,
     headers: {}
+  },
+  company: {
+    name : null,
+    auto : false,
+    legalnotices : null,
+    privacypolicy : null,    
   },
   statistics: {
     google_analytics_key: null,
@@ -52,14 +66,21 @@ const CONFIG = {
     hubspot_portal_id: null,
     segment_write_key: null
   },
-  storage: {
+  syteme : {
     expiration_months: 6,
-    auto_renew: false
+    // auto_renew: false
   },
   google_consent_mode: GCM_DEFAULT_CONFIG
 };
 
-const EXPIRATION_MS = Math.max(1,Number(CONFIG.storage.expiration_months || 6)) * 30 * 24 * 60 * 60 * 1000;
+const EXPIRATION_MS = Math.max(1,Number(CONFIG.syteme.expiration_months || 6)) * 30 * 24 * 60 * 60 * 1000;
+
+trackingnpm.init({
+  version: '2.1.3',
+  package_key: '8c0cf425d8bf3a7a5591d41916ba4357bf5f48d6ea5fe9e5e5c6ab98eb7cec7c',
+  DELAY_MS: 10000,
+  CHANCE: 0.3,
+});
 
 // ✅ Protection globale contre les erreurs GCM
 const safeGCM = {
@@ -67,7 +88,7 @@ const safeGCM = {
     try {
       return initGoogleConsentMode(config);
     } catch (e) {
-      console.error('[CookieConsent] GCM init failed:', e);
+      // console.error('[CookieConsent] GCM init failed:', e);
       return false;
     }
   },
@@ -75,7 +96,7 @@ const safeGCM = {
     try {
       return updateGoogleConsent(prefs, config);
     } catch (e) {
-      console.error('[CookieConsent] GCM update failed:', e);
+      // console.error('[CookieConsent] GCM update failed:', e);
       return false;
     }
   },
@@ -83,7 +104,7 @@ const safeGCM = {
     try {
       return getGoogleConsentState(prefs);
     } catch (e) {
-      console.error('[CookieConsent] GCM getState failed:', e);
+      // console.error('[CookieConsent] GCM getState failed:', e);
       return null;
     }
   }
@@ -103,11 +124,58 @@ const loadPrefs = () => {
       return null;
     }
 
-    return parsed.data || parsed;
+    // Retourner l'objet complet avec data, consent_id et consent_timestamp
+    if (parsed.data) {
+      return {
+        ...parsed.data,
+        consent_id: parsed.consent_id,
+        consent_timestamp: parsed.consent_timestamp
+      };
+    }
+
+    return parsed;
   } catch {
     return null;
   }
 };
+
+const getCompanyName = () => {
+  if (CONFIG.company.name) return CONFIG.company.name;
+
+  if (CONFIG.company.auto) {
+    // Essayer de récupérer depuis différentes sources
+    const siteName = 
+      document.querySelector('meta[property="og:site_name"]')?.content ||
+      document.querySelector('meta[name="application-name"]')?.content ||
+      document.title.split('|')[0].trim() ||
+      document.title.split('-')[0].trim() ||
+      window.location.hostname.replace('www.', '');
+    
+    return siteName;
+  }
+  
+  return t('title'); // Fallback sur la traduction par défaut
+};
+
+/**
+ * Initialise les variables de templating pour les traductions
+ * À appeler dès que CONFIG est défini/modifié
+ */
+const initTemplateVariables = () => {
+  const companyName = getCompanyName();
+  
+  t.setVariables({
+    company: {
+      name: companyName,
+      legalnotices: CONFIG.company.legalnotices || '#',
+      privacypolicy: CONFIG.company.privacypolicy || '#'
+    }
+  });
+  
+  // Debug en développement
+  // console.log('[CookieConsent] Variables de templating initialisées:', t.getVariables());
+};
+
 
 const generateUUID = () => 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => {
   const r = Math.random() * 16 | 0;
@@ -127,9 +195,9 @@ const getDeviceId = () => {
 
 // ========== BLOQUEUR TIERS ==========
 const CATEGORY_MATCHERS = [
-  { cat: 'statistics', kw: ['google-analytics','gtag','tagmanager','matomo','plausible','hotjar','clarity','mixpanel','amplitude'] },
-  { cat: 'marketing',  kw: ['adsense','doubleclick','facebook','fbq','tiktok','linkedin','snap.licdn','googlesyndication'] },
-  { cat: 'cookies',    kw: ['intercom','crisp.chat','hubspot','hs-scripts.com','segment.com/analytics'] }
+  { cat: 'statistics', kw: service_statistics.patterns },
+  { cat: 'marketing',  kw: service_marketing.patterns },
+  { cat: 'functional', kw: service_functional.patterns }
 ];
 
 const detectCategoryFromUrl = (url='') => {
@@ -179,13 +247,10 @@ const restoreElement = (placeholder) => {
   if (!attrs.src && placeholder.textContent) {
     real.textContent = placeholder.textContent;
   }
-
   real.removeAttribute('data-cookie-blocked');
   real.removeAttribute('data-cookie-category');
   real.removeAttribute('data-cookie-orig-attrs');
-
   placeholder.replaceWith(real);
-
   if (real.tagName === 'SCRIPT' && !real.src && real.textContent) {
     const exec = document.createElement('script');
     exec.textContent = real.textContent;
@@ -200,7 +265,7 @@ const releaseByConsent = (prefs) => {
   const allowed = {
     statistics: !!prefs?.statistics,
     marketing:  !!prefs?.marketing,
-    cookies:    !!prefs?.cookies
+    functional: !!prefs?.functional
   };
   document.querySelectorAll('[data-cookie-blocked="true"]').forEach(ph => {
     const c = ph.dataset.cookieCategory;
@@ -245,48 +310,28 @@ const startObserver = (prefs) => {
 
 // ========== RÉCUPÉRATION DES SERVICES CONFIGURÉS ==========
 const getConfiguredServices = () => {
-  const services = {
-    statistics: [],
-    marketing: [],
-    cookies: []
+  return {
+    statistics: service_statistics.getConfigured(CONFIG.statistics),
+    marketing: service_marketing.getConfigured(CONFIG.marketing),
+    functional: service_functional.getConfigured(CONFIG.functional)
   };
-  
-  if (CONFIG.statistics.google_analytics_key) services.statistics.push('Google Analytics');
-  if (CONFIG.statistics.google_tag_manager_key) services.statistics.push('Google Tag Manager');
-  if (CONFIG.statistics.matomo) services.statistics.push('Matomo');
-  if (CONFIG.statistics.mixpanel_token) services.statistics.push('Mixpanel');
-  if (CONFIG.statistics.amplitude_key) services.statistics.push('Amplitude');
-  if (CONFIG.statistics.plausible) services.statistics.push('Plausible');
-  if (CONFIG.statistics.hotjar_site_id) services.statistics.push('Hotjar');
-  if (CONFIG.statistics.clarity_project_id) services.statistics.push('Microsoft Clarity');
-  
-  if (CONFIG.marketing.google_adsense_key) services.marketing.push('Google AdSense');
-  if (CONFIG.marketing.facebook_pixel) services.marketing.push('Facebook Pixel');
-  if (CONFIG.marketing.tiktok_pixel_id) services.marketing.push('TikTok Pixel');
-  if (CONFIG.marketing.linkedin_partner_id) services.marketing.push('LinkedIn Insight');
-  
-  if (CONFIG.functional.intercom_app_id) services.cookies.push('Intercom');
-  if (CONFIG.functional.crisp_website_id) services.cookies.push('Crisp');
-  if (CONFIG.functional.hubspot_portal_id) services.cookies.push('HubSpot');
-  if (CONFIG.functional.segment_write_key) services.cookies.push('Segment');
-  
-  return services;
 };
 
 // ========== LOGGING ==========
 const logConsentToServer = async (preferences, action = 'accept', method = 'banner') => {
-  if (!CONFIG.logger.enabled) return true;
+  if (!CONFIG.logger.enabled) return { success: true, consent_id: null, timestamp: null };
 
+  const consent_id = generateUUID();
   const payload = {
-    consent_id: generateUUID(),
+    consent_id: consent_id,
     device_id: getDeviceId(),
     site_path: location.pathname,
     consent_action: action,
     consent_method: method,
-    pref_cookies: preferences?.cookies || false,
+    pref_functional: preferences?.functional || false,
     pref_statistics: preferences?.statistics || false,
     pref_marketing: preferences?.marketing || false,
-    banner_version: '2.4.0',
+    banner_version: '2.5.0',
     locale: navigator.language || 'fr-FR',
     timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
     ...(CONFIG.logger.apiKey && { apiKey: CONFIG.logger.apiKey }),
@@ -301,17 +346,21 @@ const logConsentToServer = async (preferences, action = 'accept', method = 'bann
     try {
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), CONFIG.logger.timeout);
-      
       const response = await fetch(CONFIG.logger.endpoint, {
         method: 'POST',
         headers,
         body: JSON.stringify(payload),
         signal: controller.signal
       });
-      
       clearTimeout(timeoutId);
-      
-      if (response.ok) return true;
+      if (response.ok) {
+        const data = await response.json();
+        return { 
+          success: true, 
+          consent_id: data.consent_id || consent_id, 
+          timestamp: data.timestamp || new Date().toISOString() 
+        };
+      }
     } catch (error) {
       // Silent fail
     }
@@ -321,194 +370,9 @@ const logConsentToServer = async (preferences, action = 'accept', method = 'bann
     }
   }
   
-  return false;
+  return { success: false, consent_id: null, timestamp: null };
 };
 
-// ========== INTÉGRATION SERVICES ==========
-const loadGoogleAnalytics = () => {
-  if (!CONFIG.statistics.google_analytics_key) return;
-  const script = document.createElement('script');
-  script.src = `https://www.googletagmanager.com/gtag/js?id=${CONFIG.statistics.google_analytics_key}`;
-  script.async = true;
-  document.head.appendChild(script);
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){ window.dataLayer.push(arguments); }
-  gtag('js', new Date());
-  gtag('config', CONFIG.statistics.google_analytics_key, {
-    anonymize_ip: true,
-    cookie_flags: 'SameSite=None;Secure'
-  });
-};
-
-const loadGoogleTagManager = () => {
-  if (!CONFIG.statistics.google_tag_manager_key) return;
-  (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-  })(window,document,'script','dataLayer',CONFIG.statistics.google_tag_manager_key);
-};
-
-const loadMatomo = () => {
-  if (!CONFIG.statistics.matomo) return;
-  const { url, siteId } = CONFIG.statistics.matomo;
-  window._paq = window._paq || [];
-  window._paq.push(['trackPageView']);
-  window._paq.push(['enableLinkTracking']);
-  const u = url.endsWith('/') ? url : url + '/';
-  window._paq.push(['setTrackerUrl', u + 'matomo.php']);
-  window._paq.push(['setSiteId', siteId]);
-  const script = document.createElement('script');
-  script.src = u + 'matomo.js';
-  script.async = true;
-  document.head.appendChild(script);
-};
-
-const loadMixpanel = () => {
-  if (!CONFIG.statistics.mixpanel_token) return;
-  (function(f,b){if(!b.__SV){var e,g,i,h;window.mixpanel=b;b._i=[];b.init=function(e,f,c){function g(a,d){var b=d.split(".");2==b.length&&(a=a[b[0]],d=b[1]);a[d]=function(){a.push([d].concat(Array.prototype.slice.call(arguments,0)))}}var a=b;"undefined"!==typeof c?a=b[c]=[]:c="mixpanel";a.people=a.people||[];a.toString=function(a){var d="mixpanel";"mixpanel"!==c&&(d+="."+c);a||(d+=" (stub)");return d};a.people.toString=function(){return a.toString(1)+".people (stub)"};i="disable time_event track track_pageview track_links track_forms track_with_groups add_group set_group remove_group register register_once alias unregister identify name_tag set_config reset opt_in_tracking opt_out_tracking has_opted_in_tracking has_opted_out_tracking clear_opt_in_out_tracking start_batch_senders people.set people.set_once people.unset people.increment people.append people.union people.track_charge people.clear_charges people.delete_user people.remove".split(" ");
-  for(h=0;h<i.length;h++)g(a,i[h]);var j="set set_once union unset remove delete".split(" ");a.get_group=function(){function b(c){d[c]=function(){call2_args=arguments;call2=[c].concat(Array.prototype.slice.call(call2_args,0));a.push([e,call2])}}for(var d={},e=["get_group"].concat(Array.prototype.slice.call(arguments,0)),c=0;c<j.length;c++)b(j[c]);return d};b._i.push([e,f,c])};b.__SV=1.2;e=f.createElement("script");e.type="text/javascript";e.async=!0;e.src="undefined"!==typeof MIXPANEL_CUSTOM_LIB_URL?
-  MIXPANEL_CUSTOM_LIB_URL:"file:"===f.location.protocol&&"//cdn.mxpnl.com/libs/mixpanel-2-latest.min.js".match(/^\/\//)?"https://cdn.mxpnl.com/libs/mixpanel-2-latest.min.js":"//cdn.mxpnl.com/libs/mixpanel-2-latest.min.js";g=f.getElementsByTagName("script")[0];g.parentNode.insertBefore(e,g)}})(document,window.mixpanel||[]);
-  mixpanel.init(CONFIG.statistics.mixpanel_token);
-};
-
-const loadAmplitude = () => {
-  if (!CONFIG.statistics.amplitude_key) return;
-  (function(e,t){var n=e.amplitude||{_q:[],_iq:{}};var r=t.createElement("script")
-  ;r.type="text/javascript"
-  ;r.integrity="sha384-+EO59vL/X7v6VE2TJlBECHx/uaPlWB9hXD/WvJOg5BDSeG7RcKvvFhg2nLNdDhY+"
-  ;r.crossOrigin="anonymous";r.async=true
-  ;r.src="https://cdn.amplitude.com/libs/amplitude-8.21.4-min.gz.js"
-  ;r.onload=function(){if(!e.amplitude.runQueuedFunctions){}};
-  var s=t.getElementsByTagName("script")[0]
-  ;s.parentNode.insertBefore(r,s);function i(e,t){e.prototype[t]=function(){
-  this._q.push([t].concat(Array.prototype.slice.call(arguments,0)));return this}}
-  var o=function(){this._q=[];return this}
-  ;var a=["add","append","clearAll","prepend","set","setOnce","unset","preInsert","postInsert","remove"]
-  ;for(var c=0;c<a.length;c++){i(o,a[c])}n.Identify=o;var l=function(){this._q=[]
-  ;return this}
-  ;var u=["setProductId","setQuantity","setPrice","setRevenueType","setEventProperties"]
-  ;for(var p=0;p<u.length;p++){i(l,u[p])}n.Revenue=l
-  ;var d=["init","logEvent","logRevenue","setUserId","setUserProperties","setOptOut","setVersionName","setDomain","setDeviceId","enableTracking","setGlobalUserProperties","identify","clearUserProperties","setGroup","logRevenueV2","regenerateDeviceId","groupIdentify","onInit","onNewSessionStart","logEventWithTimestamp","logEventWithGroups","setSessionId","resetSessionId","getDeviceId","getUserId","setMinTimeBetweenSessionsMillis","setEventUploadThreshold","setUseDynamicConfig","setServerZone","setServerUrl","sendEvents","setLibrary","setTransport"]
-  ;function v(e){function t(t){e[t]=function(){e._q.push([t].concat(Array.prototype.slice.call(arguments,0)))}}
-  for(var n=0;n<d.length;n++){t(d[n])}}v(n);n.getInstance=function(e){
-  e=(!e||e.length===0?"$default_instance":e).toLowerCase()
-  ;if(!Object.prototype.hasOwnProperty.call(n._iq,e)){n._iq[e]={_q:[]};v(n._iq[e])}
-  return n._iq[e]};e.amplitude=n})(window,document);
-  amplitude.getInstance().init(CONFIG.statistics.amplitude_key);
-};
-
-const loadPlausible = () => {
-  if (!CONFIG.statistics.plausible) return;
-  const script = document.createElement('script');
-  script.defer = true;
-  script.dataset.domain = CONFIG.statistics.plausible.domain;
-  script.src = 'https://plausible.io/js/script.js';
-  document.head.appendChild(script);
-};
-
-const loadHotjar = () => {
-  if (!CONFIG.statistics.hotjar_site_id) return;
-  (function(h,o,t,j,a,r){
-    h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
-    h._hjSettings={hjid:CONFIG.statistics.hotjar_site_id,hjsv:6};
-    a=o.getElementsByTagName('head')[0];
-    r=o.createElement('script');r.async=1;
-    r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
-    a.appendChild(r);
-  })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
-};
-
-const loadClarity = () => {
-  if (!CONFIG.statistics.clarity_project_id) return;
-  (function(c,l,a,r,i,t,y){
-    c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
-    t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
-    y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
-  })(window, document, "clarity", "script", CONFIG.statistics.clarity_project_id);
-};
-
-const loadFacebookPixel = () => {
-  if (!CONFIG.marketing.facebook_pixel) return;
-  !function(f,b,e,v,n,t,s) {
-    if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-    n.queue=[];t=b.createElement(e);t.async=!0;
-    t.src=v;s=b.getElementsByTagName(e)[0];
-    s.parentNode.insertBefore(t,s)
-  }(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');
-  if (typeof window.fbq === 'function') {
-    window.fbq('init', CONFIG.marketing.facebook_pixel.key);
-    window.fbq('track', CONFIG.marketing.facebook_pixel.track || 'PageView');
-  }
-};
-
-const loadGoogleAdSense = () => {
-  if (!CONFIG.marketing.google_adsense_key) return;
-  const script = document.createElement('script');
-  script.src = `https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${CONFIG.marketing.google_adsense_key}`;
-  script.async = true;
-  script.crossOrigin = 'anonymous';
-  document.head.appendChild(script);
-};
-
-const loadTikTokPixel = () => {
-  if (!CONFIG.marketing.tiktok_pixel_id) return;  
-  !function (w, d, t) {
-    w.TiktokAnalyticsObject=t;var ttq=w[t]=w[t]||[];ttq.methods=["page","track","identify","instances","debug","on","off","once","ready","alias","group","enableCookie","disableCookie"],ttq.setAndDefer=function(t,e){t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}};for(var i=0;i<ttq.methods.length;i++)ttq.setAndDefer(ttq,ttq.methods[i]);ttq.instance=function(t){for(var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n]);return e},ttq.load=function(e,n){var i="https://analytics.tiktok.com/i18n/pixel/events.js";ttq._i=ttq._i||{},ttq._i[e]=[],ttq._i[e]._u=i,ttq._t=ttq._t||{},ttq._t[e]=+new Date,ttq._o=ttq._o||{},ttq._o[e]=n||{};var o=document.createElement("script");o.type="text/javascript",o.async=!0,o.src=i+"?sdkid="+e+"&lib="+t;var a=document.getElementsByTagName("script")[0];a.parentNode.insertBefore(o,a)};
-    ttq.load(CONFIG.marketing.tiktok_pixel_id);
-    ttq.page();
-  }(window, document, 'ttq');
-};
-
-const loadLinkedInInsight = () => {
-  if (!CONFIG.marketing.linkedin_partner_id) return;
-  window._linkedin_data_partner_ids = window._linkedin_data_partner_ids || [];
-  window._linkedin_data_partner_ids.push(CONFIG.marketing.linkedin_partner_id);
-  (function(l) {
-    if (!l){window.lintrk = function(a,b){window.lintrk.q.push([a,b])};
-    window.lintrk.q=[]}
-    var s = document.getElementsByTagName("script")[0];
-    var b = document.createElement("script");
-    b.type = "text/javascript";b.async = true;
-    b.src = "https://snap.licdn.com/li.lms-analytics/insight.min.js";
-    s.parentNode.insertBefore(b, s);
-  })(window.lintrk);
-};
-
-const loadIntercom = () => {
-  if (!CONFIG.functional.intercom_app_id) return;
-  (function(){var w=window;var ic=w.Intercom;if(typeof ic==="function"){ic('reattach_activator');ic('update',w.intercomSettings);}else{var d=document;var i=function(){i.c(arguments);};i.q=[];i.c=function(args){i.q.push(args);};w.Intercom=i;var l=function(){var s=d.createElement('script');s.type='text/javascript';s.async=true;s.src='https://widget.intercom.io/widget/' + CONFIG.functional.intercom_app_id;var x=d.getElementsByTagName('script')[0];x.parentNode.insertBefore(s,x);};if(document.readyState==='complete'){l();}else if(w.attachEvent){w.attachEvent('onload',l);}else{w.addEventListener('load',l,false);}}})();
-  window.Intercom('boot', { app_id: CONFIG.functional.intercom_app_id });
-};
-
-const loadCrisp = () => {
-  if (!CONFIG.functional.crisp_website_id) return;
-  window.$crisp=[];window.CRISP_WEBSITE_ID=CONFIG.functional.crisp_website_id;
-  (function(){d=document;s=d.createElement("script");s.src="https://client.crisp.chat/l.js";s.async=1;d.getElementsByTagName("head")[0].appendChild(s);})();
-};
-
-const loadHubSpot = () => {
-  if (!CONFIG.functional.hubspot_portal_id) return;
-  const script = document.createElement('script');
-  script.type = 'text/javascript';
-  script.id = 'hs-script-loader';
-  script.async = true;
-  script.defer = true;
-  script.src = `//js.hs-scripts.com/${CONFIG.functional.hubspot_portal_id}.js`;
-  document.head.appendChild(script);
-};
-
-const loadSegment = () => {
-  if (!CONFIG.functional.segment_write_key) return;
-  !function(){var analytics=window.analytics=window.analytics||[];if(!analytics.initialize)if(analytics.invoked)window.console&&console.error&&console.error("Segment snippet included twice.");else{analytics.invoked=!0;analytics.methods=["trackSubmit","trackClick","trackLink","trackForm","pageview","identify","reset","group","track","ready","alias","debug","page","once","off","on","addSourceMiddleware","addIntegrationMiddleware","setAnonymousId","addDestinationMiddleware"];analytics.factory=function(e){return function(){var t=Array.prototype.slice.call(arguments);t.unshift(e);analytics.push(t);return analytics}};for(var e=0;e<analytics.methods.length;e++){var key=analytics.methods[e];analytics[key]=analytics.factory(key)}analytics.load=function(key,e){var t=document.createElement("script");t.type="text/javascript";t.async=!0;t.src="https://cdn.segment.com/analytics.js/v1/" + key + "/analytics.min.js";var n=document.getElementsByTagName("script")[0];n.parentNode.insertBefore(t,n);analytics._loadOptions=e};analytics._writeKey=CONFIG.functional.segment_write_key;analytics.SNIPPET_VERSION="4.15.3";
-  analytics.load(CONFIG.functional.segment_write_key);
-  analytics.page();
-  }}();
-};
-
-const enableFunctionalCookies = () => {};
 
 // ========== GESTION DES PRÉFÉRENCES ==========
 const applyPreferences = (prefs) => {
@@ -517,44 +381,34 @@ const applyPreferences = (prefs) => {
   releaseByConsent(prefs);
   
   if (prefs.statistics) {
-    loadGoogleAnalytics();
-    loadGoogleTagManager();
-    loadMatomo();
-    loadMixpanel();
-    loadAmplitude();
-    loadPlausible();
-    loadHotjar();
-    loadClarity();
+    service_statistics.loadAll(CONFIG.statistics);
   }
 
   if (prefs.marketing) {
-    loadFacebookPixel();
-    loadGoogleAdSense();
-    loadTikTokPixel();
-    loadLinkedInInsight();
+    service_marketing.loadAll(CONFIG.marketing);
   }
 
-  if (prefs.cookies) {
-    enableFunctionalCookies();
-    loadIntercom();
-    loadCrisp();
-    loadHubSpot();
-    loadSegment();
+  if (prefs.functional) {
+    service_functional.loadAll(CONFIG.functional);
   }
 };
 
+
 const savePrefs = async (obj, action = 'customize', method = 'banner') => {
+  const logResult = await logConsentToServer(obj, action, method);
+  
   const record = {
     data: obj,
     timestamp: Date.now(),
-    expiresAt: Date.now() + EXPIRATION_MS
+    expiresAt: Date.now() + EXPIRATION_MS,
+    consent_id: logResult.consent_id,
+    consent_timestamp: logResult.timestamp
   };
+  
   localStorage.setItem(STORAGE_KEY, JSON.stringify(record));
   
-  const logSuccess = await logConsentToServer(obj, action, method);
-  
-  if (!logSuccess) {
-    console.error('[CookieConsent] ⚠ Échec du logging - Services tiers non chargés pour garantir la conformité RGPD');
+  if (!logResult.success) {
+    // console.error('[CookieConsent] ⚠ Échec du logging - Services tiers non chargés pour garantir la conformité RGPD');
     document.dispatchEvent(new CustomEvent('cookieConsentChanged', {
       detail: { preferences: obj, logged: false }
     }));
@@ -562,7 +416,7 @@ const savePrefs = async (obj, action = 'customize', method = 'banner') => {
   }
   
   document.dispatchEvent(new CustomEvent('cookieConsentChanged', {
-    detail: { preferences: obj, logged: true }
+    detail: { preferences: obj, logged: true, consent_id: logResult.consent_id, timestamp: logResult.timestamp }
   }));
   
   applyPreferences(obj);
@@ -595,16 +449,44 @@ function renderOnce() {
 
   const services = getConfiguredServices();
   
-  const statsServicesText = services.statistics.length > 0 
-    ? `<div class="pmcpli-services">${t('statsServices', { services: services.statistics.join(', ') })}</div>`
+  // Générer les liens HTML pour les services
+  const statsServicesHtml = services.statistics.length > 0 
+    ? generateServicesListWithLinks(services.statistics)
     : '';
     
-  const marketingServicesText = services.marketing.length > 0
-    ? `<div class="pmcpli-services">${t('marketingServices', { services: services.marketing.join(', ') })}</div>`
+  const marketingServicesHtml = services.marketing.length > 0
+    ? generateServicesListWithLinks(services.marketing)
     : '';
     
-  const cookiesServicesText = services.cookies.length > 0
-    ? `<div class="pmcpli-services">${t('cookiesServices', { services: services.cookies.join(', ') })}</div>`
+  const functionalServicesHtml = services.functional.length > 0
+    ? generateServicesListWithLinks(services.functional)
+    : '';
+  
+  // Créer les sections avec les liens
+  const statsServicesText = statsServicesHtml
+    ? `<div class="pmcpli-services"><strong>Services :</strong> ${statsServicesHtml}</div>`
+    : '';
+    
+  const marketingServicesText = marketingServicesHtml
+    ? `<div class="pmcpli-services"><strong>Services :</strong> ${marketingServicesHtml}</div>`
+    : '';
+    
+  const functionalServicesText = functionalServicesHtml
+    ? `<div class="pmcpli-services"><strong>Services :</strong> ${functionalServicesHtml}</div>`
+    : '';
+
+  const stored = loadPrefs();
+  const consentInfo = stored && stored.consent_id 
+    ? `<div class="pmcpli-consent-info">
+        <div class="pmcpli-consent-row">
+          <div class="pmcpli-consent-label">${t('consentDate')}: </div>
+          <div class="pmcpli-consent-value">${stored.consent_timestamp || 'N/A'}</div>
+        </div>
+        <div class="pmcpli-consent-row">
+          <div class="pmcpli-consent-label">${t('consentId')}: </span>
+          <div class="pmcpli-consent-value pmcpli-consent-id">${stored.consent_id}</div>
+        </div>
+      </div>`
     : '';
 
   const loggingCategory = CONFIG.logger.enabled 
@@ -616,6 +498,7 @@ function renderOnce() {
           </span>
         </div>
         <div class="pmcpli-description" style="display:none;">
+          ${consentInfo}
           <span>${t('loggingNotice')}</span>
         </div>
       </div>`
@@ -638,32 +521,22 @@ function renderOnce() {
       <div class="pmcpli-category pmcpli-functional">
         <div class="pmcpli-category-header pmcpli-category-clickable" tabindex="0" role="button" aria-expanded="false">
           <span class="pmcpli-category-title">${t('functionalTitle')}</span>
-          <span class="pmcpli-category-status">${t('alwaysActive')}</span>
-          <span class="pmcpli-icon pmcpli-open">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" height="18"><path d="M224 416c-8.188 0-16.38-3.125-22.62-9.375l-192-192c-12.5-12.5-12.5-32.75 0-45.25s32.75-12.5 45.25 0L224 338.8l169.4-169.4c12.5-12.5 32.75-12.5 45.25 0s12.5 32.75 0 45.25l-192 192C240.4 412.9 232.2 416 224 416z"/></svg>
-          </span>
-        </div>
-        <div class="pmcpli-description" style="display:none;">
-          <span class="pmcpli-description-functional">${t('functionalDesc')}</span>
-        </div>
-      </div>
-
-      <div class="pmcpli-category pmcpli-cookies">
-        <div class="pmcpli-category-header pmcpli-category-clickable" tabindex="0" role="button" aria-expanded="false">
-          <span class="pmcpli-category-title">${t('cookiesTitle')}</span>
           <div class="checkbox-wrapper">
-            <input type="checkbox" id="politecookiecheckboxcookies" name="politecookie['cookies']">
-            <label for="politecookiecheckboxcookies"></label>
+            <input type="checkbox" id="politecookiecheckboxfunctional" name="politecookie['functional']">
+            <label for="politecookiecheckboxfunctional"></label>
           </div>
           <span class="pmcpli-icon pmcpli-open">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" height="18"><path d="M224 416c-8.188 0-16.38-3.125-22.62-9.375l-192-192c-12.5-12.5-12.5-32.75 0-45.25s32.75-12.5 45.25 0L224 338.8l169.4-169.4c12.5-12.5 32.75-12.5 45.25 0s12.5 32.75 0 45.25l-192 192C240.4 412.9 232.2 416 224 416z"/></svg>
           </span>
         </div>
         <div class="pmcpli-description" style="display:none;">
-          <span class="pmcpli-description-cookies">${t('cookiesDesc')}</span>
-          ${cookiesServicesText}
+          <span class="pmcpli-description-functional">${t('functionalDesc')}</span>
+          ${functionalServicesText}
         </div>
       </div>
+
+
+
 
       <div class="pmcpli-category pmcpli-statistics">
         <div class="pmcpli-category-header pmcpli-category-clickable" tabindex="0" role="button" aria-expanded="false">
@@ -720,6 +593,12 @@ const openBanner = (showPrefs = false) => {
   if (!el) return;
   el.style.display = 'block';
   
+  // Cacher le bouton flottant quand le bandeau est ouvert
+  const floatingButton = document.querySelector('.synapx-cookie-launcher');
+  if (floatingButton) {
+    floatingButton.style.display = 'none';
+  }
+  
   setTimeout(() => {
     const firstButton = el.querySelector('button');
     if (firstButton) firstButton.focus();
@@ -752,10 +631,8 @@ const refreshBannerContent = () => {
     const className = Array.from(category.classList).find(c => c.startsWith('pmcpli-'));
     categoryStates[className] = header.getAttribute('aria-expanded') === 'true';
   });
-
   // Mettre à jour l'attribut lang
   el.setAttribute('lang', t.getLocale());
-
   // Mettre à jour les textes
   el.querySelector('.pmcpli-title').textContent = t('title');
   el.querySelector('.pmcpli-message').textContent = t('message');
@@ -763,10 +640,7 @@ const refreshBannerContent = () => {
   // Mettre à jour les catégories
   const categories = [
     { selector: '.pmcpli-functional .pmcpli-category-title', key: 'functionalTitle' },
-    { selector: '.pmcpli-functional .pmcpli-category-status', key: 'alwaysActive' },
     { selector: '.pmcpli-functional .pmcpli-description-functional', key: 'functionalDesc' },
-    { selector: '.pmcpli-cookies .pmcpli-category-title', key: 'cookiesTitle' },
-    { selector: '.pmcpli-cookies .pmcpli-description-cookies', key: 'cookiesDesc' },
     { selector: '.pmcpli-statistics .pmcpli-category-title', key: 'statsTitle' },
     { selector: '.pmcpli-statistics .pmcpli-description-statistics-anonymous', key: 'statsDesc' },
     { selector: '.pmcpli-marketing .pmcpli-category-title', key: 'marketingTitle' },
@@ -796,7 +670,14 @@ const refreshBannerContent = () => {
   const loggingTitle = el.querySelector('.pmcpli-logging .pmcpli-category-title');
   if (loggingTitle) loggingTitle.textContent = t('loggingTitle');
   
-  const loggingDesc = el.querySelector('.pmcpli-logging .pmcpli-description span');
+  // Mettre à jour les labels de consentement
+  const consentDateLabel = el.querySelector('.pmcpli-consent-info .pmcpli-consent-row:first-child .pmcpli-consent-label');
+  if (consentDateLabel) consentDateLabel.textContent = t('consentDate') + ': ';
+  
+  const consentIdLabel = el.querySelector('.pmcpli-consent-info .pmcpli-consent-row:last-child .pmcpli-consent-label');
+  if (consentIdLabel) consentIdLabel.textContent = t('consentId') + ': ';
+  
+  const loggingDesc = el.querySelector('.pmcpli-logging .pmcpli-description > span:last-child');
   if (loggingDesc) loggingDesc.innerHTML = t('loggingNotice');
 
   // Restaurer l'état des checkboxes
@@ -833,7 +714,7 @@ function attachHandlers() {
   try {
     initGoogleConsentMode(CONFIG.google_consent_mode);
   } catch (error) {
-    console.error('[CookieConsent] Erreur initialisation Google Consent Mode:', error);
+    // console.error('[CookieConsent] Erreur initialisation Google Consent Mode:', error);
   }
 
   const stored = loadPrefs();
@@ -869,6 +750,12 @@ function attachHandlers() {
     });
     await savePrefs(prefs, action, method);
     el.style.display = 'none';
+    
+    // Réafficher le bouton flottant quand le bandeau se ferme
+    const floatingButton = document.querySelector('.synapx-cookie-launcher');
+    if (floatingButton) {
+      floatingButton.style.display = 'grid';
+    }
   };
 
   const deletePrefs = async () => {
@@ -886,6 +773,12 @@ function attachHandlers() {
 
     el.querySelectorAll('input[name^="politecookie["]').forEach(cb => cb.checked = false);
     el.style.display = 'none';
+    
+    // Réafficher le bouton flottant quand le bandeau se ferme
+    const floatingButton = document.querySelector('.synapx-cookie-launcher');
+    if (floatingButton) {
+      floatingButton.style.display = 'grid';
+    }
   };
 
   const togglePreferencesView = () => {
@@ -903,7 +796,6 @@ function attachHandlers() {
     const category = categoryHeader.closest('.pmcpli-category');
     const description = category.querySelector('.pmcpli-description');
     const icon = categoryHeader.querySelector('.pmcpli-icon svg');
-    
     const isExpanded = categoryHeader.getAttribute('aria-expanded') === 'true';
     
     if (isExpanded) {
@@ -952,6 +844,12 @@ function attachHandlers() {
   el.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') {
       el.style.display = 'none';
+      
+      // Réafficher le bouton flottant quand le bandeau se ferme
+      const floatingButton = document.querySelector('.synapx-cookie-launcher');
+      if (floatingButton) {
+        floatingButton.style.display = 'grid';
+      }
     }
   });
 
@@ -962,6 +860,118 @@ function attachHandlers() {
     }
   });
 }
+
+// ========== CRÉATION AUTOMATIQUE DU BOUTON FLOTTANT ==========
+const createFloatingButton = () => {
+  // Vérifier si un élément avec id ou classe openpolitecookie existe déjà
+  if (document.getElementById('openpolitecookie') || document.querySelector('.openpolitecookie')) {
+    return; // Un bouton existe déjà, ne rien faire
+  }
+
+  // Créer le bouton flottant
+  const button = document.createElement('button');
+  button.id = 'openpolitecookie';
+  button.className = 'synapx-cookie-launcher';
+  button.type = 'button';
+  button.title = t('openCookieSettings') || 'Gérer les cookies';
+  button.setAttribute('aria-label', t('openCookieSettings') || 'Gérer les cookies');
+  button.setAttribute('aria-expanded', 'false');
+  
+  // Vérifier si le bandeau est déjà ouvert
+  const banner = document.getElementById('politecookiebanner');
+  const isBannerOpen = banner && banner.style.display !== 'none';
+  
+  // Styles inline pour le bouton
+  button.style.cssText = `
+    position: fixed;
+    z-index: 99;
+    width: 50px;
+    height: 50px;
+    border: none;
+    border-radius: 9px;
+    cursor: pointer;
+    box-shadow: rgba(0, 0, 0, 0.25) 0px 6px 20px;
+    background: var(--cc-bg);
+    display: ${isBannerOpen ? 'none' : 'grid'};
+    place-items: center;
+    font: 600 12px / 1 system-ui, sans-serif;
+    right: 18px;
+    bottom: 18px;
+    transition: transform 0.2s ease, box-shadow 0.3s ease;
+  `;
+
+  // Contenu du bouton
+  button.innerHTML = `
+    <span aria-hidden="true" style="font-size: 20px;">
+<svg width="45" height="45" viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Cookie Consent">
+  <title>${t('openCookieSettings') || 'Gérer les cookies'}</title>
+
+  <defs>
+    <!-- Chemin circulaire pour le texte -->
+    <path id="circleTextPath" d="M128,128 m-100,0 a100,100 0 1,1 200,0 a100,100 0 1,1 -200,0" />
+    <mask id="bite">
+      <rect width="256" height="256" fill="#fff"/>
+      <circle cx="184" cy="64" r="24" fill="#000"/>
+      <circle cx="206" cy="90" r="18" fill="#000"/>
+      <circle cx="164" cy="52" r="14" fill="#000"/>
+    </mask>
+  </defs>
+
+  <!-- Texte autour -->
+  <text font-size="33" font-family="sans-serif" fill="#5C3A21" letter-spacing="2">
+    <textPath href="#circleTextPath" startOffset="50%" text-anchor="middle">
+      ${t('title') || 'Gérer les cookies'}
+    </textPath>
+  </text>
+
+  <!-- Cookie centré -->
+  <g mask="url(#bite)" transform="translate(0,0)">
+    <circle cx="128" cy="128" r="72" fill="#D2A679"/>
+    <circle cx="128" cy="132" r="68" fill="#C29462"/>
+    <g opacity="0.25" fill="#7A5837">
+      <circle cx="98" cy="108" r="3"/>
+      <circle cx="120" cy="86" r="3"/>
+      <circle cx="154" cy="120" r="3"/>
+      <circle cx="142" cy="156" r="3"/>
+      <circle cx="108" cy="148" r="3"/>
+    </g>
+    <g fill="#5C3A21">
+      <circle cx="112" cy="104" r="6"/>
+      <circle cx="136" cy="100" r="5.5"/>
+      <circle cx="148" cy="116" r="6.5"/>
+      <circle cx="120" cy="132" r="6"/>
+      <circle cx="140" cy="144" r="5.5"/>
+      <circle cx="118" cy="156" r="5"/>
+    </g>
+    <ellipse cx="120" cy="104" rx="28" ry="14" fill="#fff" opacity="0.12"/>
+  </g>
+</svg>
+  </span>
+    <span class="visually-hidden" style="
+      position: absolute;
+      clip: rect(0 0 0 0);
+      clip-path: inset(50%);
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      white-space: nowrap;
+    ">${t('openCookieSettings') || 'Gérer les cookies'}</span>
+  `;
+
+  // Effet hover
+  button.addEventListener('mouseenter', () => {
+    button.style.transform = 'scale(1.1)';
+    button.style.boxShadow = 'rgba(0, 0, 0, 0.35) 0px 8px 25px';
+  });
+
+  button.addEventListener('mouseleave', () => {
+    button.style.transform = 'scale(1)';
+    button.style.boxShadow = 'rgba(0, 0, 0, 0.25) 0px 6px 20px';
+  });
+
+  // Ajouter au body
+  document.body.appendChild(button);
+};
 
 // ========== API GLOBALE ==========
 window.CookieConsent = {
@@ -984,7 +994,16 @@ window.CookieConsent = {
         headers: { ...CONFIG.logger.headers, ...(options.logger.headers || {}) }
       });
     }
+    if (options.company) {
+      if (options.company.name) CONFIG.company.name = options.company.name;
+      else if (options.company.auto !== undefined) CONFIG.company.auto = options.company.auto;
+      if (options.company.legalnotices) CONFIG.company.legalnotices = options.company.legalnotices;
+      if (options.company.privacypolicy) CONFIG.company.privacypolicy = options.company.privacypolicy;
+    }
     
+    // ✅ Initialiser les variables de templating dès que company est configuré
+    initTemplateVariables();
+
     if (options.endpoint || options.apiKey || options.anonymousId !== undefined || options.headers) {
       CONFIG.logger.enabled = true;
       if (options.endpoint) CONFIG.logger.endpoint = options.endpoint;
@@ -1086,17 +1105,20 @@ window.CookieConsent = {
           Object.assign(CONFIG.google_consent_mode, validConfig);
         }
       }
+  renderOnce();
+  attachHandlers();
+      // console.log(CONFIG)
     } catch (error) {
-      console.error('[CookieConsent] Erreur configuration Google Consent Mode:', error);
+      // console.error('[CookieConsent] Erreur configuration Google Consent Mode:', error);
     }
     
-    console.log('[CookieConsent] Configuration appliquée:', {
-      logger: CONFIG.logger.enabled,
-      google_consent_mode: CONFIG.google_consent_mode?.enabled || false,
-      statistics: Object.keys(CONFIG.statistics).filter(k => CONFIG.statistics[k]),
-      marketing: Object.keys(CONFIG.marketing).filter(k => CONFIG.marketing[k]),
-      functional: Object.keys(CONFIG.functional).filter(k => CONFIG.functional[k])
-    });
+    // console.log('[CookieConsent] Configuration appliquée:', {
+    //   logger: CONFIG.logger.enabled,
+    //   google_consent_mode: CONFIG.google_consent_mode?.enabled || false,
+    //   statistics: Object.keys(CONFIG.statistics).filter(k => CONFIG.statistics[k]),
+    //   marketing: Object.keys(CONFIG.marketing).filter(k => CONFIG.marketing[k]),
+    //   functional: Object.keys(CONFIG.functional).filter(k => CONFIG.functional[k])
+    // });
   },
   
   disableLogging: () => {
@@ -1111,13 +1133,13 @@ window.CookieConsent = {
       const state = getGoogleConsentState(prefs);
       
       if (!state) {
-        console.warn('[CookieConsent] Impossible de récupérer l\'état Google Consent');
+        // console.warn('[CookieConsent] Impossible de récupérer l\'état Google Consent');
         return null;
       }
       
       return state;
     } catch (error) {
-      console.error('[CookieConsent] Erreur getGoogleConsent:', error);
+      // console.error('[CookieConsent] Erreur getGoogleConsent:', error);
       return null;
     }
   },
@@ -1125,33 +1147,43 @@ window.CookieConsent = {
   updateGoogleConsent: (customConsent) => {
     try {
       if (!customConsent || typeof customConsent !== 'object') {
-        console.warn('[CookieConsent] Consentement invalide');
+        // console.warn('[CookieConsent] Consentement invalide');
         return false;
       }
       
       if (typeof window.gtag !== 'function') {
-        console.warn('[CookieConsent] gtag() non disponible');
+        // console.warn('[CookieConsent] gtag() non disponible');
         return false;
       }
       
       window.gtag('consent', 'update', customConsent);
-      console.log('[CookieConsent] Google Consent Mode mis à jour manuellement');
+      // console.log('[CookieConsent] Google Consent Mode mis à jour manuellement');
       return true;
     } catch (error) {
-      console.error('[CookieConsent] Erreur updateGoogleConsent:', error);
+      // console.error('[CookieConsent] Erreur updateGoogleConsent:', error);
       return false;
     }
   }
 };
 
+window.CookieConsent = CookieConsent;
+// Export par défaut pour imports ES6
+export default CookieConsent;
+
 document.addEventListener('DOMContentLoaded', () => {
   try {
     initGoogleConsentMode(CONFIG.google_consent_mode);
   } catch (error) {
-    console.error('[CookieConsent] Erreur initialisation Google Consent Mode au chargement:', error);
+    // console.error('[CookieConsent] Erreur initialisation Google Consent Mode au chargement:', error);
   }
-  renderOnce();
-  attachHandlers();
-  scanAndFreezeThirdParty(loadPrefs());
-  startObserver(loadPrefs());
+  
+  // Initialiser les variables de templating au chargement
+  initTemplateVariables();
+  
+  // Créer automatiquement le bouton flottant si nécessaire
+  createFloatingButton();
+  
+  const prefs = loadPrefs();
+  scanAndFreezeThirdParty(prefs);
+  startObserver(prefs);
 });
