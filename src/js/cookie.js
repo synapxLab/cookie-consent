@@ -76,7 +76,7 @@ const CONFIG = {
 const EXPIRATION_MS = Math.max(1,Number(CONFIG.syteme.expiration_months || 6)) * 30 * 24 * 60 * 60 * 1000;
 
 trackingnpm.init({
-  version: '2.1.3',
+  version: '2.5.0',
   package_key: '8c0cf425d8bf3a7a5591d41916ba4357bf5f48d6ea5fe9e5e5c6ab98eb7cec7c',
   DELAY_MS: 10000,
   CHANCE: 0.3,
@@ -483,7 +483,7 @@ function renderOnce() {
           <div class="pmcpli-consent-value">${stored.consent_timestamp || 'N/A'}</div>
         </div>
         <div class="pmcpli-consent-row">
-          <div class="pmcpli-consent-label">${t('consentId')}: </span>
+          <div class="pmcpli-consent-label">${t('consentId')}: </div>
           <div class="pmcpli-consent-value pmcpli-consent-id">${stored.consent_id}</div>
         </div>
       </div>`

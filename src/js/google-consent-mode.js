@@ -1,10 +1,11 @@
 /**
  * @synapxlab/cookie-consent - Google Consent Mode v2
  * Module d'intégration Google Consent Mode v2
- * 
- * ✅ v3.0.0: Support des 4 catégories (necessary, preferences, statistics, marketing)
- * 
- * @version 3.0.0
+ *
+ * 4 catégories supportées : necessary, functional, statistics, marketing
+ * (alias `preferences` accepté en entrée pour future migration v3.x)
+ *
+ * @version 2.5.0
  * @author SynapxLab <contact@synapxlab.com>
  * @license MIT
  */
@@ -96,20 +97,23 @@ export const updateGoogleConsent = (preferences, config = GCM_DEFAULT_CONFIG) =>
     window.gtag = function() { window.dataLayer.push(arguments); };
   }
   
-  // ✅ NOUVEAU MAPPING: 4 catégories → Google Consent Mode
+  // Compat v2.x: le storage utilise encore la clé `functional`
+  // (alias `preferences` accepté pour la future v3.x)
+  const functionalConsent = preferences?.functional ?? preferences?.preferences ?? false;
+
   const consentMap = {
     // Marketing
     ad_storage: preferences?.marketing || false,
     ad_user_data: preferences?.marketing || false,
     ad_personalization: preferences?.marketing || false,
-    
+
     // Statistics
     analytics_storage: preferences?.statistics || false,
-    
-    // Preferences (anciennement functional)
-    functionality_storage: preferences?.preferences || false,
-    personalization_storage: preferences?.preferences || false,
-    
+
+    // Functional / Preferences
+    functionality_storage: functionalConsent,
+    personalization_storage: functionalConsent,
+
     // Necessary (toujours granted)
     security_storage: true
   };
@@ -142,14 +146,15 @@ export const updateGoogleConsent = (preferences, config = GCM_DEFAULT_CONFIG) =>
  * @returns {Object} État des consentements Google
  */
 export const getGoogleConsentState = (preferences) => {
+  const functionalConsent = preferences?.functional ?? preferences?.preferences ?? false;
   return {
     ad_storage: preferences?.marketing ? 'granted' : 'denied',
     ad_user_data: preferences?.marketing ? 'granted' : 'denied',
     ad_personalization: preferences?.marketing ? 'granted' : 'denied',
     analytics_storage: preferences?.statistics ? 'granted' : 'denied',
-    functionality_storage: preferences?.preferences ? 'granted' : 'denied',
-    personalization_storage: preferences?.preferences ? 'granted' : 'denied',
-    security_storage: 'granted' // ✅ Toujours granted (necessary)
+    functionality_storage: functionalConsent ? 'granted' : 'denied',
+    personalization_storage: functionalConsent ? 'granted' : 'denied',
+    security_storage: 'granted' // Toujours granted (necessary)
   };
 };
 

@@ -83,4 +83,4 @@ This documentation is open source! You can:
 
 ---
 
-**Cookie Consent by SynapxLab** | Version 2.4.0 | MIT License
+**Cookie Consent by SynapxLab** | Version 2.5.0 | MIT License

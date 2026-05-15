@@ -1,86 +1,86 @@
-# Cookie Consent Documentation
+# Documentation Cookie Consent
 
-Welcome to the complete documentation of **@synapxlab/cookie-consent**!
+Bienvenue dans la documentation complète de **@synapxlab/cookie-consent** !
 
-## 🚀 Quick Start
+## 🚀 Démarrage rapide
 
-New to Cookie Consent? Start here:
+Vous découvrez Cookie Consent ? Commencez ici :
 
-- **[Getting Started](./getting-started.md)** - Installation and first use
-- **[FAQ](./faq.md)** - Frequently asked questions
+- **[Démarrage rapide](./getting-started.md)** — Installation et première utilisation
+- **[FAQ](./faq.md)** — Questions fréquentes
 
-## 📖 Complete Documentation
+## 📖 Documentation complète
 
 ### Configuration
-- **[Full Configuration](./configuration.md)** - All available options
-- **[Logging System](./logger.md)** - GDPR consent logging
+- **[Configuration complète](./configuration.md)** — Toutes les options disponibles
+- **[Système de logging](./logger.md)** — Enregistrement des consentements (RGPD)
 
-### Legal Compliance
-- **[GDPR Compliance](./compliance-gdpr.md)** (EN) - European compliance
-- **[Conformité CNIL](../compliance-cnil.md)** (FR) - French legal framework
+### Conformité légale
+- **[Conformité RGPD](../en/compliance-gdpr.md)** (EN) — Cadre européen
+- **[Conformité CNIL](./compliance-cnil.md)** (FR) — Cadre légal français
 
-### Integrations
+### Intégrations
 
 #### Frameworks & CMS
-- **[Vanilla JavaScript](./integrations/vanilla.md)** - Pure HTML/JS
-- **[WordPress](./integrations/wordpress.md)** - Official plugin
-- **[PrestaShop](./integrations/prestashop.md)** - E-commerce module
-- **[Google Tag Manager](./integrations/tag-manager.md)** - GTM configuration
+- **[Vanilla JavaScript](./integrations/vanilla.md)** — HTML/JS pur
+- **[WordPress](./integrations/wordpress.md)** — Plugin officiel
+- **[PrestaShop](./integrations/prestashop.md)** — Module e-commerce
+- **[Google Tag Manager](./integrations/tag-manager.md)** — Configuration GTM
 
-#### Features
-- **[Internationalization](./integrations/i18n.md)** - Multi-language support
+#### Fonctionnalités
+- **[Internationalisation](./integrations/i18n.md)** — Support multi-langue
 
-## 🎯 By Use Case
+## 🎯 Par cas d'usage
 
-### I just want a working banner
-→ [Getting Started](./getting-started.md)
+### Je veux juste une bannière qui fonctionne
+→ [Démarrage rapide](./getting-started.md)
 
-### I need to be GDPR compliant
-→ [GDPR Compliance](./compliance-gdpr.md) + [Enable logging](./logger.md)
+### Je dois être conforme RGPD/CNIL
+→ [Conformité CNIL](./compliance-cnil.md) + [Activer le logging](./logger.md)
 
-### I use Google Analytics
+### J'utilise Google Analytics
 → [Configuration](./configuration.md#statistics)
 
-### I use WordPress
-→ [WordPress Guide](./integrations/wordpress.md)
+### J'utilise WordPress
+→ [Guide WordPress](./integrations/wordpress.md)
 
-### I want to customize the design
-→ [CSS Configuration](./configuration.md#css-customization)
+### Je veux personnaliser le design
+→ [Personnalisation CSS](./configuration.md#css-customization)
 
-### I want to translate to another language
-→ [Internationalization](./integrations/i18n.md)
+### Je veux traduire dans une autre langue
+→ [Internationalisation](./integrations/i18n.md)
 
-## 📊 Resources
+## 📊 Ressources
 
-### External Links
-- 🌐 [Official Website](https://synapx.fr/sdk/cookie_consent/)
-- 💻 [GitHub Repository](https://github.com/synapxLab/cookie-consent)
-- 📦 [npm Package](https://www.npmjs.com/package/@synapxlab/cookie-consent)
-- 💬 [Discord Community](https://discord.gg/synapxlab)
+### Liens externes
+- 🌐 [Site officiel](https://synapx.fr/sdk/cookie_consent/)
+- 💻 [Dépôt GitHub](https://github.com/synapxLab/cookie-consent)
+- 📦 [Package npm](https://www.npmjs.com/package/@synapxlab/cookie-consent)
+<!-- - 💬 [Communauté Discord](https://discord.gg/synapxlab) -->
 
 ### Support
-- 📧 Email: contact@synapx.fr
-- 🐛 [GitHub Issues](https://github.com/synapxLab/cookie-consent/issues)
+- 📧 Email : contact@synapx.fr
+- 🐛 [Issues GitHub](https://github.com/synapxLab/cookie-consent/issues)
 - ❓ [FAQ](./faq.md)
 
-## 🌍 Languages / Langues
+## 🌍 Langues / Languages
 
-Documentation available in:
-- 🇬🇧 **English** (current)
-- 🇫🇷 **Français** → [/docs/](../)
-
----
-
-## 🤝 Contributing
-
-This documentation is open source! You can:
-- 📝 Propose improvements
-- 🐛 Report errors
-- 🌐 Add translations
-- ✨ Share your use cases
-
-→ [Contribute on GitHub](https://github.com/synapxLab/cookie-consent/blob/main/CONTRIBUTING.md)
+Documentation disponible en :
+- 🇫🇷 **Français** (actuel)
+- 🇬🇧 **English** → [/docs/en/](../en/)
 
 ---
 
-**Cookie Consent by SynapxLab** | Version 2.4.0 | MIT License
+## 🤝 Contribuer
+
+Cette documentation est open source ! Vous pouvez :
+- 📝 Proposer des améliorations
+- 🐛 Signaler des erreurs
+- 🌐 Ajouter des traductions
+- ✨ Partager vos cas d'usage
+
+→ [Contribuer sur GitHub](https://github.com/synapxLab/cookie-consent/blob/main/CONTRIBUTING.md)
+
+---
+
+**Cookie Consent par SynapxLab** | Version 2.5.0 | Licence MIT
