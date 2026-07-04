@@ -1,0 +1,261 @@
+# Copyright (C) 2026 SynapxLab
+# This file is distributed under the GPL v2 or later.
+msgid ""
+msgstr ""
+"Project-Id-Version: Synapx Cookie Consent 1.0.0\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/synapx-cookie-consent\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2026-07-03T20:54:46+00:00\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"X-Generator: WP-CLI 2.12.0\n"
+"X-Domain: synapx-cookie-consent\n"
+
+#. Plugin Name of the plugin
+#: synapx-cookie-consent.php
+#: admin/class-scc-admin.php:51
+msgid "Synapx Cookie Consent"
+msgstr ""
+
+#. Plugin URI of the plugin
+#: synapx-cookie-consent.php
+msgid "https://synapx.fr/sdk/cookie_consent/"
+msgstr ""
+
+#. Description of the plugin
+#: synapx-cookie-consent.php
+msgid "Bannière de consentement aux cookies conforme RGPD/CNIL. Blocage automatique des scripts tiers, Google Consent Mode v2, 13 langues. Fonctionne en autonomie complète ou avec une clé API optionnelle pour la preuve de consentement."
+msgstr ""
+
+#. Author of the plugin
+#: synapx-cookie-consent.php
+msgid "SynapxLab"
+msgstr ""
+
+#. Author URI of the plugin
+#: synapx-cookie-consent.php
+msgid "https://synapx.fr/"
+msgstr ""
+
+#: admin/class-scc-admin.php:52
+msgid "Cookie Consent"
+msgstr ""
+
+#: admin/class-scc-admin.php:78
+msgid "Mode de fonctionnement"
+msgstr ""
+
+#: admin/class-scc-admin.php:85
+msgid "Clé API SynapxLab (optionnelle)"
+msgstr ""
+
+#: admin/class-scc-admin.php:95
+msgid "Affichage de la bannière"
+msgstr ""
+
+#: admin/class-scc-admin.php:102
+msgid "Langue"
+msgstr ""
+
+#: admin/class-scc-admin.php:111
+msgid "Thème"
+msgstr ""
+
+#: admin/class-scc-admin.php:121
+msgid "Informations légales"
+msgstr ""
+
+#: admin/class-scc-admin.php:128
+msgid "Nom de l'organisation"
+msgstr ""
+
+#: admin/class-scc-admin.php:137
+msgid "Politique de confidentialité"
+msgstr ""
+
+#: admin/class-scc-admin.php:146
+msgid "Mentions légales"
+msgstr ""
+
+#: admin/class-scc-admin.php:156
+msgid "Google Consent Mode v2"
+msgstr ""
+
+#: admin/class-scc-admin.php:163
+msgid "Activer Google Consent Mode v2"
+msgstr ""
+
+#: admin/class-scc-admin.php:173
+msgid "Services soumis au consentement"
+msgstr ""
+
+#: admin/class-scc-admin.php:179
+msgid "Google Analytics 4 (statistiques)"
+msgstr ""
+
+#: admin/class-scc-admin.php:180
+msgid "Google Tag Manager (statistiques)"
+msgstr ""
+
+#: admin/class-scc-admin.php:181
+msgid "Microsoft Clarity (statistiques)"
+msgstr ""
+
+#: admin/class-scc-admin.php:182
+msgid "Google AdSense (marketing)"
+msgstr ""
+
+#: admin/class-scc-admin.php:183
+msgid "Facebook Pixel (marketing)"
+msgstr ""
+
+#: admin/class-scc-admin.php:184
+msgid "Crisp (fonctionnel)"
+msgstr ""
+
+#: admin/class-scc-admin.php:185
+msgid "Intercom (fonctionnel)"
+msgstr ""
+
+#: admin/class-scc-admin.php:219
+msgid "Enregistrer les réglages"
+msgstr ""
+
+#: admin/class-scc-admin.php:232
+msgid "Le plugin propose deux modes de fonctionnement :"
+msgstr ""
+
+#: admin/class-scc-admin.php:234
+msgid "Sans clé API : la bannière fonctionne de manière entièrement autonome. Les choix des visiteurs sont enregistrés uniquement dans leur navigateur et aucune donnée n'est transmise à un service tiers."
+msgstr ""
+
+#: admin/class-scc-admin.php:235
+msgid "Avec une clé API : les actions de consentement (acceptation, refus et modification) sont journalisées par le service SynapxLab afin de constituer une preuve de consentement (article 7.1 du RGPD). La clé API est disponible depuis l'espace membre SynapxLab."
+msgstr ""
+
+#: admin/class-scc-admin.php:251
+msgid "Laissez ce champ vide pour un fonctionnement entièrement autonome, sans transmission de données liées au consentement."
+msgstr ""
+
+#: admin/class-scc-admin.php:260
+msgid "La bibliothèque affiche la bannière en position fixe, au bas de la page. Un bouton flottant permet ensuite aux visiteurs de modifier leur choix à tout moment."
+msgstr ""
+
+#: admin/class-scc-admin.php:271
+msgid "Automatique (langue du navigateur)"
+msgstr ""
+
+#: admin/class-scc-admin.php:272
+msgid "Français"
+msgstr ""
+
+#: admin/class-scc-admin.php:273
+msgid "Anglais"
+msgstr ""
+
+#: admin/class-scc-admin.php:274
+msgid "Espagnol"
+msgstr ""
+
+#: admin/class-scc-admin.php:275
+msgid "Allemand"
+msgstr ""
+
+#: admin/class-scc-admin.php:276
+msgid "Italien"
+msgstr ""
+
+#: admin/class-scc-admin.php:277
+msgid "Néerlandais"
+msgstr ""
+
+#: admin/class-scc-admin.php:278
+msgid "Portugais"
+msgstr ""
+
+#: admin/class-scc-admin.php:279
+msgid "Polonais"
+msgstr ""
+
+#: admin/class-scc-admin.php:280
+msgid "Roumain"
+msgstr ""
+
+#: admin/class-scc-admin.php:281
+msgid "Russe"
+msgstr ""
+
+#: admin/class-scc-admin.php:282
+msgid "Suédois"
+msgstr ""
+
+#: admin/class-scc-admin.php:283
+msgid "Arabe"
+msgstr ""
+
+#: admin/class-scc-admin.php:284
+msgid "Chinois"
+msgstr ""
+
+#: admin/class-scc-admin.php:297
+msgid "En mode automatique, la bannière utilise la langue du navigateur du visiteur. Le sélecteur de langue reste disponible dans la bannière."
+msgstr ""
+
+#: admin/class-scc-admin.php:308
+msgid "Défaut (clair)"
+msgstr ""
+
+#: admin/class-scc-admin.php:309
+msgid "Brun"
+msgstr ""
+
+#: admin/class-scc-admin.php:310
+msgid "Sombre"
+msgstr ""
+
+#: admin/class-scc-admin.php:311
+msgid "Rouge"
+msgstr ""
+
+#: admin/class-scc-admin.php:324
+msgid "Vous pouvez personnaliser les couleurs de la bannière dans votre thème au moyen des variables CSS --cc-*."
+msgstr ""
+
+#: admin/class-scc-admin.php:333
+msgid "Ces liens apparaissent dans la bannière. Si le champ « Politique de confidentialité » est vide, le plugin utilise la page définie dans Réglages → Confidentialité."
+msgstr ""
+
+#: admin/class-scc-admin.php:348
+msgid "Nom affiché dans la bannière. Laissez ce champ vide pour utiliser automatiquement le titre du site."
+msgstr ""
+
+#: admin/class-scc-admin.php:364
+msgid "URL de votre politique de confidentialité. Laissez ce champ vide pour utiliser la page de confidentialité définie dans WordPress."
+msgstr ""
+
+#: admin/class-scc-admin.php:379
+msgid "URL de votre page de mentions légales (facultative)."
+msgstr ""
+
+#: admin/class-scc-admin.php:388
+msgid "Google Consent Mode v2 transmet l'état du consentement aux services Google (Analytics et Ads). Les signaux sont définis sur « refusé » par défaut, puis actualisés selon le choix du visiteur. Ce mode est requis pour Google Ads dans l'Union européenne depuis mars 2024."
+msgstr ""
+
+#: admin/class-scc-admin.php:402
+msgid "Émettre les signaux Google Consent Mode v2"
+msgstr ""
+
+#: admin/class-scc-admin.php:412
+msgid "Renseignez uniquement les identifiants des services utilisés. Chaque service est chargé après que le visiteur a consenti à la catégorie correspondante (statistiques, marketing ou services fonctionnels). Les champs vides sont ignorés."
+msgstr ""
+
+#: admin/class-scc-admin.php:413
+msgid "Vous pouvez également bloquer manuellement d'autres scripts dans votre thème avec type=\"text/plain\" et l'attribut data-cookie-category."
+msgstr ""
+
+#: synapx-cookie-consent.php:75
+msgid "Réglages"
+msgstr ""

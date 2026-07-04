@@ -1,0 +1,48 @@
+# Environnement de recette WordPress pour le plugin Synapx Cookie Consent.
+#
+#   docker compose -f docker-compose.wordpress.yml up -d
+#   → WordPress : http://localhost:8082  (admin / admin sur /wp-admin, à créer à l'install)
+#
+# Le plugin est monté en lecture seule depuis le dépôt : toute modification du
+# code est prise en compte après un simple rechargement de page.
+#
+# Arrêt + purge complète (base comprise) :
+#   docker compose -f docker-compose.wordpress.yml down -v
+
+services:
+  wordpress-db:
+    image: mariadb:11
+    environment:
+      MARIADB_DATABASE: wordpress
+      MARIADB_USER: wordpress
+      MARIADB_PASSWORD: wordpress
+      MARIADB_ROOT_PASSWORD: root
+    volumes:
+      - wp-db:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  wordpress:
+    image: wordpress:php8.2-apache
+    depends_on:
+      wordpress-db:
+        condition: service_healthy
+    ports:
+      - "8082:80"
+    environment:
+      WORDPRESS_DB_HOST: wordpress-db
+      WORDPRESS_DB_USER: wordpress
+      WORDPRESS_DB_PASSWORD: wordpress
+      WORDPRESS_DB_NAME: wordpress
+      WORDPRESS_DEBUG: "1"
+    volumes:
+      - wp-core:/var/www/html
+      # Le plugin du dépôt, monté directement dans WordPress.
+      - ../wordpress/synapx-cookie-consent:/var/www/html/wp-content/plugins/synapx-cookie-consent:ro
+
+volumes:
+  wp-db:
+  wp-core:

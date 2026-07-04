@@ -1,0 +1,58 @@
+# Environnement de recette PrestaShop pour le module synapxcookieconsent.
+#
+#   docker compose -f docker-compose.prestashop.yml up -d
+#   → PrestaShop : http://localhost:8083  (installation guidée au premier lancement)
+#     Back-office : http://localhost:8083/admin (créé pendant l'installation)
+#
+# Pour tester la compatibilité 1.7 ET 8.x, relancer en changeant PS_VERSION
+# ci-dessous (voir les tags de l'image prestashop/prestashop).
+#
+# Le module est monté depuis le dépôt : après « up », l'installer depuis
+# « Modules > Gestionnaire de modules » (il apparaît car monté dans /modules).
+#
+# Arrêt + purge complète :
+#   docker compose -f docker-compose.prestashop.yml down -v
+
+services:
+  prestashop-db:
+    image: mariadb:11
+    environment:
+      MARIADB_DATABASE: prestashop
+      MARIADB_USER: prestashop
+      MARIADB_PASSWORD: prestashop
+      MARIADB_ROOT_PASSWORD: root
+    volumes:
+      - ps-db:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  prestashop:
+    # 8.1 par défaut ; pour PrestaShop 1.7 : prestashop/prestashop:1.7-apache
+    image: prestashop/prestashop:8.1-apache
+    depends_on:
+      prestashop-db:
+        condition: service_healthy
+    ports:
+      - "8083:80"
+    environment:
+      DB_SERVER: prestashop-db
+      DB_NAME: prestashop
+      DB_USER: prestashop
+      DB_PASSWD: prestashop
+      PS_DEV_MODE: "1"
+      PS_DOMAIN: localhost:8083
+      PS_INSTALL_AUTO: "1"
+      PS_ERASE_DB: "0"
+      ADMIN_MAIL: admin@example.com
+      ADMIN_PASSWD: Admin1234
+    volumes:
+      - ps-core:/var/www/html
+      # Le module du dépôt, monté directement dans PrestaShop.
+      - ../prestashop/synapxcookieconsent:/var/www/html/modules/synapxcookieconsent:ro
+
+volumes:
+  ps-db:
+  ps-core:

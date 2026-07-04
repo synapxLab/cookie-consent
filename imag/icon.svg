@@ -1,0 +1,141 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256">
+  <defs>
+    
+    <radialGradient id="bgGrad" cx="42%" cy="38%" r="62%">
+      <stop offset="0%" stop-color="#a87766"></stop>
+      <stop offset="55%" stop-color="#9b6b5a"></stop>
+      <stop offset="100%" stop-color="#6d4639"></stop>
+    </radialGradient>
+
+    
+    <radialGradient id="cookieGrad" cx="38%" cy="32%" r="72%">
+      <stop offset="0%" stop-color="#fef3c7"></stop>
+      <stop offset="45%" stop-color="#f3d68f"></stop>
+      <stop offset="85%" stop-color="#d6a35c"></stop>
+      <stop offset="100%" stop-color="#a87038"></stop>
+    </radialGradient>
+
+    
+    <radialGradient id="cookieRim" cx="50%" cy="50%" r="50%">
+      <stop offset="80%" stop-color="#000" stop-opacity="0"></stop>
+      <stop offset="100%" stop-color="#5a3318" stop-opacity="0.35"></stop>
+    </radialGradient>
+
+    
+    <radialGradient id="chipGrad" cx="35%" cy="30%" r="80%">
+      <stop offset="0%" stop-color="#6b3a1f"></stop>
+      <stop offset="55%" stop-color="#3d2010"></stop>
+      <stop offset="100%" stop-color="#1c0d05"></stop>
+    </radialGradient>
+
+    
+    <linearGradient id="shieldGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#34d399"></stop>
+      <stop offset="55%" stop-color="#10b981"></stop>
+      <stop offset="100%" stop-color="#047857"></stop>
+    </linearGradient>
+
+    
+    <filter id="cookieShadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="3.2"></feGaussianBlur>
+      <feOffset dx="0" dy="4"></feOffset>
+      <feComponentTransfer><feFuncA type="linear" slope="0.45"></feFuncA></feComponentTransfer>
+      <feMerge><feMergeNode></feMergeNode><feMergeNode in="SourceGraphic"></feMergeNode></feMerge>
+    </filter>
+
+    
+    <filter id="shieldShadow" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="2.4"></feGaussianBlur>
+      <feOffset dx="0" dy="3"></feOffset>
+      <feComponentTransfer><feFuncA type="linear" slope="0.5"></feFuncA></feComponentTransfer>
+      <feMerge><feMergeNode></feMergeNode><feMergeNode in="SourceGraphic"></feMergeNode></feMerge>
+    </filter>
+
+    
+    <radialGradient id="cookieHighlight" cx="32%" cy="26%" r="35%">
+      <stop offset="0%" stop-color="#fff" stop-opacity="0.55"></stop>
+      <stop offset="60%" stop-color="#fff" stop-opacity="0.08"></stop>
+      <stop offset="100%" stop-color="#fff" stop-opacity="0"></stop>
+    </radialGradient>
+
+    
+    <clipPath id="cookieClip">
+      <circle cx="118" cy="118" r="84"></circle>
+    </clipPath>
+  </defs>
+
+  
+  <circle cx="128" cy="128" r="124" fill="url(#bgGrad)"></circle>
+  
+  <circle cx="128" cy="128" r="124" fill="none" stroke="#000" stroke-opacity="0.18" stroke-width="1"></circle>
+
+  
+  <g filter="url(#cookieShadow)">
+    <circle cx="118" cy="118" r="84" fill="url(#cookieGrad)"></circle>
+  </g>
+
+  
+  <g clip-path="url(#cookieClip)">
+    
+    <g fill="#8a5a2c" fill-opacity="0.45">
+      <circle cx="62" cy="86" r="1.6"></circle>
+      <circle cx="92" cy="70" r="1.2"></circle>
+      <circle cx="140" cy="62" r="1.4"></circle>
+      <circle cx="170" cy="92" r="1.5"></circle>
+      <circle cx="180" cy="130" r="1.2"></circle>
+      <circle cx="60" cy="138" r="1.4"></circle>
+      <circle cx="78" cy="170" r="1.3"></circle>
+      <circle cx="148" cy="180" r="1.5"></circle>
+      <circle cx="108" cy="152" r="1.1"></circle>
+      <circle cx="160" cy="158" r="1.3"></circle>
+      <circle cx="120" cy="106" r="1.1"></circle>
+      <circle cx="84" cy="118" r="1.2"></circle>
+    </g>
+
+    
+    <circle cx="118" cy="118" r="84" fill="url(#cookieHighlight)"></circle>
+
+    
+    <circle cx="118" cy="118" r="84" fill="url(#cookieRim)"></circle>
+
+    
+    
+    <g transform="translate(96 70) rotate(-15)">
+      <ellipse cx="0" cy="0" rx="16" ry="13" fill="url(#chipGrad)"></ellipse>
+      <ellipse cx="-4" cy="-4" rx="5" ry="3" fill="#fff" fill-opacity="0.25"></ellipse>
+    </g>
+    
+    <g transform="translate(166 112) rotate(20)">
+      <ellipse cx="0" cy="0" rx="14" ry="11" fill="url(#chipGrad)"></ellipse>
+      <ellipse cx="-3" cy="-3" rx="4.5" ry="2.6" fill="#fff" fill-opacity="0.22"></ellipse>
+    </g>
+    
+    <g transform="translate(72 146) rotate(8)">
+      <ellipse cx="0" cy="0" rx="15" ry="12" fill="url(#chipGrad)"></ellipse>
+      <ellipse cx="-3.5" cy="-3.5" rx="5" ry="2.8" fill="#fff" fill-opacity="0.22"></ellipse>
+    </g>
+    
+    <g transform="translate(126 158) rotate(-22)">
+      <ellipse cx="0" cy="0" rx="13" ry="10" fill="url(#chipGrad)"></ellipse>
+      <ellipse cx="-3" cy="-3" rx="4" ry="2.4" fill="#fff" fill-opacity="0.22"></ellipse>
+    </g>
+
+    
+    <g transform="translate(118 188)" opacity="0.18">
+      <path d="M -8 -7&#xA;               C -8 -11, -2 -12, 2 -10&#xA;               C 5 -8, 5 -4, 0 -3&#xA;               C -5 -2, -8 1, -8 4&#xA;               C -8 8, -2 9, 4 7" fill="none" stroke="#4c51bf" stroke-width="2.6" stroke-linecap="round"></path>
+    </g>
+  </g>
+
+  
+  <circle cx="118" cy="118" r="84" fill="none" stroke="#fff" stroke-opacity="0.25" stroke-width="1.2" stroke-dasharray="60 260" stroke-dashoffset="-30"></circle>
+
+  
+  <g filter="url(#shieldShadow)" transform="translate(186 186)">
+    
+    <path d="M 0 -38&#xA;             C 18 -38, 30 -32, 36 -28&#xA;             L 36 4&#xA;             C 36 22, 18 34, 0 40&#xA;             C -18 34, -36 22, -36 4&#xA;             L -36 -28&#xA;             C -30 -32, -18 -38, 0 -38 Z" fill="url(#shieldGrad)"></path>
+    
+    <path d="M 0 -32&#xA;             C 14 -32, 24 -27, 30 -24&#xA;             L 30 3&#xA;             C 30 19, 14 30, 0 35&#xA;             C -14 30, -30 19, -30 3&#xA;             L -30 -24&#xA;             C -24 -27, -14 -32, 0 -32 Z" fill="none" stroke="#fff" stroke-opacity="0.22" stroke-width="1.2"></path>
+    
+    <path d="M -14 2 L -4 12 L 16 -10" fill="none" stroke="#fff" stroke-width="6.5" stroke-linecap="round" stroke-linejoin="round"></path>
+  </g>
+</svg>
