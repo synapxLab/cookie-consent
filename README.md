@@ -126,13 +126,15 @@ window.CookieConsent.init({
     wait_for_update: 500,        // ms before timeout
     ads_data_redaction: true,    // redact ad data if consent denied
     url_passthrough: false,      // pass URL params between domains
-    region: ['US-CA', 'EU']      // regional targeting
+    region: []                   // e.g. ['FR', 'US-CA'] — ISO 3166-2 country or country-subdivision codes; empty = applies to all visitors
   },
   statistics: {
     google_analytics_key: 'G-XXXXXXXXX'
   }
 });
 ```
+
+`region` must contain valid ISO 3166-2 country or country-subdivision codes; invalid codes are ignored with a console warning. An empty array applies the Consent Mode default values to all visitors.
 
 ### Disable GCM
 

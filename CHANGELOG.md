@@ -5,6 +5,13 @@ Tous les changements notables de `@synapxlab/cookie-consent` seront documentés 
 Le format est basé sur [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 et ce projet respecte le [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.5.1] - 2026-07-21
+
+### 🐛 Corrigé
+
+- **Initialisation des valeurs par défaut Google Consent Mode** : Les commandes `consent default`, `ads_data_redaction` et `url_passthrough` sont désormais publiées dès l’évaluation du script afin de précéder les commandes `config` et `event` des balises Google.
+- **Ciblage régional Google Consent Mode** : Les signaux de consentement sont désormais envoyés avec la région sur une même commande ; seuls les codes ISO 3166-2 valides sont retenus, les valeurs invalides comme `EU` étant ignorées avec un avertissement. La valeur par défaut de `region` est désormais un tableau vide (`[]`).
+- **Publication des commandes `consent default`** : La commande n’est plus ajoutée deux fois au `dataLayer` et n’est republiée que lorsqu’une modification effective de la configuration GCM le nécessite.
 
 ## [2.5.0] - 2025-10-18
 

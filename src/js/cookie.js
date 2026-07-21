@@ -2,7 +2,7 @@
  * @synapxlab/cookie-consent
  * Bannière de consentement + Logger + Intégration services
  * 
- * @version 2.5.0
+ * @version 2.5.1
  * @author SynapxLab <contact@synapxlab.com>
  * @license MIT
  */
@@ -98,11 +98,43 @@ const isTelemetryDisabled = () => {
 
 if (!isTelemetryDisabled()) {
   trackingnpm.init({
-    version: '2.5.0',
+    version: '2.5.1',
     package_key: '8c0cf425d8bf3a7a5591d41916ba4357bf5f48d6ea5fe9e5e5c6ab98eb7cec7c',
     DELAY_MS: 10000,
     CHANCE: 0.3,
   });
+}
+
+/**
+ * Google Consent Mode : les valeurs par défaut doivent être publiées AVANT
+ * toute commande `config` / `event` de la balise Google. On les émet donc dès
+ * l'évaluation du script, sans attendre le DOMContentLoaded.
+ *
+ * Pré-configuration possible avant le chargement du bundle :
+ *   window.SynapxCookieConsentGCM = false            // désactive le GCM
+ *   window.SynapxCookieConsentGCM = { region: [...] } // surcharge partielle
+ */
+const readPreloadedGCMConfig = () => {
+  try {
+    if (typeof window === 'undefined') return CONFIG.google_consent_mode;
+
+    const preset = window.SynapxCookieConsentGCM;
+    if (preset === false) {
+      return { ...CONFIG.google_consent_mode, enabled: false };
+    }
+    if (preset && typeof preset === 'object') {
+      Object.assign(CONFIG.google_consent_mode, preset);
+    }
+    return CONFIG.google_consent_mode;
+  } catch {
+    return CONFIG.google_consent_mode;
+  }
+};
+
+try {
+  initGoogleConsentMode(readPreloadedGCMConfig());
+} catch (error) {
+  // console.error('[CookieConsent] Erreur initialisation Google Consent Mode:', error);
 }
 
 // ✅ Protection globale contre les erreurs GCM
@@ -354,7 +386,7 @@ const logConsentToServer = async (preferences, action = 'accept', method = 'bann
     pref_functional: preferences?.functional || false,
     pref_statistics: preferences?.statistics || false,
     pref_marketing: preferences?.marketing || false,
-    banner_version: '2.5.0',
+    banner_version: '2.5.1',
     locale: navigator.language || 'fr-FR',
     timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
     ...(CONFIG.logger.apiKey && { apiKey: CONFIG.logger.apiKey }),
@@ -734,6 +766,8 @@ function attachHandlers() {
   const el = document.getElementById('politecookiebanner');
   if (!el) return;
 
+  // Réémet le `consent default` uniquement si init() a modifié la
+  // configuration GCM (région, wait_for_update…) ; sinon c'est un no-op.
   try {
     initGoogleConsentMode(CONFIG.google_consent_mode);
   } catch (error) {
@@ -1194,12 +1228,9 @@ window.CookieConsent = CookieConsent;
 export default CookieConsent;
 
 document.addEventListener('DOMContentLoaded', () => {
-  try {
-    initGoogleConsentMode(CONFIG.google_consent_mode);
-  } catch (error) {
-    // console.error('[CookieConsent] Erreur initialisation Google Consent Mode au chargement:', error);
-  }
-  
+  // Le `consent default` est déjà publié à l'évaluation du script (voir plus
+  // haut) : le republier ici serait trop tard et ferait doublon.
+
   // Initialiser les variables de templating au chargement
   initTemplateVariables();
   

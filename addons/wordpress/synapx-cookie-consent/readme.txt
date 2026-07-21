@@ -4,7 +4,7 @@ Tags: cookie consent, rgpd, gdpr, cnil, google consent mode
 Requires at least: 5.8
 Tested up to: 7.0
 Requires PHP: 7.4
-Stable tag: 1.0.0
+Stable tag: 1.0.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -86,6 +86,12 @@ Le script de la bannière doit être chargé dans l'en-tête de la page, avant l
 
 == Changelog ==
 
+= 1.0.1 =
+* Correction de l’application des valeurs par défaut de Google Consent Mode v2 avant le chargement des balises Google.
+* Correction du ciblage régional du consentement, avec validation des codes de région.
+* Suppression d’une commande de consentement en double dans le dataLayer.
+* Mise à jour du bundle @synapxlab/cookie-consent en version 2.5.1.
+
 = 1.0.0 =
 * Première version.
 * Bannière conforme au RGPD et aux recommandations de la CNIL, avec blocage des scripts tiers avant consentement.
@@ -94,6 +100,9 @@ Le script de la bannière doit être chargé dans l'en-tête de la page, avant l
 * Réglages : langue, thème, liens légaux, services par catégorie.
 
 == Upgrade Notice ==
+
+= 1.0.1 =
+Mettez à jour si votre site utilise Google Consent Mode, Google Ads ou Analytics : le ciblage régional et l’application des valeurs par défaut avant les balises Google sont corrigés.
 
 = 1.0.0 =
 Première version publique du plugin.

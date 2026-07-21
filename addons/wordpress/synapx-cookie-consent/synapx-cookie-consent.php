@@ -3,7 +3,7 @@
  * Plugin Name:       Synapx Cookie Consent
  * Plugin URI:        https://synapx.fr/sdk/cookie_consent/
  * Description:       Bannière de consentement aux cookies conforme RGPD/CNIL. Blocage automatique des scripts tiers, Google Consent Mode v2, 13 langues. Fonctionne en autonomie complète ou avec une clé API optionnelle pour la preuve de consentement.
- * Version:           1.0.0
+ * Version:           1.0.1
  * Requires at least: 5.8
  * Requires PHP:      7.4
  * Author:            SynapxLab
@@ -20,8 +20,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'SCC_VERSION', '1.0.0' );
-define( 'SCC_BANNER_VERSION', '2.5.0' ); // Version du bundle JS embarqué (dist/cookie.js).
+define( 'SCC_VERSION', '1.0.1' );
+define( 'SCC_BANNER_VERSION', '2.5.1' ); // Version du bundle JS embarqué (dist/cookie.js).
 define( 'SCC_PLUGIN_FILE', __FILE__ );
 define( 'SCC_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 define( 'SCC_PLUGIN_URL', plugin_dir_url( __FILE__ ) );

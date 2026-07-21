@@ -16,7 +16,7 @@ toi ou d'un environnement dédié.
 | Élément | WordPress | PrestaShop |
 |---|---|---|
 | Code | `addons/wordpress/synapx-cookie-consent/` | `addons/prestashop/synapxcookieconsent/` |
-| Zip | `addons/build/synapx-cookie-consent-1.0.0.zip` | `addons/build/synapxcookieconsent-1.0.0.zip` |
+| Zip | `addons/build/synapx-cookie-consent-1.0.1.zip` | `addons/build/synapxcookieconsent-1.0.1.zip` |
 | Guide mise en prod | `addons/wordpress/GUIDE-MISE-EN-PROD.md` | `addons/prestashop/GUIDE-MISE-EN-PROD.md` |
 | Licence GPLv2 | ✅ `LICENSE` | ✅ `LICENSE` |
 | i18n | ✅ `languages/*.pot` (60 chaînes) | source déjà en français |
@@ -24,7 +24,7 @@ toi ou d'un environnement dédié.
 
 - Deux modes gérés : **sans clé API** (autonome) et **avec clé API** (preuve de consentement).
 - 13 langues, Google Consent Mode v2, blocage des scripts tiers.
-- `php -l` vert sur tous les fichiers ; en-têtes et versions cohérents (1.0.0).
+- `php -l` vert sur tous les fichiers ; en-têtes et versions cohérents (1.0.1, bundle npm 2.5.1 embarqué).
 - Bug critique corrigé : la bannière WordPress ne s'affichait pas au premier chargement
   (init dans le `<head>` avant `document.body`) — vérifié en navigateur headless.
 - Recette conteneurisée fournie : `addons/test/` (docker-compose WP + PrestaShop, checklist).
@@ -51,4 +51,7 @@ toi ou d'un environnement dédié.
 4. **Juridique** : faire valider le disclaimer d'auto-notation du comparatif.
 5. **Rédaction** : passe Codex sur les nouveaux textes (`addons/test/README.md`,
    sections « Recette locale » des guides).
-6. **Git** : aucun commit effectué (repos cookie-consent et synapx.fr) — en attente de feu vert.
+6. **Git** : le lot Google Consent Mode (SDK 2.5.1, addons 1.0.1) est commité sur cookie-consent,
+   branche `feat/addons-wp-prestashop` ; rien n'est poussé. Dépôt synapx.fr : toujours aucun commit.
+7. **Packaging 1.0.1** : zips reconstruits en 1.0.1 (bundle npm 2.5.1 embarqué) ; les archives
+   1.0.0 ont été supprimées. Reste à les téléverser sur les places de marché le moment venu.

@@ -2,7 +2,7 @@
 <module>
     <name>synapxcookieconsent</name>
     <displayName><![CDATA[SynapxLab Cookie Consent]]></displayName>
-    <version><![CDATA[1.0.0]]></version>
+    <version><![CDATA[1.0.1]]></version>
     <description><![CDATA[Bannière de consentement aux cookies conforme RGPD/CNIL. Blocage des scripts tiers avant consentement, Google Consent Mode v2, 13 langues. Fonctionne sans compte ni service externe ; une clé API SynapxLab optionnelle active la preuve de consentement centralisée.]]></description>
     <author><![CDATA[SynapxLab]]></author>
     <tab><![CDATA[administration]]></tab>

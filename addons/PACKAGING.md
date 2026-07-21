@@ -7,7 +7,7 @@
 ## Produit
 
 - **Nom** : Synapx Cookie Consent
-- **Base** : package npm `@synapxlab/cookie-consent` v2.5.0 — bannière de consentement aux cookies RGPD/CNIL en JavaScript natif, sans dépendance.
+- **Base** : package npm `@synapxlab/cookie-consent` v2.5.1 — bannière de consentement aux cookies RGPD/CNIL en JavaScript natif, sans dépendance.
 - **Points différenciants réels** (vérifiés dans le code) :
   - Blocage automatique des scripts tiers avant consentement.
   - Google Consent Mode v2 natif.
@@ -57,4 +57,4 @@ Captures générées (Chromium headless, 1280×800, dans `imag/shots/`) :
 - [ ] Textes relus et finalisés (readme.txt, description Addons, PACKAGING.md).
 - [ ] Aucun chiffre invérifiable dans les textes.
 - [ ] Captures d'écran à jour avec la version publiée.
-- [ ] Version du plugin/module alignée sur la version npm embarquée (2.5.0).
+- [ ] Version du plugin/module alignée sur la version npm embarquée (2.5.1).

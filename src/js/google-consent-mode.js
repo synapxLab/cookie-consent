@@ -5,7 +5,7 @@
  * 4 catégories supportées : necessary, functional, statistics, marketing
  * (alias `preferences` accepté en entrée pour future migration v3.x)
  *
- * @version 2.5.0
+ * @version 2.5.1
  * @author SynapxLab <contact@synapxlab.com>
  * @license MIT
  */
@@ -19,13 +19,48 @@ export const GCM_DEFAULT_CONFIG = {
   wait_for_update: 500, // ms avant timeout
   ads_data_redaction: true,
   url_passthrough: false,
-  region: ['US-CA', 'EU'] // ['US-CA', 'EU'] pour ciblage régional
+  region: [] // vide = valeurs par défaut appliquées à tous les visiteurs
 };
 
 /**
+ * Codes de région acceptés par Google : ISO 3166-2 (pays `FR`, ou
+ * pays-subdivision `US-CA`). Les regroupements type `EU` ne sont pas valides.
+ */
+const ISO_3166_2 = /^[A-Z]{2}(-[A-Z0-9]{1,3})?$/;
+
+/**
+ * Codes à deux lettres qui ressemblent à un pays mais n'en sont pas :
+ * regroupements et codes réservés ISO 3166 (`EU` pour l'Union européenne,
+ * `UK` au lieu de `GB`, plages à usage privé…). Google les rejette.
+ */
+const RESERVED_CODES = /^(EU|EZ|UK|UN|AA|ZZ|Q[M-Z]|X[A-Z])$/;
+
+const normalizeRegions = (region) => {
+  if (!Array.isArray(region)) return [];
+
+  return region
+    .filter(code => typeof code === 'string')
+    .map(code => code.trim().toUpperCase())
+    .filter(code => {
+      if (ISO_3166_2.test(code) && !RESERVED_CODES.test(code)) return true;
+      console.warn(`[CookieConsent] Code région ignoré (ISO 3166-2 attendu, pays ou pays-subdivision) : ${code}`);
+      return false;
+    });
+};
+
+/**
+ * Signature de la dernière commande `consent default` émise : évite de
+ * republier deux fois les mêmes valeurs par défaut dans le dataLayer lorsque
+ * l'initialisation est déclenchée par plusieurs points d'entrée.
+ */
+let lastDefaultSignature = null;
+
+/**
  * Initialise Google Consent Mode v2 avec les valeurs par défaut (denied)
- * À appeler AVANT le chargement de Google Analytics/GTM
- * 
+ *
+ * ⚠️ Doit être exécuté AVANT toute commande `config` / `event` de la balise
+ * Google, donc au plus tôt (au chargement du script, pas au DOMContentLoaded).
+ *
  * @param {Object} config - Configuration GCM
  */
 export const initGoogleConsentMode = (config = GCM_DEFAULT_CONFIG) => {
@@ -33,19 +68,15 @@ export const initGoogleConsentMode = (config = GCM_DEFAULT_CONFIG) => {
     if (!config || !config.enabled) {
       return false;
     }
-    
+
     // Vérifier que l'environnement est compatible
     if (typeof window === 'undefined') {
       return false;
     }
-    
-    // Créer window.dataLayer si n'existe pas
-    window.dataLayer = window.dataLayer || [];
-    function gtag() { window.dataLayer.push(arguments); }
-    window.gtag = window.gtag || gtag;
-    
-    // Définir les valeurs par défaut (mode "denied")
-    gtag('consent', 'default', {
+
+    const regions = normalizeRegions(config.region);
+
+    const consentDefault = {
       'ad_storage': 'denied',
       'ad_user_data': 'denied',
       'ad_personalization': 'denied',
@@ -54,25 +85,39 @@ export const initGoogleConsentMode = (config = GCM_DEFAULT_CONFIG) => {
       'personalization_storage': 'denied',
       'security_storage': 'granted', // ✅ Toujours autorisé (cookies nécessaires)
       'wait_for_update': config.wait_for_update || 500
-    });
+    };
 
-    // Options avancées
+    // Ciblage régional : la commande qui porte les signaux porte aussi la
+    // région. Sans région, les valeurs par défaut s'appliquent à tous.
+    if (regions.length > 0) {
+      consentDefault.region = regions;
+    }
+
+    const signature = JSON.stringify(consentDefault);
+    if (signature === lastDefaultSignature) {
+      return true;
+    }
+
+    // Créer window.dataLayer si n'existe pas
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { window.dataLayer.push(arguments); }
+    window.gtag = window.gtag || gtag;
+
+    // Options avancées : à poser avant toute commande `config`
     if (config.ads_data_redaction) {
-      gtag('set', 'ads_data_redaction', true);
+      window.gtag('set', 'ads_data_redaction', true);
     }
-    
+
     if (config.url_passthrough) {
-      gtag('set', 'url_passthrough', true);
+      window.gtag('set', 'url_passthrough', true);
     }
-    
-    if (config.region && Array.isArray(config.region) && config.region.length > 0) {
-      gtag('consent', 'default', {
-        'region': config.region
-      });
-    }
-    
+
+    // Définir les valeurs par défaut (mode "denied")
+    window.gtag('consent', 'default', consentDefault);
+    lastDefaultSignature = signature;
+
     return true;
-    
+
   } catch (error) {
     console.error('[CookieConsent] Erreur initialisation Google Consent Mode:', error);
     return false;
@@ -206,6 +251,7 @@ export const resetGoogleConsentMode = () => {
   if (window.dataLayer) {
     window.dataLayer.length = 0;
   }
+  lastDefaultSignature = null;
   delete window.gtag;
 };
 
