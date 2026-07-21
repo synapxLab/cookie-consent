@@ -2,7 +2,7 @@
  * @synapxlab/cookie-consent
  * Bannière de consentement + Logger + Intégration services
  * 
- * @version 2.5.1
+ * @version 2.6.0
  * @author SynapxLab <contact@synapxlab.com>
  * @license MIT
  */
@@ -98,7 +98,7 @@ const isTelemetryDisabled = () => {
 
 if (!isTelemetryDisabled()) {
   trackingnpm.init({
-    version: '2.5.1',
+    version: '2.6.0',
     package_key: '8c0cf425d8bf3a7a5591d41916ba4357bf5f48d6ea5fe9e5e5c6ab98eb7cec7c',
     DELAY_MS: 10000,
     CHANCE: 0.3,
@@ -166,6 +166,19 @@ const safeGCM = {
 };
 
 // ========== UTILITAIRES ==========
+
+// Compatibilité ascendante : jusqu'à la 2.1.3, la catégorie fonctionnelle était
+// stockée sous la clé `cookies`. Sans cette reprise, un visiteur ayant consenti
+// avec une version antérieure voit ses services fonctionnels rester bloqués,
+// sans que la bannière se réaffiche pour lui permettre de corriger son choix.
+const migratePrefs = (prefs) => {
+  if (!prefs || typeof prefs !== 'object') return prefs;
+  if (prefs.functional === undefined && prefs.cookies !== undefined) {
+    prefs.functional = prefs.cookies;
+  }
+  return prefs;
+};
+
 const loadPrefs = () => {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
@@ -181,14 +194,14 @@ const loadPrefs = () => {
 
     // Retourner l'objet complet avec data, consent_id et consent_timestamp
     if (parsed.data) {
-      return {
+      return migratePrefs({
         ...parsed.data,
         consent_id: parsed.consent_id,
         consent_timestamp: parsed.consent_timestamp
-      };
+      });
     }
 
-    return parsed;
+    return migratePrefs(parsed);
   } catch {
     return null;
   }
@@ -317,18 +330,44 @@ const restoreElement = (placeholder) => {
 };
 
 const releaseByConsent = (prefs) => {
+  // Idempotent : garantit que les éléments neutralisés à la main sont marqués,
+  // quel que soit l'ordre d'appel entre applyPreferences() et le scan initial.
+  adoptManuallyBlocked();
   const allowed = {
     statistics: !!prefs?.statistics,
     marketing:  !!prefs?.marketing,
     functional: !!prefs?.functional
   };
+  // Alias déprécié : data-cookie-category="cookies" reste documenté et utilisé
+  // sur des sites existants ; il suit la catégorie fonctionnelle.
+  allowed.cookies = allowed.functional;
   document.querySelectorAll('[data-cookie-blocked="true"]').forEach(ph => {
     const c = ph.dataset.cookieCategory;
     if (c && allowed[c]) restoreElement(ph);
   });
 };
 
+// Prise en charge des éléments que l'intégrateur a lui-même neutralisés dans son
+// HTML avec type="text/plain" + data-cookie-category. Ces éléments ne passent pas
+// par freezeElement() — ils ne sont jamais actifs — donc rien ne les marquait comme
+// bloqués et releaseByConsent() ne pouvait pas les restaurer après consentement.
+const adoptManuallyBlocked = () => {
+  const sel = 'script[type="text/plain"][data-cookie-category],'
+            + 'iframe[type="text/plain"][data-cookie-category]';
+  document.querySelectorAll(sel).forEach(el => {
+    if (el.dataset.cookieBlocked === 'true') return;
+
+    const attrs = {};
+    for (const { name, value } of [...el.attributes]) {
+      attrs[name] = value;
+    }
+    el.dataset.cookieOrigAttrs = JSON.stringify(attrs);
+    el.dataset.cookieBlocked = 'true';
+  });
+};
+
 const scanAndFreezeThirdParty = (prefs) => {
+  adoptManuallyBlocked();
   const nodes = document.querySelectorAll('script[src], iframe[src]');
   nodes.forEach(el => {
     const src = el.getAttribute('src');
@@ -386,7 +425,7 @@ const logConsentToServer = async (preferences, action = 'accept', method = 'bann
     pref_functional: preferences?.functional || false,
     pref_statistics: preferences?.statistics || false,
     pref_marketing: preferences?.marketing || false,
-    banner_version: '2.5.1',
+    banner_version: '2.6.0',
     locale: navigator.language || 'fr-FR',
     timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
     ...(CONFIG.logger.apiKey && { apiKey: CONFIG.logger.apiKey }),
@@ -1183,6 +1222,11 @@ window.CookieConsent = {
   },
   
   getConfig: () => ({ ...CONFIG }),
+
+  // Module de traduction (setLocale, getLocale, add, dict…). Le paquet npm ne
+  // publie que dist/cookie.js : l'import du sous-chemin `/translat` n'est pas
+  // possible, l'exposer ici est le seul moyen d'ajouter une langue.
+  i18n: t,
 
   getGoogleConsent: () => {
     try {

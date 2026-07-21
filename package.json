@@ -1,6 +1,6 @@
 {
   "name": "@synapxlab/cookie-consent",
-  "version": "2.5.1",
+  "version": "2.6.0",
   "description": "Bannière cookies RGPD/CNIL en Vanilla JS. 0 dépendance. Blocage auto des scripts tiers. Logging optionnel (≥300 évts/mois). Alternative européenne à Cookiebot/Axeptio (non affiliée).",
   "homepage": "https://github.com/synapxLab/cookie-consent",
   "repository": {

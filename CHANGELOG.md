@@ -5,6 +5,24 @@ Tous les changements notables de `@synapxlab/cookie-consent` seront documentés 
 Le format est basé sur [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 et ce projet respecte le [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.6.0] - 2026-07-21
+
+### 🐛 Corrigé
+
+- **Restauration des scripts et iframes neutralisés manuellement** : Les éléments déclarés par l'intégrateur avec `type="text/plain"` et l'attribut `data-cookie-category` sont désormais restaurés après consentement. Le scan interne prend maintenant en compte les balises `script` et `iframe` sans attribut `src`, lit explicitement leur catégorie dans `data-cookie-category` et les marque correctement comme bloqués afin que la routine de restauration puisse les traiter. Ce défaut, présent dans toutes les versions publiées, laissait ces éléments inertes définitivement.
+  - ⚠️ **Attention : cette correction modifie le comportement observable en production.** Sur les sites concernés, des scripts jusqu'ici restés inertes s'exécuteront désormais après consentement. Il s'agit du comportement documenté et attendu ; vérifiez la configuration de vos catégories avant la mise à jour.
+
+- **Reprise des préférences enregistrées avant la version 2.5.0** : Les préférences déjà stockées dans le navigateur utilisant l'ancienne catégorie `cookies` sont désormais reprises à la lecture comme catégorie `functional`, sans réécriture du stockage ni changement de clé. Les services fonctionnels — Intercom, Crisp, HubSpot et Segment — ne restent donc plus bloqués en silence pour les visiteurs ayant donné leur consentement avec une version antérieure ou égale à 2.1.3. L'identifiant `cookies` est également accepté comme alias de `functional` dans l'attribut `data-cookie-category`.
+
+### 🎉 Ajouté
+
+- **Accès public au module de traduction** : Le module est désormais accessible via `window.CookieConsent.i18n` et expose `setLocale`, `getLocale`, `add`, `dict`, `setVariables`, `getVariables` et `applyTemplate`. Il est ainsi possible d'ajouter une langue ou de forcer une locale depuis l'API publique. Cet accès rétablit une capacité auparavant disponible avec `import t from '@synapxlab/cookie-consent/translat'`, fonctionnel jusqu'en version 2.1.1 mais inaccessible depuis la 2.1.2, le paquet ne publiant plus que le bundle `dist/cookie.js`.
+
+### 🔄 Compatibilité
+
+- **Aucune action requise dans le cas général** : Cette version n'introduit aucune rupture d'API et la clé de stockage `politecookiebanner` reste inchangée. Les corrections s'appliquent à la lecture des préférences et à l'exécution des éléments neutralisés.
+- **Vérification recommandée pour les neutralisations manuelles** : Les sites utilisant des scripts ou iframes neutralisés manuellement avec `data-cookie-category` doivent vérifier leur configuration de catégories avant la mise à jour, car leur comportement observable en production changera désormais après consentement.
+
 ## [2.5.1] - 2026-07-21
 
 ### 🐛 Corrigé

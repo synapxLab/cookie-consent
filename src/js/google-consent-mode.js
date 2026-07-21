@@ -5,7 +5,7 @@
  * 4 catégories supportées : necessary, functional, statistics, marketing
  * (alias `preferences` accepté en entrée pour future migration v3.x)
  *
- * @version 2.5.1
+ * @version 2.6.0
  * @author SynapxLab <contact@synapxlab.com>
  * @license MIT
  */

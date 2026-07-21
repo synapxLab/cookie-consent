@@ -2,7 +2,7 @@
  * @synapxlab/cookie-consent - helper
  * Utilitaires pour le système de cookie consent
  * 
- * @version 2.5.1
+ * @version 2.6.0
  * @author SynapxLab <contact@synapxlab.com>
  * @license MIT
  */
