@@ -52,7 +52,7 @@ Very simple:
 <script src="https://cdn.jsdelivr.net/npm/@synapxlab/cookie-consent/dist/cookie.min.js"></script>
 ```
 
-See [Vanilla JS Guide](./integrations/vanilla.md)
+See [Vanilla JS Guide](../fr/integrations/vanilla.md)
 
 ### How to install on WordPress?
 
@@ -60,7 +60,7 @@ See [Vanilla JS Guide](./integrations/vanilla.md)
 2. Search "SynapxLab Cookie Consent"
 3. Install and activate
 
-See [WordPress Guide](./integrations/wordpress.md)
+See [WordPress Guide](../fr/integrations/wordpress.md)
 
 ### How to install on React/Vue/Next.js?
 
@@ -356,7 +356,7 @@ cookie.js
 
 The system blocks GTM tags until consent, then activates them conditionally.
 
-See [Google Tag Manager Guide](./integrations/tag-manager.md)
+See [Google Tag Manager Guide](../fr/integrations/tag-manager.md)
 
 ### Compatible with WordPress?
 
@@ -364,7 +364,7 @@ See [Google Tag Manager Guide](./integrations/tag-manager.md)
 
 WordPress Admin > Plugins > Add New > "SynapxLab Cookie Consent"
 
-See [WordPress Guide](./integrations/wordpress.md)
+See [WordPress Guide](../fr/integrations/wordpress.md)
 
 ### Compatible with PrestaShop?
 

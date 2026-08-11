@@ -16,7 +16,11 @@
     "LICENSE",
     "package.json",
     "docs/fr/",
-    "docs/en/"
+    "docs/en/",
+    "!docs/en/integrations/prestashop.md",
+    "!docs/en/integrations/tag-manager.md",
+    "!docs/en/integrations/vanilla.md",
+    "!docs/en/integrations/wordpress.md"
   ],
   "keywords": [
     "cookie-consent",

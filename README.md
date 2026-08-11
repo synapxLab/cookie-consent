@@ -202,10 +202,10 @@ Log in to [https://synapx.fr/sdk/cookie_consent/](https://synapx.fr/sdk/cookie_c
 - [📝 Logger](./docs/en/logger.md)
 
 **Integrations:**
-- [Vanilla JS](./docs/en/integrations/vanilla.md)
-- [Google Tag Manager](./docs/en/integrations/tag-manager.md)
-- [WordPress](./docs/en/integrations/wordpress.md)
-- [PrestaShop](./docs/en/integrations/prestashop.md)
+- [Vanilla JS](./docs/fr/integrations/vanilla.md)
+- [Google Tag Manager](./docs/fr/integrations/tag-manager.md)
+- [WordPress](./docs/fr/integrations/wordpress.md)
+- [PrestaShop](./docs/fr/integrations/prestashop.md)
 - [i18n](./docs/en/integrations/i18n.md)
 
 🇫🇷 [Documentation française complète](./docs/fr/)

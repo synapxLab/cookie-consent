@@ -22,10 +22,10 @@ New to Cookie Consent? Start here:
 ### Integrations
 
 #### Frameworks & CMS
-- **[Vanilla JavaScript](./integrations/vanilla.md)** - Pure HTML/JS
-- **[WordPress](./integrations/wordpress.md)** - Official plugin
-- **[PrestaShop](./integrations/prestashop.md)** - E-commerce module
-- **[Google Tag Manager](./integrations/tag-manager.md)** - GTM configuration
+- **[Vanilla JavaScript](../fr/integrations/vanilla.md)** - Pure HTML/JS
+- **[WordPress](../fr/integrations/wordpress.md)** - Official plugin
+- **[PrestaShop](../fr/integrations/prestashop.md)** - E-commerce module
+- **[Google Tag Manager](../fr/integrations/tag-manager.md)** - GTM configuration
 
 #### Features
 - **[Internationalization](./integrations/i18n.md)** - Multi-language support
@@ -42,7 +42,7 @@ New to Cookie Consent? Start here:
 → [Configuration](./configuration.md#statistics)
 
 ### I use WordPress
-→ [WordPress Guide](./integrations/wordpress.md)
+→ [WordPress Guide](../fr/integrations/wordpress.md)
 
 ### I want to customize the design
 → [CSS Configuration](./configuration.md#css-customization)
