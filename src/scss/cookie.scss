@@ -28,6 +28,15 @@ $cookie-themes: (
   --cc-link-hover: color-mix(in srgb, var(--cc-accent) 86%, black 14%);
   --cc-primary: var(--cc-accent);
   --cc-on-primary: #fff;
+
+  /* Couleur du bouton de refus. Il doit être un bouton PLEIN, de poids visuel
+     comparable à celui d'acceptation : la CNIL exige que refuser soit aussi
+     simple qu'accepter, ce qui couvre la mise en avant et pas seulement le
+     nombre de clics. Un bouton fantôme (fond transparent) face à un bouton
+     coloré constitue un dark pattern. Teinte neutre dérivée du texte : elle
+     reste lisible en thème clair comme en thème sombre. */
+  --cc-neutral: color-mix(in srgb, var(--cc-text) 82%, var(--cc-surface));
+  --cc-on-neutral: var(--cc-surface);
 }
 
 @mixin focus-ring($offset: 2px) {
@@ -256,7 +265,7 @@ $cookie-themes: (
 
   .pmcpli-btn { @include btn-base; }
   .pmcpli-accept { @include btn-variant(var(--cc-primary), var(--cc-on-primary)); }
-  .pmcpli-deny   { @include btn-variant(transparent, var(--cc-text), var(--cc-line)); }
+  .pmcpli-deny   { @include btn-variant(var(--cc-neutral), var(--cc-on-neutral)); }
   .pmcpli-save-preferences,
   .pmcpli-del-preferences { background: color-mix(in srgb, var(--cc-surface) 85%, white 15%); }
 
