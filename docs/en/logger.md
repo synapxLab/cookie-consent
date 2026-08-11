@@ -214,7 +214,7 @@ const generateDeviceId = () => {
 
 ### Access logs
 
-Login at [https://synapx.fr/sdk/Cookie/Home](https://synapx.fr/sdk/Cookie/Home)
+Login at [https://synapx.fr/sdk/cookie_consent/](https://synapx.fr/sdk/cookie_consent/)
 
 ### Available statistics
 
