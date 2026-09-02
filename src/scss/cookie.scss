@@ -461,3 +461,50 @@ $cookie-themes: (
     .pmcpli-cookie-details { grid-template-columns: 1fr; }
   }
 }
+
+/* ── Classes issues du retrait des styles en ligne (02/09/2026) ───────────────
+   Ces règles remplacent des attributs `style=` et un `cssText` qui vivaient dans le
+   JavaScript. Une CSP sans `style-src 'unsafe-inline'` les refusait : la bannière
+   s'affichait ENTIÈREMENT SANS MISE EN FORME, sans erreur serveur — seule la console
+   du navigateur le signalait. Ni nonce ni hash ne peuvent autoriser un attribut
+   `style`, la spécification l'exclut : seule une classe règle le problème. */
+
+/* Bouton flottant de réouverture. */
+.pmcpli-fab {
+  position: fixed;
+  z-index: 99;
+  width: 50px;
+  height: 50px;
+  border: none;
+  border-radius: 9px;
+  cursor: pointer;
+  box-shadow: rgba(0, 0, 0, 0.25) 0 6px 20px;
+  background: var(--cc-bg);
+  display: grid;
+  place-items: center;
+  font: 600 12px / 1 system-ui, sans-serif;
+  right: 18px;
+  bottom: 18px;
+  transition: transform 0.2s ease, box-shadow 0.3s ease;
+}
+
+.pmcpli-fab-icone { font-size: 20px; }
+
+/* ⚠️ EN DERNIER, ET SANS `!important`.
+   En dernier, parce que `.pmcpli-hidden` et `.pmcpli-fab` ont la même spécificité :
+   c'est l'ordre du fichier qui tranche, et masquer doit gagner.
+   Sans `!important`, parce que le code bascule l'affichage par `style.display` en
+   ligne — un `!important` battrait ce style en ligne et la bannière ne s'ouvrirait
+   plus jamais. Le style en ligne DOIT rester le dernier mot. */
+.pmcpli-hidden { display: none; }
+
+/* Texte réservé aux lecteurs d'écran. Portait les mêmes déclarations en attribut. */
+.visually-hidden {
+  position: absolute;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  white-space: nowrap;
+}

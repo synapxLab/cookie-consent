@@ -6,6 +6,12 @@
  * @author SynapxLab <contact@synapxlab.com>
  * @license MIT
  */
+// ⚠️ PREMIER IMPORT DU PAQUET, ET IL DOIT LE RESTER.
+// `nonce.js` pose `__webpack_nonce__`, que style-loader lit au moment d'insérer la
+// balise `<style>`. Les imports ES sont évalués dans l'ordre : tout module placé avant
+// lui et injectant du style le ferait sans nonce, et il serait refusé par une CSP
+// stricte — bannière sans mise en forme, sans la moindre erreur serveur.
+import './nonce.js';
 import { trackingnpm } from '@synapxlab/tracking-npm';
 // import { trackingnpm } from './Tracking-npm';
 import '../scss/cookie.scss';
@@ -591,16 +597,16 @@ function renderOnce() {
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" height="18"><path d="M224 416c-8.188 0-16.38-3.125-22.62-9.375l-192-192c-12.5-12.5-12.5-32.75 0-45.25s32.75-12.5 45.25 0L224 338.8l169.4-169.4c12.5-12.5 32.75-12.5 45.25 0s12.5 32.75 0 45.25l-192 192C240.4 412.9 232.2 416 224 416z"/></svg>
           </span>
         </div>
-        <div class="pmcpli-description" style="display:none;">
+        <div class="pmcpli-description pmcpli-hidden">
           ${consentInfo}
           <span>${t('loggingNotice')}</span>
         </div>
       </div>`
     : '';
 
-  const tpl = `<div id="politecookiebanner" class="pmcpli-cookiebanner pmcpli-show"
+  const tpl = `<div id="politecookiebanner" class="pmcpli-cookiebanner pmcpli-show pmcpli-hidden"
     aria-label="cookiebanner" title="cookiebanner" aria-modal="true" data-nosnippet="true"
-    role="dialog" aria-live="polite" style="display:none;" lang="${t.getLocale()}">
+    role="dialog" aria-live="polite" lang="${t.getLocale()}">
   <div class="pmcpli-header">
     <div class="pmcpli-title">${t('title')}</div>
     ${generateLanguageSelector()}
@@ -608,7 +614,7 @@ function renderOnce() {
   <div class="pmcpli-divider pmcpli-divider-header"></div>
   <div class="pmcpli-body">
     <div class="pmcpli-message">${t('message')}</div>
-    <div class="pmcpli-categories" style="display:none;">
+    <div class="pmcpli-categories pmcpli-hidden">
       
       ${loggingCategory}
       
@@ -623,7 +629,7 @@ function renderOnce() {
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" height="18"><path d="M224 416c-8.188 0-16.38-3.125-22.62-9.375l-192-192c-12.5-12.5-12.5-32.75 0-45.25s32.75-12.5 45.25 0L224 338.8l169.4-169.4c12.5-12.5 32.75-12.5 45.25 0s12.5 32.75 0 45.25l-192 192C240.4 412.9 232.2 416 224 416z"/></svg>
           </span>
         </div>
-        <div class="pmcpli-description" style="display:none;">
+        <div class="pmcpli-description pmcpli-hidden">
           <span class="pmcpli-description-functional">${t('functionalDesc')}</span>
           ${functionalServicesText}
         </div>
@@ -643,7 +649,7 @@ function renderOnce() {
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" height="18"><path d="M224 416c-8.188 0-16.38-3.125-22.62-9.375l-192-192c-12.5-12.5-12.5-32.75 0-45.25s32.75-12.5 45.25 0L224 338.8l169.4-169.4c12.5-12.5 32.75-12.5 45.25 0s12.5 32.75 0 45.25l-192 192C240.4 412.9 232.2 416 224 416z"/></svg>
           </span>
         </div>
-        <div class="pmcpli-description" style="display:none;">
+        <div class="pmcpli-description pmcpli-hidden">
           <span class="pmcpli-description-statistics-anonymous">${t('statsDesc')}</span>
           ${statsServicesText}
         </div>
@@ -660,7 +666,7 @@ function renderOnce() {
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" height="18"><path d="M224 416c-8.188 0-16.38-3.125-22.62-9.375l-192-192c-12.5-12.5-12.5-32.75 0-45.25s32.75-12.5 45.25 0L224 338.8l169.4-169.4c12.5-12.5 32.75-12.5 45.25 0s12.5 32.75 0 45.25l-192 192C240.4 412.9 232.2 416 224 416z"/></svg>
           </span>
         </div>
-        <div class="pmcpli-description" style="display:none;">
+        <div class="pmcpli-description pmcpli-hidden">
           <span class="pmcpli-description-marketing">${t('marketingDesc')}</span>
           ${marketingServicesText}
         </div>
@@ -673,8 +679,8 @@ function renderOnce() {
     <button class="pmcpli-btn pmcpli-accept">${t('acceptAll')}</button>
     <button class="pmcpli-btn pmcpli-deny">${t('denyAll')}</button>
     <button class="pmcpli-btn pmcpli-view-preferences">${t('viewPrefs')}</button>
-    <button class="pmcpli-btn pmcpli-save-preferences" style="display:none;">${t('savePrefs')}</button>
-    <button class="pmcpli-btn pmcpli-del-preferences" style="display:none;">${t('delPrefs')}</button>
+    <button class="pmcpli-btn pmcpli-save-preferences pmcpli-hidden">${t('savePrefs')}</button>
+    <button class="pmcpli-btn pmcpli-del-preferences pmcpli-hidden">${t('delPrefs')}</button>
   </div>
   <div class="pmcpli-links pmcpli-documents"></div>
 </div>`;
@@ -977,28 +983,15 @@ const createFloatingButton = () => {
   const banner = document.getElementById('politecookiebanner');
   const isBannerOpen = banner && banner.style.display !== 'none';
   
-  // Styles inline pour le bouton
-  button.style.cssText = `
-    position: fixed;
-    z-index: 99;
-    width: 50px;
-    height: 50px;
-    border: none;
-    border-radius: 9px;
-    cursor: pointer;
-    box-shadow: rgba(0, 0, 0, 0.25) 0px 6px 20px;
-    background: var(--cc-bg);
-    display: ${isBannerOpen ? 'none' : 'grid'};
-    place-items: center;
-    font: 600 12px / 1 system-ui, sans-serif;
-    right: 18px;
-    bottom: 18px;
-    transition: transform 0.2s ease, box-shadow 0.3s ease;
-  `;
+  // ⚠️ Pas de `cssText` ici : une CSP sans `style-src 'unsafe-inline'` le refuse, et le
+  // bouton sort alors sans aucune mise en forme — sans erreur, seule la console le dit.
+  // Les règles vivent dans la feuille ; seul l'état, visible ou non, passe par une classe.
+  button.classList.add('pmcpli-fab');
+  button.classList.toggle('pmcpli-hidden', Boolean(isBannerOpen));
 
   // Contenu du bouton
   button.innerHTML = `
-    <span aria-hidden="true" style="font-size: 20px;">
+    <span aria-hidden="true" class="pmcpli-fab-icone">
 <svg width="45" height="45" viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Cookie Consent">
   <title>${t('openCookieSettings') || 'Gérer les cookies'}</title>
 
@@ -1043,15 +1036,7 @@ const createFloatingButton = () => {
   </g>
 </svg>
   </span>
-    <span class="visually-hidden" style="
-      position: absolute;
-      clip: rect(0 0 0 0);
-      clip-path: inset(50%);
-      width: 1px;
-      height: 1px;
-      overflow: hidden;
-      white-space: nowrap;
-    ">${t('openCookieSettings') || 'Gérer les cookies'}</span>
+    <span class="visually-hidden">${t('openCookieSettings') || 'Gérer les cookies'}</span>
   `;
 
   // Effet hover
