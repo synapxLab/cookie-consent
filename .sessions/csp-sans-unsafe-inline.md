@@ -42,3 +42,25 @@ Aucune mention de CSP dans README, INTEGRATION ni docs/. Le défaut vaut pour le
 habilo.fr.lan sous `style-src 'self' 'nonce-…'`, sans `unsafe-inline` : bannière
 complète, mise en forme correcte, **zéro violation** en console. Avant le correctif :
 bannière entièrement nue et 6 violations.
+
+## Régression introduite le 02/09, trouvée par test et corrigée
+
+Le remplacement des `style="display:none"` par une classe faisait **revenir le bandeau à
+chaque chargement**, alors même que le choix était bien enregistré en localStorage.
+
+Cause : un attribut `style` bat TOUTE règle de feuille. Une classe, non. Or deux règles
+existantes la dominaient — `#politecookiebanner` (1-0-0, `display: grid`) et
+`#politecookiebanner .pmcpli-*` (1-0-1). La classe nue (0-1-0) perdait contre les deux.
+
+Correctif : trois sélecteurs, dont deux qualifiés par l'identifiant (1-1-0). Toujours sans
+`!important`, qui battrait les `style.display` par lesquels le SDK ouvre et ferme.
+
+⚠️ **Leçon générale** : retirer un style en ligne ne se fait jamais à l'aveugle. Il faut
+d'abord chercher quelles règles visaient déjà l'élément, et écrire la classe de
+remplacement AU MOINS aussi spécifique. Le lint ne voit rien, la console non plus — seul
+un test de parcours le montre.
+
+Prouvé par Playwright, contexte unique : premier chargement bandeau visible ; après
+« Tout Accepter » masqué et choix enregistré ; **après rechargement, masqué** ; sur une
+autre page du même navigateur, masqué. Et après « Tout Refuser », le bouton flottant est
+visible et le clic rouvre bien le bandeau.

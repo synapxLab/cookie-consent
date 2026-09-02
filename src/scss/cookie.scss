@@ -490,12 +490,23 @@ $cookie-themes: (
 
 .pmcpli-fab-icone { font-size: 20px; }
 
-/* ⚠️ EN DERNIER, ET SANS `!important`.
-   En dernier, parce que `.pmcpli-hidden` et `.pmcpli-fab` ont la même spécificité :
-   c'est l'ordre du fichier qui tranche, et masquer doit gagner.
-   Sans `!important`, parce que le code bascule l'affichage par `style.display` en
-   ligne — un `!important` battrait ce style en ligne et la bannière ne s'ouvrirait
-   plus jamais. Le style en ligne DOIT rester le dernier mot. */
+/* ⚠️ TROIS SÉLECTEURS, ET C'EST NÉCESSAIRE — spécificité.
+   L'attribut `style="display:none"` d'origine battait TOUTE règle de feuille. En le
+   remplaçant par une classe, on entre dans la cascade, et deux règles existantes la
+   dominaient :
+     `#politecookiebanner`               (1-0-0) pose `display: grid`
+     `#politecookiebanner .pmcpli-*`     (1-0-1) posent leurs propres display
+   Une classe seule (0-1-0) perdait contre les deux : le bandeau restait affiché même
+   après un choix enregistré, et revenait à CHAQUE chargement. Constaté le 02/09/2026
+   par un test de rechargement, pas à la lecture.
+   Les deux formes qualifiées pèsent 1-1-0 et l'emportent ; la classe nue reste pour le
+   bouton flottant, qui vit hors du bandeau.
+
+   ⚠️ Toujours SANS `!important` : le code ouvre et ferme par `style.display` en ligne.
+   Un `!important` battrait ce style en ligne et le bandeau ne s'ouvrirait plus jamais.
+   Le style en ligne DOIT rester le dernier mot. */
+#politecookiebanner.pmcpli-hidden,
+#politecookiebanner .pmcpli-hidden,
 .pmcpli-hidden { display: none; }
 
 /* Texte réservé aux lecteurs d'écran. Portait les mêmes déclarations en attribut. */
