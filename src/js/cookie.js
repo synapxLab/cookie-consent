@@ -981,7 +981,15 @@ const createFloatingButton = () => {
   
   // Vérifier si le bandeau est déjà ouvert
   const banner = document.getElementById('politecookiebanner');
-  const isBannerOpen = banner && banner.style.display !== 'none';
+  // ⚠️ NE PAS lire `banner.style.display` : cet attribut n'est renseigné que si du code
+  // l'a écrit. Quand l'état est porté par une CLASSE, il vaut chaîne vide, et
+  // `'' !== 'none'` conclut « ouvert » alors que le bandeau est masqué. Observé le
+  // 02/09/2026 : au rechargement d'une page portant un choix déjà enregistré, la
+  // pastille de réouverture était créée puis aussitôt masquée — plus aucun moyen de
+  // revenir sur son consentement sans vider le navigateur.
+  // `getComputedStyle` donne l'état RÉEL, quelle qu'en soit la source.
+  const isBannerOpen = Boolean(banner)
+    && window.getComputedStyle(banner).display !== 'none';
   
   // ⚠️ Pas de `cssText` ici : une CSP sans `style-src 'unsafe-inline'` le refuse, et le
   // bouton sort alors sans aucune mise en forme — sans erreur, seule la console le dit.
