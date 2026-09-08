@@ -519,3 +519,23 @@ $cookie-themes: (
   overflow: hidden;
   white-space: nowrap;
 }
+
+
+/* ── Réserver la place du bandeau ────────────────────────────────────────────
+   Un bandeau `fixed` ne prend aucune place dans le flux : il recouvre le bas de
+   la page, et le visiteur ne peut pas faire défiler au-delà. Sur habilo.fr le
+   08/09/2026, il masquait un bouton d'action tant qu'aucun choix n'était fait.
+
+   On réserve donc la hauteur pendant qu'il est ouvert. Le site hôte peut
+   surcharger `--cc-place-reservee` s'il place le bandeau autrement.            */
+:root { --cc-place-reservee: 240px; }
+
+.pmcpli-banniere-ouverte body {
+  padding-bottom: var(--cc-place-reservee);
+}
+
+/* En dessous de 640 px le bandeau occupe toute la largeur et devient plus haut :
+   la réserve suit, sinon le bas de page reste inatteignable sur téléphone. */
+@media (max-width: 640px) {
+  :root { --cc-place-reservee: 320px; }
+}

@@ -685,6 +685,11 @@ function renderOnce() {
   <div class="pmcpli-links pmcpli-documents"></div>
 </div>`;
   document.body.insertAdjacentHTML('beforeend', tpl);
+  // ⚠️ Le bandeau est en `position: fixed` : il RECOUVRE le bas de la page, et rien ne
+  // permet de faire défiler au-delà. Sur un écran de 1280 px, il masquait un bouton
+  // d'action tant que le visiteur n'avait pas choisi — constaté sur habilo.fr le
+  // 08/09/2026. On marque donc la racine pour que la page puisse réserver la place.
+  document.documentElement.classList.add('pmcpli-banniere-ouverte');
 }
 
 const openBanner = (showPrefs = false) => {
@@ -852,6 +857,7 @@ function attachHandlers() {
     });
     await savePrefs(prefs, action, method);
     el.style.display = 'none';
+    document.documentElement.classList.remove('pmcpli-banniere-ouverte');
     
     // Réafficher le bouton flottant quand le bandeau se ferme
     const floatingButton = document.querySelector('.synapx-cookie-launcher');
@@ -875,6 +881,7 @@ function attachHandlers() {
 
     el.querySelectorAll('input[name^="politecookie["]').forEach(cb => cb.checked = false);
     el.style.display = 'none';
+    document.documentElement.classList.remove('pmcpli-banniere-ouverte');
     
     // Réafficher le bouton flottant quand le bandeau se ferme
     const floatingButton = document.querySelector('.synapx-cookie-launcher');
@@ -946,6 +953,7 @@ function attachHandlers() {
   el.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') {
       el.style.display = 'none';
+      document.documentElement.classList.remove('pmcpli-banniere-ouverte');
       
       // Réafficher le bouton flottant quand le bandeau se ferme
       const floatingButton = document.querySelector('.synapx-cookie-launcher');
