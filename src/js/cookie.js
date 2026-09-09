@@ -685,11 +685,6 @@ function renderOnce() {
   <div class="pmcpli-links pmcpli-documents"></div>
 </div>`;
   document.body.insertAdjacentHTML('beforeend', tpl);
-  // ⚠️ Le bandeau est en `position: fixed` : il RECOUVRE le bas de la page, et rien ne
-  // permet de faire défiler au-delà. Sur un écran de 1280 px, il masquait un bouton
-  // d'action tant que le visiteur n'avait pas choisi — constaté sur habilo.fr le
-  // 08/09/2026. On marque donc la racine pour que la page puisse réserver la place.
-  document.documentElement.classList.add('pmcpli-banniere-ouverte');
 }
 
 const openBanner = (showPrefs = false) => {
@@ -697,6 +692,20 @@ const openBanner = (showPrefs = false) => {
   const el = document.getElementById('politecookiebanner');
   if (!el) return;
   el.style.display = 'block';
+
+  // ⚠️ Le bandeau est en `position: fixed` : il RECOUVRE le bas de la page, et rien ne
+  // permet de faire défiler au-delà. Sur un écran de 1280 px, il masquait un bouton
+  // d'action tant que le visiteur n'avait pas choisi — constaté sur habilo.fr le
+  // 08/09/2026. On marque donc la racine pour que la page puisse réserver la place.
+  //
+  // ⚠️ LA MARQUE SE POSE ICI, PAS DANS renderOnce(). Elle y était jusqu'au 09/09/2026,
+  // et c'était faux : `renderOnce()` s'exécute à CHAQUE chargement de page, parce que
+  // le bouton flottant a besoin du balisage même quand le bandeau reste masqué. Un
+  // visiteur ayant déjà consenti gardait donc la marque à vie, donc la place réservée
+  // en bas de page — sur habilo.fr, le pied de page ne pouvait plus atteindre le bas
+  // de la fenêtre, avec 240 px de vide sous lui. La marque suit l'AFFICHAGE, pas la
+  // construction.
+  document.documentElement.classList.add('pmcpli-banniere-ouverte');
   
   // Cacher le bouton flottant quand le bandeau est ouvert
   const floatingButton = document.querySelector('.synapx-cookie-launcher');
@@ -832,7 +841,12 @@ function attachHandlers() {
     });
     applyPreferences(stored);
   } else {
+    // Premier affichage : aucun consentement stocké. C'est L'AUTRE chemin qui montre
+    // le bandeau — `openBanner()` ne sert qu'à le rouvrir depuis le bouton flottant.
+    // Les deux doivent poser la marque, sinon la place n'est pas réservée là où elle
+    // compte le plus : à la toute première visite.
     el.style.display = 'block';
+    document.documentElement.classList.add('pmcpli-banniere-ouverte');
     el.querySelector('.pmcpli-categories').style.display = 'none';
   }
 
