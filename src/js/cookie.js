@@ -2,7 +2,7 @@
  * @synapxlab/cookie-consent
  * Bannière de consentement + Logger + Intégration services
  * 
- * @version 2.6.0
+ * @version 2.6.1
  * @author SynapxLab <contact@synapxlab.com>
  * @license MIT
  */
@@ -104,7 +104,7 @@ const isTelemetryDisabled = () => {
 
 if (!isTelemetryDisabled()) {
   trackingnpm.init({
-    version: '2.6.0',
+    version: '2.6.1',
     package_key: '8c0cf425d8bf3a7a5591d41916ba4357bf5f48d6ea5fe9e5e5c6ab98eb7cec7c',
     DELAY_MS: 10000,
     CHANCE: 0.3,
@@ -431,7 +431,7 @@ const logConsentToServer = async (preferences, action = 'accept', method = 'bann
     pref_functional: preferences?.functional || false,
     pref_statistics: preferences?.statistics || false,
     pref_marketing: preferences?.marketing || false,
-    banner_version: '2.6.0',
+    banner_version: '2.6.1',
     locale: navigator.language || 'fr-FR',
     timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
     ...(CONFIG.logger.apiKey && { apiKey: CONFIG.logger.apiKey }),
@@ -1098,6 +1098,20 @@ window.CookieConsent = {
   },
   
   init: (options = {}) => {
+    // Compatibilité : le configurateur de synapx.fr a longtemps généré les services sous
+    // `services: { statistics, marketing, functional }`, forme que init() ne lisait pas —
+    // la bannière s'affichait, le logger tournait, mais aucune balise n'était posée
+    // (constaté le 14/09/2026 sur markdown.synapx.fr). Les deux formes sont acceptées ;
+    // une clé à la racine prime sur son homonyme sous `services`.
+    if (options.services && typeof options.services === 'object') {
+      const { statistics, marketing, functional } = options.services;
+      options = {
+        ...(statistics ? { statistics } : {}),
+        ...(marketing ? { marketing } : {}),
+        ...(functional ? { functional } : {}),
+        ...options,
+      };
+    }
     if (options.logger) {
       Object.assign(CONFIG.logger, {
         enabled: true,

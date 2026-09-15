@@ -5,6 +5,12 @@ Tous les changements notables de `@synapxlab/cookie-consent` seront documentés 
 Le format est basé sur [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 et ce projet respecte le [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.6.1] - 2026-09-15
+
+### 🐛 Corrigé
+
+- **Services déclarés sous `services:` ignorés** : `init()` ne lisait `statistics`, `marketing` et `functional` qu'à la racine des options, alors que le configurateur de synapx.fr générait ces blocs sous une clé `services`. Sur les sites ayant copié ce code, la bannière s'affichait et le logger fonctionnait, mais aucune balise de mesure ou de marketing n'était jamais posée après consentement, sans aucune erreur (constaté le 14/09/2026 sur markdown.synapx.fr). Les deux formes sont désormais acceptées ; en cas de doublon, la clé à la racine prime. Le configurateur génère dorénavant les clés à la racine.
+
 ## [2.6.0] - 2026-07-21
 
 ### 🐛 Corrigé
