@@ -9,7 +9,7 @@ et ce projet respecte le [Semantic Versioning](https://semver.org/spec/v2.0.0.ht
 
 ### 🔄 Modifié
 
-- **Bouton flottant déplacé dans le coin inférieur gauche** : le coin inférieur droit est occupé par la plupart des widgets de discussion (tawk.to, Crisp, Intercom), qui se superposaient au bouton de réouverture et le rendaient inaccessible. Pour conserver l'ancienne position : `.pmcpli-fab { left: auto; right: 18px; }`.
+- **Bouton flottant décalé à 100 px du bord droit** : le coin inférieur droit est occupé par la plupart des widgets de discussion (tawk.to, Crisp, Intercom), qui se superposaient au bouton de réouverture et le rendaient inaccessible. Pour conserver l'ancienne position : `.pmcpli-fab { right: 18px; }`.
 
 ## [2.6.2] - 2026-11-13
 
