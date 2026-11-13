@@ -5,6 +5,12 @@ Tous les changements notables de `@synapxlab/cookie-consent` seront documentés 
 Le format est basé sur [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 et ce projet respecte le [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.6.3] - 2026-11-13
+
+### 🔄 Modifié
+
+- **Bouton flottant déplacé dans le coin inférieur gauche** : le coin inférieur droit est occupé par la plupart des widgets de discussion (tawk.to, Crisp, Intercom), qui se superposaient au bouton de réouverture et le rendaient inaccessible. Pour conserver l'ancienne position : `.pmcpli-fab { left: auto; right: 18px; }`.
+
 ## [2.6.2] - 2026-11-13
 
 ### 🐛 Corrigé

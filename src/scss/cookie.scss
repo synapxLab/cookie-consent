@@ -483,7 +483,10 @@ $cookie-themes: (
   display: grid;
   place-items: center;
   font: 600 12px / 1 system-ui, sans-serif;
-  right: 18px;
+  /* Coin bas GAUCHE : le bas droit est le coin des widgets de chat (tawk.to,
+     Crisp, Intercom…), qui se posaient par-dessus le bouton (constaté le
+     13/11/2026). Un site qui le veut à droite : `.pmcpli-fab { left: auto; right: 18px; }`. */
+  left: 18px;
   bottom: 18px;
   transition: transform 0.2s ease, box-shadow 0.3s ease;
 }
