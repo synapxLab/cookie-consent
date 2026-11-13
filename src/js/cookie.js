@@ -2,7 +2,7 @@
  * @synapxlab/cookie-consent
  * Bannière de consentement + Logger + Intégration services
  * 
- * @version 2.6.1
+ * @version 2.6.2
  * @author SynapxLab <contact@synapxlab.com>
  * @license MIT
  */
@@ -104,7 +104,7 @@ const isTelemetryDisabled = () => {
 
 if (!isTelemetryDisabled()) {
   trackingnpm.init({
-    version: '2.6.1',
+    version: '2.6.2',
     package_key: '8c0cf425d8bf3a7a5591d41916ba4357bf5f48d6ea5fe9e5e5c6ab98eb7cec7c',
     DELAY_MS: 10000,
     CHANCE: 0.3,
@@ -431,7 +431,7 @@ const logConsentToServer = async (preferences, action = 'accept', method = 'bann
     pref_functional: preferences?.functional || false,
     pref_statistics: preferences?.statistics || false,
     pref_marketing: preferences?.marketing || false,
-    banner_version: '2.6.1',
+    banner_version: '2.6.2',
     locale: navigator.language || 'fr-FR',
     timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
     ...(CONFIG.logger.apiKey && { apiKey: CONFIG.logger.apiKey }),
@@ -977,12 +977,17 @@ function attachHandlers() {
     }
   });
 
-  document.addEventListener('click', e => {
-    if (e.target.closest('#openpolitecookie, #openpolitecookie a')) {
-      e.preventDefault();
-      openBanner(true);
-    }
-  });
+  // Un seul écouteur sur document, même si attachHandlers() repasse (init() tardif
+  // après le filet d'auto-init) : deux écouteurs ouvriraient le bandeau deux fois.
+  if (!__docClickBound) {
+    __docClickBound = true;
+    document.addEventListener('click', e => {
+      if (e.target.closest('#openpolitecookie, #openpolitecookie a')) {
+        e.preventDefault();
+        openBanner(true);
+      }
+    });
+  }
 }
 
 // ========== CRÉATION AUTOMATIQUE DU BOUTON FLOTTANT ==========
@@ -1084,6 +1089,16 @@ const createFloatingButton = () => {
   document.body.appendChild(button);
 };
 
+// ========== ÉTAT D'INITIALISATION ==========
+// Le bandeau, son affichage à la première visite et le clic du bouton flottant ne
+// naissent que dans init(). Un site qui importait le paquet sans appeler init()
+// obtenait un bouton flottant mort et AUCUN bandeau — non conforme, et rien ne
+// signalait l'oubli (constaté le 13/11/2026 sur un site Nuxt en 2.6.0). D'où le
+// filet posé au chargement complet de la page (voir DOMContentLoaded plus bas).
+let __initCalled = false;   // init() a tourné, appelé par le site ou par le filet
+let __autoInit = false;     // le dernier init() venait du filet, pas du site
+let __docClickBound = false;
+
 // ========== API GLOBALE ==========
 window.CookieConsent = {
   open: openBanner,
@@ -1098,6 +1113,17 @@ window.CookieConsent = {
   },
   
   init: (options = {}) => {
+    // init() appelé APRÈS le filet d'auto-init : le bandeau a été construit avec la
+    // configuration par défaut (renderOnce ne reconstruit jamais). On le jette pour
+    // qu'il renaisse avec la vraie configuration ; un choix déjà fait reste en stockage.
+    if (__autoInit) {
+      __autoInit = false;
+      const ancien = document.getElementById('politecookiebanner');
+      if (ancien) ancien.remove();
+      document.documentElement.classList.remove('pmcpli-banniere-ouverte');
+    }
+    __initCalled = true;
+
     // Compatibilité : le configurateur de synapx.fr a longtemps généré les services sous
     // `services: { statistics, marketing, functional }`, forme que init() ne lisait pas —
     // la bannière s'affichait, le logger tournait, mais aucune balise n'était posée
@@ -1313,4 +1339,17 @@ document.addEventListener('DOMContentLoaded', () => {
   const prefs = loadPrefs();
   scanAndFreezeThirdParty(prefs);
   startObserver(prefs);
+
+  // Filet : si le site n'a toujours pas appelé init() au chargement complet, on
+  // initialise avec la configuration par défaut — bandeau à la première visite,
+  // bouton flottant fonctionnel — et on signale l'oubli. Un init() ultérieur
+  // reconstruit le bandeau avec la vraie configuration.
+  const filet = () => {
+    if (__initCalled) return;
+    console.warn('[CookieConsent] init() n\'a pas été appelé : bandeau affiché avec la configuration par défaut. Appelez window.CookieConsent.init({ … }) après l\'import.');
+    window.CookieConsent.init({});
+    __autoInit = true;
+  };
+  if (document.readyState === 'complete') setTimeout(filet, 0);
+  else window.addEventListener('load', () => setTimeout(filet, 0), { once: true });
 });

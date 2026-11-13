@@ -5,6 +5,12 @@ Tous les changements notables de `@synapxlab/cookie-consent` seront documentés 
 Le format est basé sur [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 et ce projet respecte le [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.6.2] - 2026-11-13
+
+### 🐛 Corrigé
+
+- **Import sans `init()` : bouton flottant inactif et aucun bandeau** : le bouton flottant était créé au chargement, mais le bandeau, son affichage à la première visite et l'ouverture au clic n'étaient mis en place que par `init()`. Un site qui importait le paquet sans l'appeler affichait donc un bouton sans effet et aucun bandeau de consentement, sans aucune erreur. Désormais, si `init()` n'a pas été appelé au chargement complet de la page, le paquet s'initialise avec la configuration par défaut et le signale par un avertissement dans la console. Un appel ultérieur à `init()` reconstruit le bandeau avec la configuration fournie ; un choix déjà enregistré par le visiteur est conservé.
+
 ## [2.6.1] - 2026-09-15
 
 ### 🐛 Corrigé
